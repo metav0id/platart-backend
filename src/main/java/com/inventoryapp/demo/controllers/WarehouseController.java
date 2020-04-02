@@ -26,7 +26,7 @@ public class WarehouseController {
      */
 
 
-    @GetMapping("/getallitems")
+    @PostMapping("/getallitems")
     public List<WarehouseGetAllItemsDTO> getAllItems(){
         //TODO implement calling method to all items from service class
 
