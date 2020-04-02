@@ -14,7 +14,7 @@ import java.util.List;
 public class WarehouseController {
 
     @Autowired
-     private WarehouseService warehouseService;
+    private WarehouseService warehouseService;
 
     public WarehouseController(WarehouseService warehouseService) {
         this.warehouseService = warehouseService;
@@ -22,12 +22,13 @@ public class WarehouseController {
 
     /**
      * You get all items which are currently available in stock of the warehouse.
+     *
      * @return List of WarehouseGetAllItemsDTO with "category":string, "quantity": int, "pricePerUnit":long. Price is in pence.
      */
 
 
     @PostMapping("/getallitems")
-    public List<WarehouseGetAllItemsDTO> getAllItems(){
+    public List<WarehouseGetAllItemsDTO> getAllItems() {
         //TODO implement calling method to all items from service class
 
         List<WarehouseGetAllItemsDTO> warehouseItemList = warehouseService.getAllStockItems();

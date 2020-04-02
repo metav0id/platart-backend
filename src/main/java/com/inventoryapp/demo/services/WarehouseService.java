@@ -20,18 +20,19 @@ public class WarehouseService {
     public WarehouseService(WarehouseRepository warehouseRepository) {
         this.warehouseRepository = warehouseRepository;
     }
+
     /**
      * This service gets all items in table Item from data base and turns them into a DTO list.
      */
 
-    public List<WarehouseGetAllItemsDTO> getAllStockItems (){
-        List<Item> findAllItemsList= warehouseRepository.findAll();
+    public List<WarehouseGetAllItemsDTO> getAllStockItems() {
+        List<Item> findAllItemsList = warehouseRepository.findAll();
         List<WarehouseGetAllItemsDTO> findAllItemsDTOList = new ArrayList<>();
-        if(findAllItemsList.size()>0){
-        findAllItemsDTOList= covertToDTO(findAllItemsList);
+        if (findAllItemsList.size() > 0) {
+            findAllItemsDTOList = covertToDTO(findAllItemsList);
             return findAllItemsDTOList;
-    }else {
-           System.out.println("----> No items found in the Data Base<----");
+        } else {
+            System.out.println("----> No items found in the Data Base<----");
         }
         return findAllItemsDTOList;
 
@@ -41,19 +42,18 @@ public class WarehouseService {
      * This service turns a list of entities into a list of DTOS.
      */
 
-    public List<WarehouseGetAllItemsDTO> covertToDTO (List<Item> findAllItems){
+    public List<WarehouseGetAllItemsDTO> covertToDTO(List<Item> findAllItems) {
         List<WarehouseGetAllItemsDTO> listWarehouseItemsDTO = new ArrayList<>();
         for (Item item : findAllItems) {
             WarehouseGetAllItemsDTO getAllItemsDTO = new WarehouseGetAllItemsDTO();
             getAllItemsDTO.setCategory(item.getCategory());
             getAllItemsDTO.setPricePerUnit(item.getPricePerUnit());
-            getAllItemsDTO.setQuantitiy(item.getQuantitiy());
+            getAllItemsDTO.setQuantity(item.getQuantity());
             listWarehouseItemsDTO.add(getAllItemsDTO);
         }
         return listWarehouseItemsDTO;
 
     }
-
 
 
 }

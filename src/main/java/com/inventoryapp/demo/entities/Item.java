@@ -15,7 +15,7 @@ public class Item {
     private long id;
 
     private String category;
-    private int quantitiy;
+    private int quantity;
     private long pricePerUnit;
 
 }
