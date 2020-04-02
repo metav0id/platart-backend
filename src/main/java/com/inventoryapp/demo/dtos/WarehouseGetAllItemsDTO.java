@@ -8,7 +8,9 @@ public class WarehouseGetAllItemsDTO {
     private int quantitiy;
     private long pricePerUnit;
 
-    public WarehouseGetAllItemsDTO (String category, int quantitiy, long pricePerUnit){
+    public WarehouseGetAllItemsDTO() {
+    }
+        public WarehouseGetAllItemsDTO (String category, int quantitiy, long pricePerUnit){
         this.category = category;
         this.quantitiy = quantitiy;
         this.pricePerUnit = pricePerUnit;
