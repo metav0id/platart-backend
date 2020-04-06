@@ -5,6 +5,7 @@ import com.inventoryapp.demo.services.NewDeliveryOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -25,7 +26,15 @@ public class NewDeliveryOrderController {
      */
     @PostMapping("/getAllNewOrderItems")
     public List<NewDeliveryOrderItemDTO> getAllNewOrderItems(){
-        return newDeliveryOrderService.getAllDeliveryOrderItems();
+        List<NewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList = new ArrayList<>();
+        System.out.println("Controller1:");
+        System.out.println(newDeliveryOrderItemDTOList);
+        newDeliveryOrderItemDTOList = newDeliveryOrderService.getAllDeliveryOrderItems();
+
+        System.out.println("Controller2:");
+        System.out.println(newDeliveryOrderItemDTOList);
+
+        return newDeliveryOrderItemDTOList;
     }
 
     @PostMapping("/setAllNewOrderItems")

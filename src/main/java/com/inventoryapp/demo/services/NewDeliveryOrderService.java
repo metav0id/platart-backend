@@ -26,12 +26,18 @@ public class NewDeliveryOrderService {
     public List<NewDeliveryOrderItemDTO> getAllDeliveryOrderItems(){
         List<NewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
         List<NewDeliveryOrderItem> deliveryOrderItemsEntities = this.newDeliveryOrderRepository.findAll();
+        System.out.println("Service1:");
+        System.out.println(deliveryOrderItemsEntities);
+
 
         if(deliveryOrderItemsEntities.size()>0){
             deliveryOrderItemDTOS = convertEntitiesToDtos(deliveryOrderItemsEntities);
+            System.out.println("Service if");
         } else {
             System.out.println("----> No items found in Data Base for new order <----");
         }
+        System.out.println("Service:");
+        System.out.println(deliveryOrderItemDTOS);
         return deliveryOrderItemDTOS;
     }
 
@@ -53,6 +59,7 @@ public class NewDeliveryOrderService {
      */
     public List<NewDeliveryOrderItemDTO> convertEntitiesToDtos(List<NewDeliveryOrderItem> deliveryOrderItemsEntities){
         List<NewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
+
         for(NewDeliveryOrderItem item: deliveryOrderItemsEntities){
             NewDeliveryOrderItemDTO newDeliveryOrderItemDTO = new NewDeliveryOrderItemDTO();
             newDeliveryOrderItemDTO.setId(item.getId());
@@ -61,6 +68,8 @@ public class NewDeliveryOrderService {
             newDeliveryOrderItemDTO.setDeliveryPricePerUnit(item.getDeliveryPricePerUnit());
             newDeliveryOrderItemDTO.setDeliveryDiscount(item.getDeliveryDiscount());
             newDeliveryOrderItemDTO.setDeliveryFinalPricePerUnit(item.getDeliveryFinalPricePerUnit());
+
+            deliveryOrderItemDTOS.add(newDeliveryOrderItemDTO);
         }
         return deliveryOrderItemDTOS;
     }
@@ -80,6 +89,8 @@ public class NewDeliveryOrderService {
             newDeliveryOrderItem.setDeliveryPricePerUnit(item.getDeliveryPricePerUnit());
             newDeliveryOrderItem.setDeliveryDiscount(item.getDeliveryDiscount());
             newDeliveryOrderItem.setDeliveryFinalPricePerUnit(item.getDeliveryFinalPricePerUnit());
+
+            deliveryOrderItemEntityLists.add(newDeliveryOrderItem);
         }
         return deliveryOrderItemEntityLists;
     }

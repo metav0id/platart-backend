@@ -3,6 +3,7 @@ package com.inventoryapp.demo.entities;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Data
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 public class NewDeliveryOrderItem {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     private String category;
