@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class WarehouseServiceTest {
@@ -21,6 +23,18 @@ public class WarehouseServiceTest {
 
     @Test
     public void  getAllStockItemsTest(){
+        Item itemEntity = new Item();
+        Item itemEntity1 = new Item();
+
+        warehouseRepository.save(itemEntity);
+        warehouseRepository.save(itemEntity1);
+
+        WarehouseService warehouseService = new WarehouseService(warehouseRepository);
+
+        List<WarehouseGetAllItemsDTO> listItems = warehouseService.getAllStockItems();
+        System.out.println(listItems.size());
+
+        Assert.assertEquals(listItems.size(), 2);
 
 
 
