@@ -2,7 +2,7 @@ package com.inventoryapp.demo.services;
 
 import com.inventoryapp.demo.dtos.WarehouseSupplierItemDTO;
 import com.inventoryapp.demo.entities.WarehouseSupplierItem;
-import com.inventoryapp.demo.repositories.WarehouseNewDeliverySupplierRepository;
+import com.inventoryapp.demo.repositories.WarehouseDeliverySupplierRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import java.util.List;
 @DataJpaTest
 public class WarehouseDeliverySupplierServiceTest {
     @Autowired
-    WarehouseNewDeliverySupplierRepository warehouseNewDeliverySupplierRepository;
+    WarehouseDeliverySupplierRepository warehouseDeliverySupplierRepository;
 
     @Before
     public void setUp(){
@@ -34,22 +34,12 @@ public class WarehouseDeliverySupplierServiceTest {
         list.add(item1);
         list.add(item2);
 
-        warehouseNewDeliverySupplierRepository.saveAll(list);
-        Iterable<WarehouseSupplierItem> listDatabase = warehouseNewDeliverySupplierRepository.findAll();
+        warehouseDeliverySupplierRepository.saveAll(list);
+        Iterable<WarehouseSupplierItem> listDatabase = warehouseDeliverySupplierRepository.findAll();
         List<WarehouseSupplierItem> listNew = new ArrayList<>();
         for(WarehouseSupplierItem item : listDatabase){
             listNew.add(item);
         }
         Assert.assertEquals(2, listNew.size());
-    }
-
-    @Test
-    public void serviceTest(){
-        WarehouseSupplierItemDTO itemDTO1 = new WarehouseSupplierItemDTO("Earring", 50, 30, 1500, "Enrico");
-        WarehouseSupplierItemDTO itemDTO2 = new WarehouseSupplierItemDTO("Necklace", 10, 200, 2000, "Alonzo");
-        List<WarehouseSupplierItemDTO> listDTO = new ArrayList<>();
-        listDTO.add(itemDTO1);
-        listDTO.add(itemDTO2);
-
     }
 }

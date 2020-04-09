@@ -3,7 +3,7 @@ package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.WarehouseSupplierItemDTO;
 import com.inventoryapp.demo.entities.WarehouseSupplierItem;
-import com.inventoryapp.demo.repositories.WarehouseNewDeliverySupplierRepository;
+import com.inventoryapp.demo.repositories.WarehouseDeliverySupplierRepository;
 import com.inventoryapp.demo.services.WarehouseDeliverySupplierService;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class WarehouseControllerTest {
     @Mock
-    private WarehouseNewDeliverySupplierRepository warehouseNewDeliverySupplierRepository;
+    private WarehouseDeliverySupplierRepository warehouseDeliverySupplierRepository;
 
     @InjectMocks
     private WarehouseDeliverySupplierService warehouseDeliverySupplierService;
@@ -36,10 +36,9 @@ public class WarehouseControllerTest {
         listDTO.add(itemDTO1);
         listDTO.add(itemDTO2);
 
-//        Mockito.doNothing().when(warehouseNewDeliverySupplierRepository).saveAll(Mockito.anyList());
         List<WarehouseSupplierItem> warehouseSupplierItem = new ArrayList<>();
-        Mockito.when(warehouseNewDeliverySupplierRepository.saveAll(Mockito.anyList())).thenReturn(warehouseSupplierItem);
+        Mockito.when(warehouseDeliverySupplierRepository.saveAll(Mockito.anyList())).thenReturn(warehouseSupplierItem);
         warehouseDeliverySupplierService.saveListDeliverySuppliers(listDTO);
-        Mockito.verify(warehouseNewDeliverySupplierRepository, Mockito.times(1)).saveAll(Mockito.anyList());
+        Mockito.verify(warehouseDeliverySupplierRepository, Mockito.times(1)).saveAll(Mockito.anyList());
     }
 }
