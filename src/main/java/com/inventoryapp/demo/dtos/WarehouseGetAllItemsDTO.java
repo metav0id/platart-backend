@@ -8,7 +8,7 @@ import javax.persistence.Id;
 @Data
 public class WarehouseGetAllItemsDTO {
     private String category;
-    private int quantity;
+    private long quantity;
     private long pricePerUnit;
     @Id
     @GeneratedValue
@@ -16,7 +16,7 @@ public class WarehouseGetAllItemsDTO {
     public WarehouseGetAllItemsDTO() {
     }
 
-    public WarehouseGetAllItemsDTO(String category, int quantity, long pricePerUnit) {
+    public WarehouseGetAllItemsDTO(String category, long quantity, long pricePerUnit) {
         this.category = category;
         this.quantity = quantity;
         this.pricePerUnit = pricePerUnit;
