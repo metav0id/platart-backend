@@ -1,11 +1,16 @@
 package com.inventoryapp.demo.services;
 
 import com.inventoryapp.demo.dtos.NewDeliveryOrderItemDTO;
+import com.inventoryapp.demo.entities.Item;
 import com.inventoryapp.demo.entities.NewDeliveryOrderItem;
+import com.inventoryapp.demo.entities.WarehouseSendDeliveryOrderItem;
 import com.inventoryapp.demo.repositories.NewDeliveryOrderRepository;
+import com.inventoryapp.demo.repositories.WarehouseRepository;
+import com.inventoryapp.demo.repositories.WarehouseShopDeliveryOrdersSend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +18,15 @@ import java.util.List;
 public class NewDeliveryOrderService {
 
     private NewDeliveryOrderRepository newDeliveryOrderRepository;
+    private WarehouseRepository warehouseRepository;
+
+    public NewDeliveryOrderService(NewDeliveryOrderRepository newDeliveryOrderRepository, WarehouseRepository warehouseRepository) {
+        this.newDeliveryOrderRepository = newDeliveryOrderRepository;
+        this.warehouseRepository = warehouseRepository;
+    }
 
     @Autowired
-    public NewDeliveryOrderService(NewDeliveryOrderRepository newDeliveryOrderRepository) {
-        this.newDeliveryOrderRepository = newDeliveryOrderRepository;
-    }
+
 
     /**
      * Get all items in the current delivery order list.
@@ -51,6 +60,49 @@ public class NewDeliveryOrderService {
         System.out.println("New Delivery Order Service:");
         this.newDeliveryOrderRepository.deleteAll();
         this.newDeliveryOrderRepository.saveAll(newDeliveryOrderItemEntitiesList);
+    }
+
+    public void sendDeliveryOrder(){
+        List<NewDeliveryOrderItem> currentDeliveryOrderItemEntitiesList = this.newDeliveryOrderRepository.findAll();
+        System.out.println("sendDeliveryOrder - service");
+
+        System.out.println("WarehouseRepository item output:");
+        List<Long> modifiedItems =  new ArrayList<>();
+
+        //update the item amount on the warehouse table and add them to the OrderSendTable
+        LocalDateTime newDeliveryDateTime = LocalDateTime.now();
+        for(NewDeliveryOrderItem itemOnList: currentDeliveryOrderItemEntitiesList){
+            Item itemWarehouse = this.warehouseRepository.findByCategoryAndPricePerUnit(itemOnList.getCategory(), itemOnList.getDeliveryFinalPricePerUnit());
+
+            if(itemWarehouse.getQuantity() >= itemOnList.getDeliveryQuantity()){
+                int newWarehouseQuantity = itemWarehouse.getQuantity()-itemOnList.getDeliveryQuantity();
+                itemWarehouse.setQuantity(newWarehouseQuantity);
+
+                modifiedItems.add(itemOnList.getId());
+                this.warehouseRepository.save(itemWarehouse);
+
+                WarehouseSendDeliveryOrderItem deliveryItemSend = new WarehouseSendDeliveryOrderItem();
+                deliveryItemSend.setId(itemOnList.getId());
+                deliveryItemSend.setCategory(itemOnList.getCategory());
+                deliveryItemSend.setDeliveryDisplayPricePerUnit(itemOnList.getDeliveryDisplayPricePerUnit());
+                deliveryItemSend.setDeliveryDiscount(itemOnList.getDeliveryDiscount());
+                deliveryItemSend.setDeliveryFinalPricePerUnit(itemOnList.getDeliveryFinalPricePerUnit());
+                deliveryItemSend.setDeliverySending(newDeliveryDateTime);
+                deliveryItemSend.setDeliveryQuantity(itemOnList.getDeliveryQuantity());
+                deliveryItemSend.setShop("SomeShop");
+            } else {
+                System.out.println("The operation is not possible for element" + itemOnList.getCategory() + ", "+ itemOnList.getCategory());
+            }
+        }
+
+        //remove the items, which were removable from the order list
+        for(NewDeliveryOrderItem itemOnList: currentDeliveryOrderItemEntitiesList){
+            if(modifiedItems.contains(itemOnList.getId())){
+                this.newDeliveryOrderRepository.delete(itemOnList);
+                System.out.println("Element deleted from order list");
+            }
+        }
+
     }
 
     /**

@@ -61,4 +61,12 @@ public class NewDeliveryOrderController {
 
         return this.warehouseVerifyAmountItemsOnStockService.verifyAmountItemsOnStock(verifyAmountItemsOnStockDTO);
     }
+
+    /**
+     * Save current list of Orders.
+     */
+    @PostMapping("sendDeliveryOrder")
+    public void sendDeliveryOrder(){
+        this.newDeliveryOrderService.sendDeliveryOrder();
+    }
 }

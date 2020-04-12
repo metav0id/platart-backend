@@ -6,8 +6,6 @@ import com.inventoryapp.demo.repositories.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLOutput;
-
 @Service
 public class WarehouseVerifyAmountItemsOnStockService {
 
