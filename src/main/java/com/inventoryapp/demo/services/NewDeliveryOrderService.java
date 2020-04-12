@@ -46,14 +46,11 @@ public class NewDeliveryOrderService {
      * @return
      */
     public void setAllDeliveryOrderItems(List<NewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList) {
-        List<NewDeliveryOrderItem> newDeliveryOrderItemEntitiesList = new ArrayList<>();
-        newDeliveryOrderItemEntitiesList = convertDtosToEntities(newDeliveryOrderItemDTOList);
+        List<NewDeliveryOrderItem> newDeliveryOrderItemEntitiesList = convertDtosToEntities(newDeliveryOrderItemDTOList);
 
-        this.newDeliveryOrderRepository.deleteAll();
         System.out.println("New Delivery Order Service:");
-        System.out.println(newDeliveryOrderItemDTOList);
-        System.out.println(newDeliveryOrderItemEntitiesList);
-        // TODO: persist newDeliveryOrderItemEntitiesList
+        this.newDeliveryOrderRepository.deleteAll();
+        this.newDeliveryOrderRepository.saveAll(newDeliveryOrderItemEntitiesList);
     }
 
     /**
