@@ -17,10 +17,12 @@ import java.util.List;
 @Service
 public class NewDeliveryOrderService {
 
+    private WarehouseShopDeliveryOrdersSend warehouseShopDeliveryOrdersSend;
     private NewDeliveryOrderRepository newDeliveryOrderRepository;
     private WarehouseRepository warehouseRepository;
 
-    public NewDeliveryOrderService(NewDeliveryOrderRepository newDeliveryOrderRepository, WarehouseRepository warehouseRepository) {
+    public NewDeliveryOrderService(WarehouseShopDeliveryOrdersSend warehouseShopDeliveryOrdersSend, NewDeliveryOrderRepository newDeliveryOrderRepository, WarehouseRepository warehouseRepository) {
+        this.warehouseShopDeliveryOrdersSend = warehouseShopDeliveryOrdersSend;
         this.newDeliveryOrderRepository = newDeliveryOrderRepository;
         this.warehouseRepository = warehouseRepository;
     }
@@ -90,6 +92,7 @@ public class NewDeliveryOrderService {
                 deliveryItemSend.setDeliverySending(newDeliveryDateTime);
                 deliveryItemSend.setDeliveryQuantity(itemOnList.getDeliveryQuantity());
                 deliveryItemSend.setShop("SomeShop");
+                this.warehouseShopDeliveryOrdersSend.save(deliveryItemSend);
             } else {
                 System.out.println("The operation is not possible for element" + itemOnList.getCategory() + ", "+ itemOnList.getCategory());
             }
