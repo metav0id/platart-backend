@@ -13,18 +13,18 @@ public class NewDeliveryOrderItemDTO {
 
     private String category;
     private int deliveryQuantity;
-    private long deliveryPricePerUnit;
+    private long deliveryDisplayPricePerUnit;
     private int deliveryDiscount;
     private long deliveryFinalPricePerUnit;
 
     public NewDeliveryOrderItemDTO() {
     }
 
-    public NewDeliveryOrderItemDTO(Long id, String category, int deliveryQuantity, long deliveryPricePerUnit, int deliveryDiscount, long deliveryFinalPricePerUnit) {
+    public NewDeliveryOrderItemDTO(Long id, String category, int deliveryQuantity, long deliveryDisplayPricePerUnit, int deliveryDiscount, long deliveryFinalPricePerUnit) {
         this.id = id;
         this.category = category;
         this.deliveryQuantity = deliveryQuantity;
-        this.deliveryPricePerUnit = deliveryPricePerUnit;
+        this.deliveryDisplayPricePerUnit = deliveryDisplayPricePerUnit;
         this.deliveryDiscount = deliveryDiscount;
         this.deliveryFinalPricePerUnit = deliveryFinalPricePerUnit;
     }

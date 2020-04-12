@@ -50,6 +50,10 @@ public class NewDeliveryOrderService {
         newDeliveryOrderItemEntitiesList = convertDtosToEntities(newDeliveryOrderItemDTOList);
 
         this.newDeliveryOrderRepository.deleteAll();
+        System.out.println("New Delivery Order Service:");
+        System.out.println(newDeliveryOrderItemDTOList);
+        System.out.println(newDeliveryOrderItemEntitiesList);
+        // TODO: persist newDeliveryOrderItemEntitiesList
     }
 
     /**
@@ -65,7 +69,7 @@ public class NewDeliveryOrderService {
             newDeliveryOrderItemDTO.setId(item.getId());
             newDeliveryOrderItemDTO.setCategory(item.getCategory());
             newDeliveryOrderItemDTO.setDeliveryQuantity(item.getDeliveryQuantity());
-            newDeliveryOrderItemDTO.setDeliveryPricePerUnit(item.getDeliveryPricePerUnit());
+            newDeliveryOrderItemDTO.setDeliveryDisplayPricePerUnit(item.getDeliveryDisplayPricePerUnit());
             newDeliveryOrderItemDTO.setDeliveryDiscount(item.getDeliveryDiscount());
             newDeliveryOrderItemDTO.setDeliveryFinalPricePerUnit(item.getDeliveryFinalPricePerUnit());
 
@@ -86,7 +90,7 @@ public class NewDeliveryOrderService {
             newDeliveryOrderItem.setId(item.getId());
             newDeliveryOrderItem.setCategory(item.getCategory());
             newDeliveryOrderItem.setDeliveryQuantity(item.getDeliveryQuantity());
-            newDeliveryOrderItem.setDeliveryPricePerUnit(item.getDeliveryPricePerUnit());
+            newDeliveryOrderItem.setDeliveryDisplayPricePerUnit(item.getDeliveryDisplayPricePerUnit());
             newDeliveryOrderItem.setDeliveryDiscount(item.getDeliveryDiscount());
             newDeliveryOrderItem.setDeliveryFinalPricePerUnit(item.getDeliveryFinalPricePerUnit());
 
