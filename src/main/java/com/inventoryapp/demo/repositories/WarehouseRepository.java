@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WarehouseRepository extends JpaRepository<Item,Long> {
     Item findByCategory (String category);
+    Item findByCategoryAndPricePerUnit (String category, Long pricePerUnit);
 }

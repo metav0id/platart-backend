@@ -1,7 +1,9 @@
 package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.NewDeliveryOrderItemDTO;
+import com.inventoryapp.demo.dtos.VerifyAmountItemsOnStockDTO;
 import com.inventoryapp.demo.services.NewDeliveryOrderService;
+import com.inventoryapp.demo.services.WarehouseVerifyAmountItemsOnStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +16,14 @@ import java.util.List;
 public class NewDeliveryOrderController {
 
     private NewDeliveryOrderService newDeliveryOrderService;
+    private WarehouseVerifyAmountItemsOnStockService warehouseVerifyAmountItemsOnStockService;
 
     @Autowired
-    public NewDeliveryOrderController(NewDeliveryOrderService newDeliveryOrderService) {
+    public NewDeliveryOrderController(NewDeliveryOrderService newDeliveryOrderService, WarehouseVerifyAmountItemsOnStockService warehouseVerifyAmountItemsOnStockService) {
         this.newDeliveryOrderService = newDeliveryOrderService;
+        this.warehouseVerifyAmountItemsOnStockService = warehouseVerifyAmountItemsOnStockService;
     }
+
 
     /**
      * REST Post-Request of all new order items.
@@ -37,8 +42,23 @@ public class NewDeliveryOrderController {
         return newDeliveryOrderItemDTOList;
     }
 
+    /**
+     * Reset the localy persisted NewOrderList.
+     * @param newDeliveryOrderItemDTOList
+     */
     @PostMapping("/setAllNewOrderItems")
     public void setAllNewOrderItems(@RequestBody List<NewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
         newDeliveryOrderService.setAllDeliveryOrderItems(newDeliveryOrderItemDTOList);
+    }
+
+    /**
+     * Get an object with the available amount of items, for a given category and price.
+     * @param verifyAmountItemsOnStockDTO
+     * @return
+     */
+    @PostMapping("verifyAmountItemsOnStock")
+    public VerifyAmountItemsOnStockDTO verifyAmountItemsOnStock(@RequestBody VerifyAmountItemsOnStockDTO verifyAmountItemsOnStockDTO){
+
+        return this.warehouseVerifyAmountItemsOnStockService.verifyAmountItemsOnStock(verifyAmountItemsOnStockDTO);
     }
 }
