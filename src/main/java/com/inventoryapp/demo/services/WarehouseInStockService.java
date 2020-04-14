@@ -65,11 +65,44 @@ public class WarehouseInStockService {
         Item itemEntity = covertToEntity(itemDTO);
         warehouseRepository.save(itemEntity);
     }*/
-
     public void saveListToIntenvoryStock(List<WarehouseSupplierItemDTO> itemListDTO) {
         //Remove all duplicates from DTO list and cumulate quantities per category and pricePerUnit
-        List<WarehouseStockItem> itemListEntity = removeDuplicates(itemListDTO);
+        List<WarehouseStockItem> listStockItemsWithoutDuplicates = removeDuplicates(itemListDTO);
 
+        // Step 1 Get stock for each category and fill list
+        System.out.println("Loading stock inventory for categories and pricePerUnits mentioned in supplier list...");
+        List<WarehouseStockItem> listStockDatabase = new ArrayList<>();
+        for (WarehouseStockItem item : listStockItemsWithoutDuplicates) {
+            WarehouseStockItem newItem = warehouseRepository.findItemByCategoryAndPricePerUnit(item.getCategory(), item.getPricePerUnit());
+            //If an item with a certain category and pricePerUnit is not available in stock inventory it will be added
+            if (newItem != null) {
+                listStockDatabase.add(newItem);
+            }
+        }
+        System.out.println("List loaded.");
+
+        //Step 2 cumulate for each category and PricePerUnit new quantity on list.
+        // If not existing in stock initialize as new category and pricePerUnit with quantity
+        System.out.println("Cumulating quantities in list...");
+        for (WarehouseStockItem item : listStockItemsWithoutDuplicates) {
+            listStockDatabase.stream().filter(o -> item.getCategory().equals(o.getCategory()) &&
+                    item.getPricePerUnit() == o.getPricePerUnit()).forEach(o -> o.setQuantity(o.getQuantity() + item.getQuantity()));
+            if (listStockDatabase.stream().noneMatch(o -> item.getCategory().equals(o.getCategory()) &&
+                    item.getPricePerUnit() == o.getPricePerUnit())) {
+                listStockDatabase.add(item);
+            }
+        }
+        System.out.println("Cumulation finished.");
+
+        //Step 3 persist new stock list to inventory table
+        System.out.println("Saving new cumulated stock list to database...");
+        for (WarehouseStockItem item : listStockDatabase) {
+            int modifiedRow = warehouseRepository.updateStock(item.getCategory(), item.getPricePerUnit(), item.getQuantity());
+            if (modifiedRow == 0) {
+                warehouseRepository.save(item);
+            }
+        }
+        System.out.println("Saving successful.");
     }
 
     private List<WarehouseStockItem> removeDuplicates(List<WarehouseSupplierItemDTO> itemListDTO) {
@@ -117,7 +150,6 @@ public class WarehouseInStockService {
         item.setQuantity(itemDto.getQuantity());
         return item;
     }*/
-
     private WarehouseStockItem covertToEntity(WarehouseSupplierItemDTO itemDto) {
         WarehouseStockItem item = new WarehouseStockItem();
         item.setCategory(itemDto.getCategory());

@@ -154,14 +154,16 @@ public class WarehouseInStockServiceTest {
         warehouseRepository.saveAll(tempListDatabase);
 
         // Step 1 Get stock for each category and fill list
+        System.out.println("Loading stock inventory for categories and pricePerUnits mentioned in supplier list...");
         List<WarehouseStockItem> listStockDatabase = new ArrayList<>();
         for (WarehouseStockItem item : listStockItemsWithoutDuplicates) {
             WarehouseStockItem newItem = warehouseRepository.findItemByCategoryAndPricePerUnit(item.getCategory(), item.getPricePerUnit());
+            //If an item with a certain category and pricePerUnit is not available in stock inventory it will be added
             if(newItem != null){
                 listStockDatabase.add(newItem);
             }
         }
-        System.out.println(listStockDatabase);
+        System.out.println("List loaded.");
 
         // Test 1
         boolean isEqualCategoryAndPricePerUnitItem1 = listStockDatabase.get(0).getCategory().equals(item1.getCategory()) &&
@@ -181,6 +183,7 @@ public class WarehouseInStockServiceTest {
 
         //Step 2 cumulate for each category and PricePerUnit new quantity on list.
         // If not existing in stock initialize as new category and pricePerUnit with quantity
+        System.out.println("Cumulating quantities in list...");
         for (WarehouseStockItem item : listStockItemsWithoutDuplicates) {
             listStockDatabase.stream().filter(o -> item.getCategory().equals(o.getCategory()) &&
                     item.getPricePerUnit() == o.getPricePerUnit()).forEach(o -> o.setQuantity(o.getQuantity() + item.getQuantity()));
@@ -189,6 +192,8 @@ public class WarehouseInStockServiceTest {
                 listStockDatabase.add(item);
             }
         }
+        System.out.println("Cumulation finished.");
+
         //Test 2
         Assert.assertEquals(150,listStockDatabase.get(0).getQuantity());
         Assert.assertEquals(175,listStockDatabase.get(1).getQuantity());
@@ -200,12 +205,14 @@ public class WarehouseInStockServiceTest {
         Assert.assertEquals(113, listStockDatabase.get(4).getQuantity());
 
         //Step 3 persist new stock list to inventory table
+        System.out.println("Saving new cumulated stock list to database...");
         for(WarehouseStockItem item : listStockDatabase){
             int modifiedRow = warehouseRepository.updateStock(item.getCategory(), item.getPricePerUnit(), item.getQuantity());
             if(modifiedRow == 0){
                 warehouseRepository.save(item);
             }
         }
+        System.out.println("Saving successful.");
 
         //Test 3
         System.out.println("Table from database:");
