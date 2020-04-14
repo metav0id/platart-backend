@@ -1,9 +1,9 @@
 package com.inventoryapp.demo.services;
 
 import com.inventoryapp.demo.dtos.NewDeliveryOrderItemDTO;
-import com.inventoryapp.demo.entities.Item;
 import com.inventoryapp.demo.entities.NewDeliveryOrderItem;
 import com.inventoryapp.demo.entities.WarehouseSendDeliveryOrderItem;
+import com.inventoryapp.demo.entities.WarehouseStockItem;
 import com.inventoryapp.demo.repositories.NewDeliveryOrderRepository;
 import com.inventoryapp.demo.repositories.WarehouseRepository;
 import com.inventoryapp.demo.repositories.WarehouseShopDeliveryOrdersSend;
@@ -74,10 +74,10 @@ public class NewDeliveryOrderService {
         //update the item amount on the warehouse table and add them to the OrderSendTable
         LocalDateTime newDeliveryDateTime = LocalDateTime.now();
         for(NewDeliveryOrderItem itemOnList: currentDeliveryOrderItemEntitiesList){
-            Item itemWarehouse = this.warehouseRepository.findByCategoryAndPricePerUnit(itemOnList.getCategory(), itemOnList.getDeliveryFinalPricePerUnit());
+            WarehouseStockItem itemWarehouse = this.warehouseRepository.findItemByCategoryAndPricePerUnit(itemOnList.getCategory(), itemOnList.getDeliveryFinalPricePerUnit());
 
             if(itemWarehouse.getQuantity() >= itemOnList.getDeliveryQuantity()){
-                int newWarehouseQuantity = itemWarehouse.getQuantity()-itemOnList.getDeliveryQuantity();
+                long newWarehouseQuantity = itemWarehouse.getQuantity()-itemOnList.getDeliveryQuantity();
                 itemWarehouse.setQuantity(newWarehouseQuantity);
 
                 modifiedItems.add(itemOnList.getId());

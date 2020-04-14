@@ -6,6 +6,6 @@ import lombok.Data;
 public class VerifyAmountItemsOnStockDTO {
 
     private String category;
-    private int quantity;
+    private long quantity;
     private Long pricePerUnit;
 }
