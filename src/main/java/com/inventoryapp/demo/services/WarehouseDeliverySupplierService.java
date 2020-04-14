@@ -14,6 +14,10 @@ public class WarehouseDeliverySupplierService {
 
     @Autowired
     WarehouseDeliverySupplierRepository warehouseDeliverySupplierRepository;
+
+    @Autowired
+    WarehouseInStockService warehouseInStockService;
+
     /**
      * This method persists the list from warehouse of new items from suppliers
      * @param listDTO DTO of new item list
@@ -29,5 +33,11 @@ public class WarehouseDeliverySupplierService {
         }
         warehouseDeliverySupplierRepository.saveAll(listEntity);
         System.out.println("Successfully saved!");
+        this.transferListToStock(listDTO);
+    }
+
+    public void transferListToStock(List<WarehouseSupplierItemDTO> listDTO){
+        System.out.println("Transferring list to stock inventory...");
+        warehouseInStockService.saveListToIntenvoryStock(listDTO);
     }
 }
