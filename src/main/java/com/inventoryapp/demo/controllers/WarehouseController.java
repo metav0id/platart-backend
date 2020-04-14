@@ -36,14 +36,6 @@ public class WarehouseController {
 
         List<WarehouseGetAllItemsDTO> warehouseItemList = warehouseInStockService.getAllStockItems();
 
-//        List<WarehouseGetAllItemsDTO> warehouseItemList = new ArrayList<>();
-////        WarehouseGetAllItemsDTO item1 = new WarehouseGetAllItemsDTO("necklace-5Dollar", 10, 500);
-////        WarehouseGetAllItemsDTO item2 = new WarehouseGetAllItemsDTO("bracelet-3Dollar", 20, 300);
-////        WarehouseGetAllItemsDTO item3 = new WarehouseGetAllItemsDTO("shoes-20Dollar", 8, 2000);
-////        warehouseItemList.add(item1);
-////        warehouseItemList.add(item2);
-////        warehouseItemList.add(item3);
-
         return warehouseItemList;
     }
 
