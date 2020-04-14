@@ -227,4 +227,13 @@ public class WarehouseInStockServiceTest {
             System.out.println(item);
         }
     }
+
+    @Test
+    public void updateRecordInDatabase(){
+        WarehouseStockItem item1 = new WarehouseStockItem("Bracelet", 100, 10);
+
+        int modified = warehouseRepository.updateStock(item1.getCategory(), item1.getPricePerUnit(), item1.getQuantity());
+
+        System.out.println("Result modification: " + modified);
+    }
 }
