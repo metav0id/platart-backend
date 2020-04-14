@@ -1,12 +1,9 @@
 package com.inventoryapp.demo.services;
 
 import com.inventoryapp.demo.dtos.WarehouseSupplierItemDTO;
-import com.inventoryapp.demo.entities.WarehouseStockItem;
 import com.inventoryapp.demo.entities.WarehouseSupplierItem;
 import com.inventoryapp.demo.repositories.WarehouseDeliverySupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,6 +38,6 @@ public class WarehouseDeliverySupplierService {
 
     public void transferListToStock(List<WarehouseSupplierItemDTO> listDTO){
         System.out.println("Transferring list to stock inventory...");
-        warehouseInStockService.enterNewList(listDTO);
+        warehouseInStockService.saveListToIntenvoryStock(listDTO);
     }
 }

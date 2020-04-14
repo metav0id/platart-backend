@@ -66,32 +66,44 @@ public class WarehouseInStockService {
         warehouseRepository.save(itemEntity);
     }*/
 
-    public void enterNewList(List<WarehouseSupplierItemDTO> itemListDTO) {
-        // 1. transfer WarehouseSupplierDTO to WarehouseStockItem List
-        List<WarehouseStockItem> listStockItem = new ArrayList<>();
-        for(WarehouseSupplierItemDTO item : itemListDTO){
-            listStockItem.add(this.covertToEntity(item));
+    public void saveListToIntenvoryStock(List<WarehouseSupplierItemDTO> itemListDTO) {
+        //Remove all duplicates from DTO list and cumulate quantities per category and pricePerUnit
+        List<WarehouseStockItem> itemListEntity = removeDuplicates(itemListDTO);
+
+    }
+
+    private List<WarehouseStockItem> removeDuplicates(List<WarehouseSupplierItemDTO> itemListDTO) {
+        // 1. transfer WarehouseSupplierDTO to WarehouseStockItem List as reference table
+        List<WarehouseStockItem> listStockItemsContainingDuplicates = new ArrayList<>();
+
+        for (WarehouseSupplierItemDTO item : itemListDTO) {
+            listStockItemsContainingDuplicates.add(this.covertToEntity(item));
         }
-        // 2, Identify duplicates by category and price. So cumulate quantity.
-        //TODO Enrico-09.04.2020: summarize all items on list by category and price. So first identify duplicates.
-        List<WarehouseStockItem> newListStockItem = new ArrayList<>();
-        for(WarehouseStockItem item : listStockItem){
-            if(newListStockItem.contains(item)){
-                int tempIndex = newListStockItem.indexOf(item);
-                System.out.println("Duplicate at index: " + tempIndex);
-                System.out.println("Old quantitiy: " + newListStockItem.get(tempIndex).getQuantity());
-                long tempSumQuantity = item.getQuantity() + newListStockItem.get(tempIndex).getQuantity();
-                newListStockItem.get(tempIndex).setQuantity(tempSumQuantity);
-                System.out.println("New quantitiy: " + newListStockItem.get(tempIndex).getQuantity());
+
+        // 2. Identify duplicates by category and price. So cumulate quantity.
+        List<WarehouseStockItem> listStockItemsWithoutDuplicates = new ArrayList<>();
+        //Build list without duplicates containing categories and pricePerUnit
+        for (WarehouseStockItem outerItem : listStockItemsContainingDuplicates) {
+            if (listStockItemsWithoutDuplicates.stream().noneMatch(o -> o.getCategory().equals(outerItem.getCategory()) &&
+                    o.getPricePerUnit() == outerItem.getPricePerUnit())) {
+                WarehouseStockItem newItem = new WarehouseStockItem();
+                newItem.setCategory(outerItem.getCategory());
+                newItem.setPricePerUnit(outerItem.getPricePerUnit());
+                listStockItemsWithoutDuplicates.add(newItem);
             }
         }
 
-        //TODO find products in stock with same category and pricePerUnit and cumulate
+        // 3. Iterrate through stock list with duplicates and cumulate quantities in new list without duplicates
+        for (WarehouseStockItem outerItem : listStockItemsContainingDuplicates) {
+            listStockItemsWithoutDuplicates.stream().filter(o -> o.getCategory().equals(outerItem.getCategory()) &&
+                    o.getPricePerUnit() == outerItem.getPricePerUnit()).forEach(o -> {
+                o.setQuantity(o.getQuantity() + outerItem.getQuantity());
+            });
+        }
 
-
-        /*List<WarehouseStockItem> listFromStock = warehouseRepository.findByCategory()
-        warehouseRepository.save(itemEntity);*/
+        return listStockItemsWithoutDuplicates;
     }
+
 
     /**
      * This method turns a DTO into an entity.

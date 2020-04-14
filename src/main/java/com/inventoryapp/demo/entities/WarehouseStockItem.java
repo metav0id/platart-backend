@@ -18,4 +18,12 @@ public class WarehouseStockItem {
     private long quantity;
     private long pricePerUnit;
 
+    public WarehouseStockItem() {
+    }
+
+    public WarehouseStockItem(String category, long quantity, long pricePerUnit) {
+        this.category = category;
+        this.quantity = quantity;
+        this.pricePerUnit = pricePerUnit;
+    }
 }
