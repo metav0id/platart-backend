@@ -3,7 +3,7 @@ package com.inventoryapp.demo.controllers;
 import com.inventoryapp.demo.dtos.WarehouseSupplierItemDTO;
 import com.inventoryapp.demo.dtos.WarehouseGetAllItemsDTO;
 import com.inventoryapp.demo.services.WarehouseDeliverySupplierService;
-import com.inventoryapp.demo.services.WarehouseService;
+import com.inventoryapp.demo.services.WarehouseInStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +15,13 @@ import java.util.List;
 public class WarehouseController {
 
     @Autowired
-    private WarehouseService warehouseService;
+    private final WarehouseInStockService warehouseInStockService;
 
     @Autowired
     private WarehouseDeliverySupplierService warehouseDeliverySupplierService;
 
-    public WarehouseController(WarehouseService warehouseService) {
-        this.warehouseService = warehouseService;
+    public WarehouseController(WarehouseInStockService warehouseInStockService) {
+        this.warehouseInStockService = warehouseInStockService;
     }
 
     /**
@@ -33,9 +33,8 @@ public class WarehouseController {
 
     @PostMapping("/getallitems")
     public List<WarehouseGetAllItemsDTO> getAllItems() {
-        //TODO implement calling method to all items from service class
 
-        List<WarehouseGetAllItemsDTO> warehouseItemList = warehouseService.getAllStockItems();
+        List<WarehouseGetAllItemsDTO> warehouseItemList = warehouseInStockService.getAllStockItems();
 
 //        List<WarehouseGetAllItemsDTO> warehouseItemList = new ArrayList<>();
 ////        WarehouseGetAllItemsDTO item1 = new WarehouseGetAllItemsDTO("necklace-5Dollar", 10, 500);
