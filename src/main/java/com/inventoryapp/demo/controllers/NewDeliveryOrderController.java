@@ -68,5 +68,6 @@ public class NewDeliveryOrderController {
     @PostMapping("sendDeliveryOrder")
     public void sendDeliveryOrder(@RequestBody List<NewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
         this.newDeliveryOrderService.sendDeliveryOrder(newDeliveryOrderItemDTOList);
+        System.out.println("Controller shop: "+ newDeliveryOrderItemDTOList.get(0).getDeliveryShop());
     }
 }

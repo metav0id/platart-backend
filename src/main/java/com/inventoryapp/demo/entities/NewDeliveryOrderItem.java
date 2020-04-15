@@ -19,4 +19,6 @@ public class NewDeliveryOrderItem {
     private long deliveryDisplayPricePerUnit;
     private int deliveryDiscount;
     private long deliveryFinalPricePerUnit;
+    private String deliveryShop;
+
 }

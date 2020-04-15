@@ -21,14 +21,12 @@ public class NewDeliveryOrderService {
     private NewDeliveryOrderRepository newDeliveryOrderRepository;
     private WarehouseRepository warehouseRepository;
 
+    @Autowired
     public NewDeliveryOrderService(WarehouseShopDeliveryOrdersSend warehouseShopDeliveryOrdersSend, NewDeliveryOrderRepository newDeliveryOrderRepository, WarehouseRepository warehouseRepository) {
         this.warehouseShopDeliveryOrdersSend = warehouseShopDeliveryOrdersSend;
         this.newDeliveryOrderRepository = newDeliveryOrderRepository;
         this.warehouseRepository = warehouseRepository;
     }
-
-    @Autowired
-
 
     /**
      * Get all items in the current delivery order list.
@@ -95,7 +93,8 @@ public class NewDeliveryOrderService {
                 deliveryItemSend.setDeliveryFinalPricePerUnit(itemOnList.getDeliveryFinalPricePerUnit());
                 deliveryItemSend.setDeliverySending(newDeliveryDateTime);
                 deliveryItemSend.setDeliveryQuantity(itemOnList.getDeliveryQuantity());
-                deliveryItemSend.setShop("SomeShop");
+                deliveryItemSend.setShop(itemOnList.getDeliveryShop());
+                System.out.println(itemOnList.getDeliveryShop());
                 this.warehouseShopDeliveryOrdersSend.save(deliveryItemSend);
             } else {
                 System.out.println("The operation is not possible for element" + itemOnList.getCategory() + ", "+ itemOnList.getCategory());
@@ -149,6 +148,7 @@ public class NewDeliveryOrderService {
             newDeliveryOrderItem.setDeliveryDisplayPricePerUnit(item.getDeliveryDisplayPricePerUnit());
             newDeliveryOrderItem.setDeliveryDiscount(item.getDeliveryDiscount());
             newDeliveryOrderItem.setDeliveryFinalPricePerUnit(item.getDeliveryFinalPricePerUnit());
+            newDeliveryOrderItem.setDeliveryShop(item.getDeliveryShop());
 
             deliveryOrderItemEntityLists.add(newDeliveryOrderItem);
         }
