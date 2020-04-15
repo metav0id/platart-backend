@@ -39,26 +39,6 @@ public class WarehouseInStockServiceTest {
         Assert.assertEquals(listItems.size(), 2);
     }
 
-   /* @Test
-    public void enterNewItemTest() {
-
-        WarehouseGetAllItemsDTO itemDto = new WarehouseGetAllItemsDTO();
-        itemDto.setCategory("Aretes");
-        itemDto.setPricePerUnit(6);
-        itemDto.setQuantity(2);
-
-
-//        WarehouseInStockService warehouseInStockService = new WarehouseInStockService(warehouseRepository);
-        WarehouseInStockService warehouseInStockService = new WarehouseInStockService();
-
-        warehouseInStockService.enterNewItem(itemDto);
-
-        WarehouseStockItem itemDummy = warehouseRepository.findByCategory("Aretes");
-        Assert.assertEquals(itemDummy.getCategory(), itemDto.getCategory());
-
-
-    }*/
-
     @Test
     public void removeDuplicatesFromListDtoTest() {
         //Setup

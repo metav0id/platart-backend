@@ -38,6 +38,6 @@ public class WarehouseDeliverySupplierService {
 
     public void transferListToStock(List<WarehouseSupplierItemDTO> listDTO){
         System.out.println("Transferring list to stock inventory...");
-        warehouseInStockService.saveListToIntenvoryStock(listDTO);
+        warehouseInStockService.saveListToInventoryStock(listDTO);
     }
 }

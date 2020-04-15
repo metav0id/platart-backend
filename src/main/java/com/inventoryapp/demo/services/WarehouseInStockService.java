@@ -3,14 +3,11 @@ package com.inventoryapp.demo.services;
 import com.inventoryapp.demo.dtos.WarehouseGetAllItemsDTO;
 import com.inventoryapp.demo.dtos.WarehouseSupplierItemDTO;
 import com.inventoryapp.demo.entities.WarehouseStockItem;
-import com.inventoryapp.demo.entities.WarehouseSupplierItem;
 import com.inventoryapp.demo.repositories.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Service
 public class WarehouseInStockService {
@@ -18,7 +15,6 @@ public class WarehouseInStockService {
     @Autowired
     private WarehouseRepository warehouseRepository;
 
-    //TODO why is in constructor warehouseRepository needed when it is already declared as @Autowired?
     public WarehouseInStockService(WarehouseRepository warehouseRepository) {
         this.warehouseRepository = warehouseRepository;
     }
@@ -26,7 +22,6 @@ public class WarehouseInStockService {
     /**
      * This service gets all items in table Item from data base and turns them into a DTO list.
      */
-
     public List<WarehouseGetAllItemsDTO> getAllStockItems() {
         List<WarehouseStockItem> findAllItemsList = warehouseRepository.findAll();
         List<WarehouseGetAllItemsDTO> findAllItemsDTOList = new ArrayList<>();
@@ -37,13 +32,11 @@ public class WarehouseInStockService {
             System.out.println("----> No items found in the Data Base<----");
         }
         return findAllItemsDTOList;
-
     }
 
     /**
      * This service turns a list of entities into a list of DTOS.
      */
-
     private List<WarehouseGetAllItemsDTO> covertToDTO(List<WarehouseStockItem> findAllWarehouseStockItems) {
         List<WarehouseGetAllItemsDTO> listWarehouseItemsDTO = new ArrayList<>();
         for (WarehouseStockItem item : findAllWarehouseStockItems) {
@@ -54,18 +47,15 @@ public class WarehouseInStockService {
             listWarehouseItemsDTO.add(getAllItemsDTO);
         }
         return listWarehouseItemsDTO;
-
     }
 
     /**
-     * This service allows to enter a new item to the list of items.
+     * This service removes duplicates in DTO list.
+     * Then it loads all categories+pricePerUnit items from stock that matches DTO list.
+     * All quantities from DTO list will be added stock inventory.
+     * Finally the updated stock list will be saved to database.
      */
-/*
-    public void enterNewItem(WarehouseGetAllItemsDTO itemDTO) {
-        Item itemEntity = covertToEntity(itemDTO);
-        warehouseRepository.save(itemEntity);
-    }*/
-    public void saveListToIntenvoryStock(List<WarehouseSupplierItemDTO> itemListDTO) {
+    public void saveListToInventoryStock(List<WarehouseSupplierItemDTO> itemListDTO) {
         //Remove all duplicates from DTO list and cumulate quantities per category and pricePerUnit
         List<WarehouseStockItem> listStockItemsWithoutDuplicates = removeDuplicates(itemListDTO);
 
@@ -105,6 +95,11 @@ public class WarehouseInStockService {
         System.out.println("Saving successful.");
     }
 
+    /**
+     * All duplicates will be removed. Quantities of duplicates will be summarized.
+     * @param itemListDTO that is containing duplicates
+     * @return list of WarehouseStockItemEntities without duplicates
+     */
     private List<WarehouseStockItem> removeDuplicates(List<WarehouseSupplierItemDTO> itemListDTO) {
         // 1. transfer WarehouseSupplierDTO to WarehouseStockItem List as reference table
         List<WarehouseStockItem> listStockItemsContainingDuplicates = new ArrayList<>();
@@ -137,19 +132,9 @@ public class WarehouseInStockService {
         return listStockItemsWithoutDuplicates;
     }
 
-
     /**
      * This method turns a DTO into an entity.
      */
-
-    /*public Item covertToEntity(WarehouseGetAllItemsDTO itemDto) {
-        Item item = new Item();
-        item.setCategory(itemDto.getCategory());
-        item.setId(itemDto.getId());
-        item.setPricePerUnit(itemDto.getPricePerUnit());
-        item.setQuantity(itemDto.getQuantity());
-        return item;
-    }*/
     private WarehouseStockItem covertToEntity(WarehouseSupplierItemDTO itemDto) {
         WarehouseStockItem item = new WarehouseStockItem();
         item.setCategory(itemDto.getCategory());

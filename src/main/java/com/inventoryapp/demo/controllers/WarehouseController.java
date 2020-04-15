@@ -29,13 +29,11 @@ public class WarehouseController {
      *
      * @return List of WarehouseGetAllItemsDTO with "category":string, "quantity": int, "pricePerUnit":long. Price is in pence.
      */
-
-
     @PostMapping("/getallitems")
     public List<WarehouseGetAllItemsDTO> getAllItems() {
 
         List<WarehouseGetAllItemsDTO> warehouseItemList = warehouseInStockService.getAllStockItems();
-
+        System.out.println("List of stock loaded.");
         return warehouseItemList;
     }
 

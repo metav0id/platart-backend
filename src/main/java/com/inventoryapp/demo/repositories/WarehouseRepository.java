@@ -12,6 +12,14 @@ import java.util.List;
 
 @Repository
 public interface WarehouseRepository extends JpaRepository<WarehouseStockItem,Long> {
+
+    /**
+     * Updates a dataset in database by category and pricePerUnit
+     * @param category
+     * @param pricePerUnit
+     * @param quantity
+     * @return int of affected rows
+     */
     @Modifying(clearAutomatically = true)
     @Transactional
     @Query("UPDATE WarehouseStockItem item SET item.quantity = :quantity WHERE item.category = :category AND item.pricePerUnit = :pricePerUnit")
@@ -19,6 +27,12 @@ public interface WarehouseRepository extends JpaRepository<WarehouseStockItem,Lo
 
     WarehouseStockItem findByCategory (String category);
 
+    /**
+     * Returns a list of stock items filtered by category and pricePerUnit
+     * @param category
+     * @param pricePerUnit
+     * @return list of stock items
+     */
     @Query("SELECT item from WarehouseStockItem item where item.category = :category AND item.pricePerUnit = :pricePerUnit")
     WarehouseStockItem findItemByCategoryAndPricePerUnit(@Param("category") String category, @Param("pricePerUnit") long pricePerUnit);
 
