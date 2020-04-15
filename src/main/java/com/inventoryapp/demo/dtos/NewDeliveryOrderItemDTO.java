@@ -15,6 +15,7 @@ public class NewDeliveryOrderItemDTO {
     private long deliveryDisplayPricePerUnit;
     private int deliveryDiscount;
     private long deliveryFinalPricePerUnit;
+    private String deliveryShop;
 
     public NewDeliveryOrderItemDTO() {
     }
@@ -26,5 +27,16 @@ public class NewDeliveryOrderItemDTO {
         this.deliveryDisplayPricePerUnit = deliveryDisplayPricePerUnit;
         this.deliveryDiscount = deliveryDiscount;
         this.deliveryFinalPricePerUnit = deliveryFinalPricePerUnit;
+        this.deliveryShop = "ShopTest";
+    }
+
+    public NewDeliveryOrderItemDTO(Long id, String category, int deliveryQuantity, long deliveryDisplayPricePerUnit, int deliveryDiscount, long deliveryFinalPricePerUnit, String deliveryShop) {
+        this.id = id;
+        this.category = category;
+        this.deliveryQuantity = deliveryQuantity;
+        this.deliveryDisplayPricePerUnit = deliveryDisplayPricePerUnit;
+        this.deliveryDiscount = deliveryDiscount;
+        this.deliveryFinalPricePerUnit = deliveryFinalPricePerUnit;
+        this.deliveryShop = deliveryShop;
     }
 }

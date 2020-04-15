@@ -66,7 +66,7 @@ public class NewDeliveryOrderController {
      * Save current list of Orders.
      */
     @PostMapping("sendDeliveryOrder")
-    public void sendDeliveryOrder(){
-        this.newDeliveryOrderService.sendDeliveryOrder();
+    public void sendDeliveryOrder(@RequestBody List<NewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
+        this.newDeliveryOrderService.sendDeliveryOrder(newDeliveryOrderItemDTOList);
     }
 }

@@ -64,7 +64,11 @@ public class NewDeliveryOrderService {
         this.newDeliveryOrderRepository.saveAll(newDeliveryOrderItemEntitiesList);
     }
 
-    public void sendDeliveryOrder(){
+    public void sendDeliveryOrder(List<NewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
+        //1. Reset the Database
+        setAllDeliveryOrderItems(newDeliveryOrderItemDTOList);
+
+        //2. Data Management
         List<NewDeliveryOrderItem> currentDeliveryOrderItemEntitiesList = this.newDeliveryOrderRepository.findAll();
         System.out.println("sendDeliveryOrder - service");
 
