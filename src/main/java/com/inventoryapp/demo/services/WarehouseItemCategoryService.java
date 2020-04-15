@@ -42,4 +42,12 @@ public class WarehouseItemCategoryService {
     }
 
 
+    public void deleteCategory(WarehouseItemCategoryDTO categoryToBeDeletedDTO) {
+
+        System.out.println("Test delete category Service1"+ categoryToBeDeletedDTO.getCategory());
+
+        this.warehouseItemCategoryRepository.deleteCategoryByName(categoryToBeDeletedDTO.getCategory());
+        System.out.println("Test delete category Service2"+ categoryToBeDeletedDTO.getCategory());
+        //System.out.println("Number elements deleted: "+ numDeleted);
+    }
 }
