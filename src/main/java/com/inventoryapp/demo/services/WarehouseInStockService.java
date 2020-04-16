@@ -139,7 +139,12 @@ public class WarehouseInStockService {
         WarehouseStockItem item = new WarehouseStockItem();
         item.setCategory(itemDto.getCategory());
         item.setPricePerUnit(itemDto.getPricePerUnit());
-        item.setQuantity(itemDto.getQuantity());
+        boolean isNegativeQuantity = itemDto.getQuantity() < 0;
+        if (isNegativeQuantity) {
+            item.setQuantity(0);
+        } else {
+            item.setQuantity(itemDto.getQuantity());
+        }
         return item;
     }
 }
