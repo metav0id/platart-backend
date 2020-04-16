@@ -1,10 +1,10 @@
 package com.inventoryapp.demo.services;
 
-import com.inventoryapp.demo.dtos.NewDeliveryOrderItemDTO;
-import com.inventoryapp.demo.entities.NewDeliveryOrderItem;
+import com.inventoryapp.demo.dtos.WarehouseNewDeliveryOrderItemDTO;
+import com.inventoryapp.demo.entities.WarehouseNewDeliveryOrderItem;
 import com.inventoryapp.demo.entities.WarehouseSendDeliveryOrderItem;
 import com.inventoryapp.demo.entities.WarehouseStockItem;
-import com.inventoryapp.demo.repositories.NewDeliveryOrderRepository;
+import com.inventoryapp.demo.repositories.WarehouseNewDeliveryOrderRepository;
 import com.inventoryapp.demo.repositories.WarehouseRepository;
 import com.inventoryapp.demo.repositories.WarehouseShopDeliveryOrdersSend;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class NewDeliveryOrderService {
+public class WarehouseNewDeliveryOrderService {
 
     private WarehouseShopDeliveryOrdersSend warehouseShopDeliveryOrdersSend;
-    private NewDeliveryOrderRepository newDeliveryOrderRepository;
+    private WarehouseNewDeliveryOrderRepository warehouseNewDeliveryOrderRepository;
     private WarehouseRepository warehouseRepository;
 
     @Autowired
-    public NewDeliveryOrderService(WarehouseShopDeliveryOrdersSend warehouseShopDeliveryOrdersSend, NewDeliveryOrderRepository newDeliveryOrderRepository, WarehouseRepository warehouseRepository) {
+    public WarehouseNewDeliveryOrderService(WarehouseShopDeliveryOrdersSend warehouseShopDeliveryOrdersSend, WarehouseNewDeliveryOrderRepository newDeliveryOrderRepository, WarehouseRepository warehouseRepository) {
         this.warehouseShopDeliveryOrdersSend = warehouseShopDeliveryOrdersSend;
-        this.newDeliveryOrderRepository = newDeliveryOrderRepository;
+        this.warehouseNewDeliveryOrderRepository = newDeliveryOrderRepository;
         this.warehouseRepository = warehouseRepository;
     }
 
@@ -32,9 +32,9 @@ public class NewDeliveryOrderService {
      * Get all items in the current delivery order list.
      * @return List with data transfer objects
      */
-    public List<NewDeliveryOrderItemDTO> getAllDeliveryOrderItems(){
-        List<NewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
-        List<NewDeliveryOrderItem> deliveryOrderItemsEntities = this.newDeliveryOrderRepository.findAll();
+    public List<WarehouseNewDeliveryOrderItemDTO> getAllDeliveryOrderItems(){
+        List<WarehouseNewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
+        List<WarehouseNewDeliveryOrderItem> deliveryOrderItemsEntities = this.warehouseNewDeliveryOrderRepository.findAll();
         System.out.println("Service1:");
         System.out.println(deliveryOrderItemsEntities);
 
@@ -54,20 +54,20 @@ public class NewDeliveryOrderService {
      * Persist all items in the current delivery order list for improved later use.
      * @return
      */
-    public void setAllDeliveryOrderItems(List<NewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList) {
-        List<NewDeliveryOrderItem> newDeliveryOrderItemEntitiesList = convertDtosToEntities(newDeliveryOrderItemDTOList);
+    public void setAllDeliveryOrderItems(List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList) {
+        List<WarehouseNewDeliveryOrderItem> newDeliveryOrderItemEntitiesList = convertDtosToEntities(newDeliveryOrderItemDTOList);
 
         System.out.println("New Delivery Order Service:");
-        this.newDeliveryOrderRepository.deleteAll();
-        this.newDeliveryOrderRepository.saveAll(newDeliveryOrderItemEntitiesList);
+        this.warehouseNewDeliveryOrderRepository.deleteAll();
+        this.warehouseNewDeliveryOrderRepository.saveAll(newDeliveryOrderItemEntitiesList);
     }
 
-    public void sendDeliveryOrder(List<NewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
+    public void sendDeliveryOrder(List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
         //1. Reset the Database
         setAllDeliveryOrderItems(newDeliveryOrderItemDTOList);
 
         //2. Data Management
-        List<NewDeliveryOrderItem> currentDeliveryOrderItemEntitiesList = this.newDeliveryOrderRepository.findAll();
+        List<WarehouseNewDeliveryOrderItem> currentDeliveryOrderItemEntitiesList = this.warehouseNewDeliveryOrderRepository.findAll();
         System.out.println("sendDeliveryOrder - service");
 
         System.out.println("WarehouseRepository item output:");
@@ -75,7 +75,7 @@ public class NewDeliveryOrderService {
 
         //update the item amount on the warehouse table and add them to the OrderSendTable
         LocalDateTime newDeliveryDateTime = LocalDateTime.now();
-        for(NewDeliveryOrderItem itemOnList: currentDeliveryOrderItemEntitiesList){
+        for(WarehouseNewDeliveryOrderItem itemOnList: currentDeliveryOrderItemEntitiesList){
             WarehouseStockItem itemWarehouse = this.warehouseRepository.findItemByCategoryAndPricePerUnit(itemOnList.getCategory(), itemOnList.getDeliveryFinalPricePerUnit());
 
             if(itemWarehouse.getQuantity() >= itemOnList.getDeliveryQuantity()){
@@ -102,9 +102,9 @@ public class NewDeliveryOrderService {
         }
 
         //remove the items, which were removable from the order list
-        for(NewDeliveryOrderItem itemOnList: currentDeliveryOrderItemEntitiesList){
+        for(WarehouseNewDeliveryOrderItem itemOnList: currentDeliveryOrderItemEntitiesList){
             if(modifiedItems.contains(itemOnList.getId())){
-                this.newDeliveryOrderRepository.delete(itemOnList);
+                this.warehouseNewDeliveryOrderRepository.delete(itemOnList);
                 System.out.println("Element deleted from order list");
             }
         }
@@ -116,11 +116,11 @@ public class NewDeliveryOrderService {
      * @param deliveryOrderItemsEntities
      * @return
      */
-    public List<NewDeliveryOrderItemDTO> convertEntitiesToDtos(List<NewDeliveryOrderItem> deliveryOrderItemsEntities){
-        List<NewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
+    public List<WarehouseNewDeliveryOrderItemDTO> convertEntitiesToDtos(List<WarehouseNewDeliveryOrderItem> deliveryOrderItemsEntities){
+        List<WarehouseNewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
 
-        for(NewDeliveryOrderItem item: deliveryOrderItemsEntities){
-            NewDeliveryOrderItemDTO newDeliveryOrderItemDTO = new NewDeliveryOrderItemDTO();
+        for(WarehouseNewDeliveryOrderItem item: deliveryOrderItemsEntities){
+            WarehouseNewDeliveryOrderItemDTO newDeliveryOrderItemDTO = new WarehouseNewDeliveryOrderItemDTO();
             newDeliveryOrderItemDTO.setId(item.getId());
             newDeliveryOrderItemDTO.setCategory(item.getCategory());
             newDeliveryOrderItemDTO.setDeliveryQuantity(item.getDeliveryQuantity());
@@ -138,10 +138,10 @@ public class NewDeliveryOrderService {
      * @param deliveryOrderItemDtoList
      * @return
      */
-    public List<NewDeliveryOrderItem> convertDtosToEntities(List<NewDeliveryOrderItemDTO> deliveryOrderItemDtoList){
-        List<NewDeliveryOrderItem> deliveryOrderItemEntityLists = new ArrayList<>();
-        for(NewDeliveryOrderItemDTO item: deliveryOrderItemDtoList){
-            NewDeliveryOrderItem newDeliveryOrderItem = new NewDeliveryOrderItem();
+    public List<WarehouseNewDeliveryOrderItem> convertDtosToEntities(List<WarehouseNewDeliveryOrderItemDTO> deliveryOrderItemDtoList){
+        List<WarehouseNewDeliveryOrderItem> deliveryOrderItemEntityLists = new ArrayList<>();
+        for(WarehouseNewDeliveryOrderItemDTO item: deliveryOrderItemDtoList){
+            WarehouseNewDeliveryOrderItem newDeliveryOrderItem = new WarehouseNewDeliveryOrderItem();
             newDeliveryOrderItem.setId(item.getId());
             newDeliveryOrderItem.setCategory(item.getCategory());
             newDeliveryOrderItem.setDeliveryQuantity(item.getDeliveryQuantity());

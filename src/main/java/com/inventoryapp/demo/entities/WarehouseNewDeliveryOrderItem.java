@@ -8,7 +8,7 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-public class NewDeliveryOrderItem {
+public class WarehouseNewDeliveryOrderItem {
 
     @Id
     @GeneratedValue

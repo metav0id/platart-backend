@@ -1,8 +1,8 @@
 package com.inventoryapp.demo.controllers;
 
-import com.inventoryapp.demo.dtos.NewDeliveryOrderItemDTO;
-import com.inventoryapp.demo.dtos.VerifyAmountItemsOnStockDTO;
-import com.inventoryapp.demo.services.NewDeliveryOrderService;
+import com.inventoryapp.demo.dtos.WarehouseNewDeliveryOrderItemDTO;
+import com.inventoryapp.demo.dtos.WarehouseVerifyAmountItemsOnStockDTO;
+import com.inventoryapp.demo.services.WarehouseNewDeliveryOrderService;
 import com.inventoryapp.demo.services.WarehouseVerifyAmountItemsOnStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +13,14 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController("")
 @RequestMapping("/warehouse")
-public class NewDeliveryOrderController {
+public class WarehouseNewDeliveryOrderController {
 
-    private NewDeliveryOrderService newDeliveryOrderService;
+    private WarehouseNewDeliveryOrderService warehouseNewDeliveryOrderService;
     private WarehouseVerifyAmountItemsOnStockService warehouseVerifyAmountItemsOnStockService;
 
     @Autowired
-    public NewDeliveryOrderController(NewDeliveryOrderService newDeliveryOrderService, WarehouseVerifyAmountItemsOnStockService warehouseVerifyAmountItemsOnStockService) {
-        this.newDeliveryOrderService = newDeliveryOrderService;
+    public WarehouseNewDeliveryOrderController(WarehouseNewDeliveryOrderService warehouseNewDeliveryOrderService, WarehouseVerifyAmountItemsOnStockService warehouseVerifyAmountItemsOnStockService) {
+        this.warehouseNewDeliveryOrderService = warehouseNewDeliveryOrderService;
         this.warehouseVerifyAmountItemsOnStockService = warehouseVerifyAmountItemsOnStockService;
     }
 
@@ -30,11 +30,11 @@ public class NewDeliveryOrderController {
      * @return DTO-List with current new order items.
      */
     @PostMapping("/getAllNewOrderItems")
-    public List<NewDeliveryOrderItemDTO> getAllNewOrderItems(){
-        List<NewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList = new ArrayList<>();
+    public List<WarehouseNewDeliveryOrderItemDTO> getAllNewOrderItems(){
+        List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList = new ArrayList<>();
         System.out.println("Controller1:");
         System.out.println(newDeliveryOrderItemDTOList);
-        newDeliveryOrderItemDTOList = newDeliveryOrderService.getAllDeliveryOrderItems();
+        newDeliveryOrderItemDTOList = warehouseNewDeliveryOrderService.getAllDeliveryOrderItems();
 
         System.out.println("Controller2:");
         System.out.println(newDeliveryOrderItemDTOList);
@@ -47,8 +47,8 @@ public class NewDeliveryOrderController {
      * @param newDeliveryOrderItemDTOList
      */
     @PostMapping("/setAllNewOrderItems")
-    public void setAllNewOrderItems(@RequestBody List<NewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
-        newDeliveryOrderService.setAllDeliveryOrderItems(newDeliveryOrderItemDTOList);
+    public void setAllNewOrderItems(@RequestBody List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
+        warehouseNewDeliveryOrderService.setAllDeliveryOrderItems(newDeliveryOrderItemDTOList);
     }
 
     /**
@@ -57,7 +57,7 @@ public class NewDeliveryOrderController {
      * @return
      */
     @PostMapping("verifyAmountItemsOnStock")
-    public VerifyAmountItemsOnStockDTO verifyAmountItemsOnStock(@RequestBody VerifyAmountItemsOnStockDTO verifyAmountItemsOnStockDTO){
+    public WarehouseVerifyAmountItemsOnStockDTO verifyAmountItemsOnStock(@RequestBody WarehouseVerifyAmountItemsOnStockDTO verifyAmountItemsOnStockDTO){
 
         return this.warehouseVerifyAmountItemsOnStockService.verifyAmountItemsOnStock(verifyAmountItemsOnStockDTO);
     }
@@ -66,8 +66,8 @@ public class NewDeliveryOrderController {
      * Save current list of Orders.
      */
     @PostMapping("sendDeliveryOrder")
-    public void sendDeliveryOrder(@RequestBody List<NewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
-        this.newDeliveryOrderService.sendDeliveryOrder(newDeliveryOrderItemDTOList);
+    public void sendDeliveryOrder(@RequestBody List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
+        this.warehouseNewDeliveryOrderService.sendDeliveryOrder(newDeliveryOrderItemDTOList);
         System.out.println("Controller shop: "+ newDeliveryOrderItemDTOList.get(0).getDeliveryShop());
     }
 }

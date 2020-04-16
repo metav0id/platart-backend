@@ -1,8 +1,8 @@
 package com.inventoryapp.demo.services;
 
-import com.inventoryapp.demo.dtos.NewDeliveryOrderItemDTO;
-import com.inventoryapp.demo.entities.NewDeliveryOrderItem;
-import com.inventoryapp.demo.repositories.NewDeliveryOrderRepository;
+import com.inventoryapp.demo.dtos.WarehouseNewDeliveryOrderItemDTO;
+import com.inventoryapp.demo.entities.WarehouseNewDeliveryOrderItem;
+import com.inventoryapp.demo.repositories.WarehouseNewDeliveryOrderRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,15 +16,15 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class NewDeliveryOrderServiceTest {
+public class WarehouseNewDeliveryOrderServiceTest {
     @Autowired
-    NewDeliveryOrderRepository newDeliveryOrderRepository;
+    WarehouseNewDeliveryOrderRepository warehouseNewDeliveryOrderRepository;
 
-    List<NewDeliveryOrderItem> deliveryOrderItemsEntities = new ArrayList<>();
-    List<NewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
+    List<WarehouseNewDeliveryOrderItem> deliveryOrderItemsEntities = new ArrayList<>();
+    List<WarehouseNewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
     @Before
     public void setUp(){
-        NewDeliveryOrderItem newDeliveryItem1 = new NewDeliveryOrderItem();
+        WarehouseNewDeliveryOrderItem newDeliveryItem1 = new WarehouseNewDeliveryOrderItem();
         newDeliveryItem1.setId(1L);
         newDeliveryItem1.setCategory("Category 1");
         newDeliveryItem1.setDeliveryQuantity(123);
@@ -33,7 +33,7 @@ public class NewDeliveryOrderServiceTest {
         newDeliveryItem1.setDeliveryFinalPricePerUnit(15L);
         deliveryOrderItemsEntities.add(newDeliveryItem1);
 
-        NewDeliveryOrderItem newDeliveryItem2 = new NewDeliveryOrderItem();
+        WarehouseNewDeliveryOrderItem newDeliveryItem2 = new WarehouseNewDeliveryOrderItem();
         newDeliveryItem2.setId(2L);
         newDeliveryItem2.setCategory("Category 2");
         newDeliveryItem2.setDeliveryQuantity(123);
@@ -42,7 +42,7 @@ public class NewDeliveryOrderServiceTest {
         newDeliveryItem2.setDeliveryFinalPricePerUnit(15L);
         deliveryOrderItemsEntities.add(newDeliveryItem2);
 
-        NewDeliveryOrderItemDTO newDeliveryItemDTO1 = new NewDeliveryOrderItemDTO();
+        WarehouseNewDeliveryOrderItemDTO newDeliveryItemDTO1 = new WarehouseNewDeliveryOrderItemDTO();
         newDeliveryItemDTO1.setId(1L);
         newDeliveryItemDTO1.setCategory("Category 1");
         newDeliveryItemDTO1.setDeliveryQuantity(123);
@@ -51,7 +51,7 @@ public class NewDeliveryOrderServiceTest {
         newDeliveryItemDTO1.setDeliveryFinalPricePerUnit(15L);
         deliveryOrderItemDTOS.add(newDeliveryItemDTO1);
 
-        NewDeliveryOrderItemDTO newDeliveryItemDTO2 = new NewDeliveryOrderItemDTO();
+        WarehouseNewDeliveryOrderItemDTO newDeliveryItemDTO2 = new WarehouseNewDeliveryOrderItemDTO();
         newDeliveryItemDTO2.setId(2L);
         newDeliveryItemDTO2.setCategory("Category 2");
         newDeliveryItemDTO2.setDeliveryQuantity(123);
@@ -64,11 +64,11 @@ public class NewDeliveryOrderServiceTest {
     @Test
     public void persistanceListTest(){
 
-        newDeliveryOrderRepository.saveAll(deliveryOrderItemsEntities);
-        Iterable<NewDeliveryOrderItem> elementsDatabase = newDeliveryOrderRepository.findAll();
-        List<NewDeliveryOrderItem> deliveryOrderItemsEntitiesTest = new ArrayList<>();
+        warehouseNewDeliveryOrderRepository.saveAll(deliveryOrderItemsEntities);
+        Iterable<WarehouseNewDeliveryOrderItem> elementsDatabase = warehouseNewDeliveryOrderRepository.findAll();
+        List<WarehouseNewDeliveryOrderItem> deliveryOrderItemsEntitiesTest = new ArrayList<>();
 
-        for(NewDeliveryOrderItem item: elementsDatabase){
+        for(WarehouseNewDeliveryOrderItem item: elementsDatabase){
             deliveryOrderItemsEntitiesTest.add(item);
         }
 
@@ -78,10 +78,10 @@ public class NewDeliveryOrderServiceTest {
     @Test
     public void convertEntitiesToDtosTest(){
 
-        List<NewDeliveryOrderItemDTO> deliveryOrderItemDTOSTest = new ArrayList<>();
+        List<WarehouseNewDeliveryOrderItemDTO> deliveryOrderItemDTOSTest = new ArrayList<>();
 
-        for(NewDeliveryOrderItem item: deliveryOrderItemsEntities){
-            NewDeliveryOrderItemDTO newDeliveryOrderItemDTO = new NewDeliveryOrderItemDTO();
+        for(WarehouseNewDeliveryOrderItem item: deliveryOrderItemsEntities){
+            WarehouseNewDeliveryOrderItemDTO newDeliveryOrderItemDTO = new WarehouseNewDeliveryOrderItemDTO();
             newDeliveryOrderItemDTO.setId(item.getId());
             newDeliveryOrderItemDTO.setCategory(item.getCategory());
             newDeliveryOrderItemDTO.setDeliveryQuantity(item.getDeliveryQuantity());
@@ -99,9 +99,9 @@ public class NewDeliveryOrderServiceTest {
 
     @Test
     public void convertDtosToEntitiesTest(){
-        List<NewDeliveryOrderItem> deliveryOrderItemEntityListsTest = new ArrayList<>();
-        for(NewDeliveryOrderItemDTO item: deliveryOrderItemDTOS){
-            NewDeliveryOrderItem newDeliveryOrderItem = new NewDeliveryOrderItem();
+        List<WarehouseNewDeliveryOrderItem> deliveryOrderItemEntityListsTest = new ArrayList<>();
+        for(WarehouseNewDeliveryOrderItemDTO item: deliveryOrderItemDTOS){
+            WarehouseNewDeliveryOrderItem newDeliveryOrderItem = new WarehouseNewDeliveryOrderItem();
             newDeliveryOrderItem.setId(item.getId());
             newDeliveryOrderItem.setCategory(item.getCategory());
             newDeliveryOrderItem.setDeliveryQuantity(item.getDeliveryQuantity());

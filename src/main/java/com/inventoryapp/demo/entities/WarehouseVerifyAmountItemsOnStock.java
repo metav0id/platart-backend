@@ -3,7 +3,7 @@ package com.inventoryapp.demo.entities;
 import lombok.Data;
 
 @Data
-public class VerifyAmountItemsOnStock {
+public class WarehouseVerifyAmountItemsOnStock {
 
     private String category;
     private int quantity;

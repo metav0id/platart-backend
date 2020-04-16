@@ -3,7 +3,7 @@ package com.inventoryapp.demo.dtos;
 import lombok.Data;
 
 @Data
-public class VerifyAmountItemsOnStockDTO {
+public class WarehouseVerifyAmountItemsOnStockDTO {
 
     private String category;
     private long quantity;

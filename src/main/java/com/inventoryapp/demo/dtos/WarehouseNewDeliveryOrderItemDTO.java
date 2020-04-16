@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.persistence.Id;
 
 @Data
-public class NewDeliveryOrderItemDTO {
+public class WarehouseNewDeliveryOrderItemDTO {
 
     @Id
     private Long id;
@@ -17,10 +17,10 @@ public class NewDeliveryOrderItemDTO {
     private long deliveryFinalPricePerUnit;
     private String deliveryShop;
 
-    public NewDeliveryOrderItemDTO() {
+    public WarehouseNewDeliveryOrderItemDTO() {
     }
 
-    public NewDeliveryOrderItemDTO(Long id, String category, int deliveryQuantity, long deliveryDisplayPricePerUnit, int deliveryDiscount, long deliveryFinalPricePerUnit) {
+    public WarehouseNewDeliveryOrderItemDTO(Long id, String category, int deliveryQuantity, long deliveryDisplayPricePerUnit, int deliveryDiscount, long deliveryFinalPricePerUnit) {
         this.id = id;
         this.category = category;
         this.deliveryQuantity = deliveryQuantity;
@@ -30,7 +30,7 @@ public class NewDeliveryOrderItemDTO {
         this.deliveryShop = "ShopTest";
     }
 
-    public NewDeliveryOrderItemDTO(Long id, String category, int deliveryQuantity, long deliveryDisplayPricePerUnit, int deliveryDiscount, long deliveryFinalPricePerUnit, String deliveryShop) {
+    public WarehouseNewDeliveryOrderItemDTO(Long id, String category, int deliveryQuantity, long deliveryDisplayPricePerUnit, int deliveryDiscount, long deliveryFinalPricePerUnit, String deliveryShop) {
         this.id = id;
         this.category = category;
         this.deliveryQuantity = deliveryQuantity;

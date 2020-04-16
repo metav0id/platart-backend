@@ -1,6 +1,6 @@
 package com.inventoryapp.demo.services;
 
-import com.inventoryapp.demo.dtos.VerifyAmountItemsOnStockDTO;
+import com.inventoryapp.demo.dtos.WarehouseVerifyAmountItemsOnStockDTO;
 import com.inventoryapp.demo.entities.WarehouseStockItem;
 import com.inventoryapp.demo.repositories.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class WarehouseVerifyAmountItemsOnStockService {
         this.warehouseRepository = warehouseRepository;
     }
 
-    public VerifyAmountItemsOnStockDTO verifyAmountItemsOnStock(VerifyAmountItemsOnStockDTO verifyAmountItemsOnStockDTO){
+    public WarehouseVerifyAmountItemsOnStockDTO verifyAmountItemsOnStock(WarehouseVerifyAmountItemsOnStockDTO verifyAmountItemsOnStockDTO){
         System.out.println("verifyAmountItemsOnStock-test"+ verifyAmountItemsOnStockDTO);
 
         WarehouseStockItem amountVerificationItem

@@ -9,6 +9,7 @@ import com.inventoryapp.demo.services.WarehouseDeliverySupplierService;
 import com.inventoryapp.demo.services.WarehouseInStockService;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -51,6 +52,7 @@ public class WarehouseControllerDeliverySupplierTest {
         Mockito.verify(warehouseDeliverySupplierService, Mockito.times(1)).saveListDeliverySuppliers(Mockito.anyList());
     }
 
+    @Ignore
     @Test
     public void getAllItems(){
         List<WarehouseGetAllItemsDTO> returnList = new ArrayList<>();
