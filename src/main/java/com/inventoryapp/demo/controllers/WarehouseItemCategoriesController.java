@@ -33,7 +33,7 @@ public class WarehouseItemCategoriesController {
         this.warehouseItemCategoryService.saveNewCategory(newWarehouseItemCategory);
     }
 
-    @PostMapping("/deleteCategory")
+    @PostMapping("/Ware")
     private void deleteCategory(@RequestBody WarehouseItemCategoryDTO categoryToBeDeletedDTO){
         System.out.println("Test delete category Contoller"+ categoryToBeDeletedDTO.getCategory());
         this.warehouseItemCategoryService.deleteCategory(categoryToBeDeletedDTO);
