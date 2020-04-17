@@ -112,7 +112,6 @@ public class WarehouseItemCategoriesControllerTest {
         // 1. Define Service Mock
         Mockito.doNothing().when(warehouseItemCategoryService).deleteCategory(Mockito.any());
 
-
         // 2. Use the method
         warehouseItemCategoryService.deleteCategory(warehouseItemDto1);
 

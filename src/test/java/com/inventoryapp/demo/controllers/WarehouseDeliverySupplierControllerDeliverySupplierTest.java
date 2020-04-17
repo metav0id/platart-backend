@@ -53,13 +53,4 @@ public class WarehouseDeliverySupplierControllerDeliverySupplierTest {
         this.warehouseDeliverySupplierController.saveListDeliverySuppliers(listDTO);
         Mockito.verify(warehouseDeliverySupplierService, Mockito.times(2)).saveListDeliverySuppliers(Mockito.anyList());
     }
-
-    @Ignore
-    @Test
-    public void getAllItems(){
-        List<WarehouseGetAllItemsDTO> returnList = new ArrayList<>();
-        Mockito.when(warehouseInStockService.getAllStockItems()).thenReturn(returnList);
-        List<WarehouseGetAllItemsDTO> assertList = this.warehouseInStockController.getAllItems();
-        Assert.assertNotNull(assertList);
-    }
 }

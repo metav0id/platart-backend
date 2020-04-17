@@ -1,6 +1,7 @@
 package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.WarehouseNewDeliveryOrderItemDTO;
+import com.inventoryapp.demo.dtos.WarehouseVerifyAmountItemsOnStockDTO;
 import com.inventoryapp.demo.services.WarehouseNewDeliveryOrderService;
 import com.inventoryapp.demo.services.WarehouseVerifyAmountItemsOnStockService;
 import org.junit.Assert;
@@ -134,6 +135,72 @@ public class WarehouseNewDeliveryOrderControllerTest {
         Mockito.verify(warehouseNewDeliveryOrderService, Mockito.times(3)).setAllDeliveryOrderItems(Mockito.anyList());
     }
 
+    @Test
+    public void verifyAmountItemsOnStockPositiveTest(){
+        // 0. Define DTO instance
+        WarehouseVerifyAmountItemsOnStockDTO verifyAmountOnStockDTOInput =  new WarehouseVerifyAmountItemsOnStockDTO();
+        verifyAmountOnStockDTOInput.setCategory("Category1");
+        verifyAmountOnStockDTOInput.setQuantity(10);
+        verifyAmountOnStockDTOInput.setPricePerUnit(100L);
 
+        // 1. Define Service-Method-Mock
+        Mockito.when(warehouseVerifyAmountItemsOnStockService.verifyAmountItemsOnStock(Mockito.any(WarehouseVerifyAmountItemsOnStockDTO.class))).thenReturn(verifyAmountOnStockDTOInput);
 
+        // 2. Test the Controller method
+        WarehouseVerifyAmountItemsOnStockDTO verifyAmountOnStockDTOOutput1 = warehouseNewDeliveryOrderController.verifyAmountItemsOnStock(verifyAmountOnStockDTOInput);
+        WarehouseVerifyAmountItemsOnStockDTO verifyAmountOnStockDTOOutput2 = warehouseNewDeliveryOrderController.verifyAmountItemsOnStock(verifyAmountOnStockDTOInput);
+        WarehouseVerifyAmountItemsOnStockDTO verifyAmountOnStockDTOOutput3 = warehouseNewDeliveryOrderController.verifyAmountItemsOnStock(verifyAmountOnStockDTOInput);
+
+        // 3. Assert the controller
+        Mockito.verify(warehouseVerifyAmountItemsOnStockService, Mockito.times(3)).verifyAmountItemsOnStock(verifyAmountOnStockDTOInput);
+
+        String expectedDto = verifyAmountOnStockDTOInput.toString();
+        String fetcheddDto = verifyAmountOnStockDTOOutput1.toString();
+        Assert.assertEquals(expectedDto, fetcheddDto);
+    }
+
+    @Test
+    public void verifyAmountItemsOnStockNegativeTest(){
+        // 0.1 Define positive input DTO instance
+        WarehouseVerifyAmountItemsOnStockDTO verifyAmountOnStockDTOInput =  new WarehouseVerifyAmountItemsOnStockDTO();
+        verifyAmountOnStockDTOInput.setCategory("Category1");
+        verifyAmountOnStockDTOInput.setQuantity(10);
+        verifyAmountOnStockDTOInput.setPricePerUnit(100L);
+
+        // 0.2 Define negative output DTO instance
+        WarehouseVerifyAmountItemsOnStockDTO verifyAmountOnStockDTONegativeInput =  new WarehouseVerifyAmountItemsOnStockDTO();
+        verifyAmountOnStockDTONegativeInput.setCategory("CategoryNegativeValue");
+        verifyAmountOnStockDTONegativeInput.setQuantity(2020);
+        verifyAmountOnStockDTONegativeInput.setPricePerUnit(2020L);
+
+        // 1. Define Service-Method-Mock
+        Mockito.when(warehouseVerifyAmountItemsOnStockService.verifyAmountItemsOnStock(Mockito.any(WarehouseVerifyAmountItemsOnStockDTO.class))).thenReturn(verifyAmountOnStockDTOInput);
+
+        // 2. Test the Controller method
+        WarehouseVerifyAmountItemsOnStockDTO verifyAmountOnStockDTOOutput1 = warehouseNewDeliveryOrderController.verifyAmountItemsOnStock(verifyAmountOnStockDTOInput);
+        WarehouseVerifyAmountItemsOnStockDTO verifyAmountOnStockDTOOutput2 = warehouseNewDeliveryOrderController.verifyAmountItemsOnStock(verifyAmountOnStockDTOInput);
+        WarehouseVerifyAmountItemsOnStockDTO verifyAmountOnStockDTOOutput3 = warehouseNewDeliveryOrderController.verifyAmountItemsOnStock(verifyAmountOnStockDTOInput);
+
+        // 3. Assert the controller
+        Mockito.verify(warehouseVerifyAmountItemsOnStockService, Mockito.times(3)).verifyAmountItemsOnStock(verifyAmountOnStockDTOInput);
+
+        String expectedFalseDto = verifyAmountOnStockDTONegativeInput.toString();
+        String fetcheddDto = verifyAmountOnStockDTOOutput1.toString();
+        Assert.assertNotEquals(expectedFalseDto, fetcheddDto);
+    }
+
+    @Test
+    public void sendDeliveryOrderPositiveTest(){
+        // 1. Define Service-Method Mock
+        Mockito.doNothing().when(warehouseNewDeliveryOrderService).setAllDeliveryOrderItems(Mockito.anyList());
+
+        // 2. Use the Controller-method
+        warehouseNewDeliveryOrderController.setAllNewOrderItems(warehouseDeliveryOrderDTOList);
+        warehouseNewDeliveryOrderController.setAllNewOrderItems(warehouseDeliveryOrderDTOList);
+        warehouseNewDeliveryOrderController.setAllNewOrderItems(warehouseDeliveryOrderDTOList);
+
+        // 3. Verify
+        Mockito.verify(warehouseNewDeliveryOrderService, Mockito.times(3)).setAllDeliveryOrderItems(Mockito.anyList());
+
+    }
 }

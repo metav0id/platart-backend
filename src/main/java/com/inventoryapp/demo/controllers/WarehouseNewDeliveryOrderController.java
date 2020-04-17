@@ -58,7 +58,6 @@ public class WarehouseNewDeliveryOrderController {
      */
     @PostMapping("verifyAmountItemsOnStock")
     public WarehouseVerifyAmountItemsOnStockDTO verifyAmountItemsOnStock(@RequestBody WarehouseVerifyAmountItemsOnStockDTO verifyAmountItemsOnStockDTO){
-
         return this.warehouseVerifyAmountItemsOnStockService.verifyAmountItemsOnStock(verifyAmountItemsOnStockDTO);
     }
 
