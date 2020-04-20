@@ -30,16 +30,17 @@ public class WarehouseNewDeliveryOrderService {
 
     /**
      * Get all items in the current delivery order list.
+     *
      * @return List with data transfer objects
      */
-    public List<WarehouseNewDeliveryOrderItemDTO> getAllDeliveryOrderItems(){
+    public List<WarehouseNewDeliveryOrderItemDTO> getAllDeliveryOrderItems() {
         List<WarehouseNewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
         List<WarehouseNewDeliveryOrderItem> deliveryOrderItemsEntities = this.warehouseNewDeliveryOrderRepository.findAll();
         System.out.println("Service1:");
         System.out.println(deliveryOrderItemsEntities);
 
 
-        if(deliveryOrderItemsEntities.size()>0){
+        if (deliveryOrderItemsEntities.size() > 0) {
             deliveryOrderItemDTOS = convertEntitiesToDtos(deliveryOrderItemsEntities);
             System.out.println("Service if");
         } else {
@@ -52,6 +53,7 @@ public class WarehouseNewDeliveryOrderService {
 
     /**
      * Persist all items in the current delivery order list for improved later use.
+     *
      * @return
      */
     public void setAllDeliveryOrderItems(List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList) {
@@ -62,55 +64,98 @@ public class WarehouseNewDeliveryOrderService {
         this.warehouseNewDeliveryOrderRepository.saveAll(newDeliveryOrderItemEntitiesList);
     }
 
-    public void sendDeliveryOrder(List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
-        //1. Reset the Database
+    public void sendDeliveryOrder(List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList) {
+        // 1. Reset the current new deliveries Database-table
         setAllDeliveryOrderItems(newDeliveryOrderItemDTOList);
 
-        //2. Data Management
+        // 2. Data Management
         List<WarehouseNewDeliveryOrderItem> currentDeliveryOrderItemEntitiesList = this.warehouseNewDeliveryOrderRepository.findAll();
+        currentDeliveryOrderItemEntitiesList.stream().forEach(o-> System.out.println("Delivery Quantity" + o.getDeliveryQuantity() + " Category "+ o.getCategory() + " price " + o.getDeliveryFinalPricePerUnit()));
+
+
         System.out.println("sendDeliveryOrder - service");
 
         System.out.println("WarehouseRepository item output:");
-        List<Long> modifiedItems =  new ArrayList<>();
+        List<Long> modifiedItems = new ArrayList<>();
 
-        //update the item amount on the warehouse table and add them to the OrderSendTable
-        LocalDateTime newDeliveryDateTime = LocalDateTime.now();
-        for(WarehouseNewDeliveryOrderItem itemOnList: currentDeliveryOrderItemEntitiesList){
-            WarehouseStockItem itemWarehouse = this.warehouseRepository.findItemByCategoryAndPricePerUnit(itemOnList.getCategory(), itemOnList.getDeliveryFinalPricePerUnit());
+        // 3. cumulate for each category and PricePerUnit new quantity on list.
+        List<WarehouseNewDeliveryOrderItem> currentDeliveriesAggregated = new ArrayList<>();
 
-            if(itemWarehouse.getQuantity() >= itemOnList.getDeliveryQuantity()){
-                long newWarehouseQuantity = itemWarehouse.getQuantity()-itemOnList.getDeliveryQuantity();
-                itemWarehouse.setQuantity(newWarehouseQuantity);
+        for (WarehouseNewDeliveryOrderItem item : currentDeliveryOrderItemEntitiesList) {
 
-                modifiedItems.add(itemOnList.getId());
-                this.warehouseRepository.save(itemWarehouse);
+            currentDeliveriesAggregated.stream()
+                    .filter(
+                            o -> item.getCategory().equals(o.getCategory()) &&
+                                    item.getDeliveryFinalPricePerUnit() == item.getDeliveryFinalPricePerUnit())
+                    .forEach(o -> o.setDeliveryQuantity(o.getDeliveryQuantity() + item.getDeliveryQuantity()));
 
-                WarehouseSendDeliveryOrderItem deliveryItemSend = new WarehouseSendDeliveryOrderItem();
-                deliveryItemSend.setId(itemOnList.getId());
-                deliveryItemSend.setCategory(itemOnList.getCategory());
-                deliveryItemSend.setDeliveryDisplayPricePerUnit(itemOnList.getDeliveryDisplayPricePerUnit());
-                deliveryItemSend.setDeliveryDiscount(itemOnList.getDeliveryDiscount());
-                deliveryItemSend.setDeliveryFinalPricePerUnit(itemOnList.getDeliveryFinalPricePerUnit());
-                deliveryItemSend.setDeliverySending(newDeliveryDateTime);
-                deliveryItemSend.setDeliveryQuantity(itemOnList.getDeliveryQuantity());
-                deliveryItemSend.setShop(itemOnList.getDeliveryShop());
-                System.out.println(itemOnList.getDeliveryShop());
-                this.warehouseShopDeliveryOrdersSend.save(deliveryItemSend);
-            } else {
-                System.out.println("The operation is not possible for element" + itemOnList.getCategory() + ", "+ itemOnList.getCategory());
+            boolean isNotItemFound = currentDeliveriesAggregated.stream()
+                    .noneMatch(
+                            o -> item.getCategory().equals(o.getCategory()) &&
+                                    item.getDeliveryFinalPricePerUnit() == item.getDeliveryFinalPricePerUnit());
+
+            if (isNotItemFound) {
+                currentDeliveriesAggregated.add(item);
             }
         }
 
-        //remove the items, which were removable from the order list
-        for(WarehouseNewDeliveryOrderItem itemOnList: currentDeliveryOrderItemEntitiesList){
-            if(modifiedItems.contains(itemOnList.getId())){
-                this.warehouseNewDeliveryOrderRepository.delete(itemOnList);
-                System.out.println("Element deleted from order list");
+        // 4. verify if transaction is feasible for all items in delivery list
+        boolean isTransactionFeasible = true;
+        for (WarehouseNewDeliveryOrderItem item : currentDeliveriesAggregated) {
+            System.out.println("ITEM ITEM: " + item.getCategory() + " " + item.getDeliveryQuantity());
+
+            // verify if amount of item in stock
+            WarehouseStockItem itemWarehouse = this.warehouseRepository.findItemByCategoryAndPricePerUnit(item.getCategory(), item.getDeliveryFinalPricePerUnit());
+
+            if (itemWarehouse.getQuantity() < item.getDeliveryQuantity()) {
+                isTransactionFeasible = false;
+                break;
             }
+        }
+
+        if(isTransactionFeasible){
+            // 5. update the item amount on the warehouse table and add them to the OrderSendTable
+            LocalDateTime newDeliveryDateTime = LocalDateTime.now();
+            for (WarehouseNewDeliveryOrderItem itemOnList : currentDeliveryOrderItemEntitiesList) {
+                WarehouseStockItem itemWarehouse = this.warehouseRepository.findItemByCategoryAndPricePerUnit(itemOnList.getCategory(), itemOnList.getDeliveryFinalPricePerUnit());
+
+                if (itemWarehouse.getQuantity() >= itemOnList.getDeliveryQuantity()) {
+                    long newWarehouseQuantity = itemWarehouse.getQuantity() - itemOnList.getDeliveryQuantity();
+                    itemWarehouse.setQuantity(newWarehouseQuantity);
+
+                    modifiedItems.add(itemOnList.getId());
+                    this.warehouseRepository.save(itemWarehouse);
+
+                    WarehouseSendDeliveryOrderItem deliveryItemSend = new WarehouseSendDeliveryOrderItem();
+                    //deliveryItemSend.setId(itemOnList.getId());
+                    deliveryItemSend.setCategory(itemOnList.getCategory());
+                    deliveryItemSend.setDeliveryDisplayPricePerUnit(itemOnList.getDeliveryDisplayPricePerUnit());
+                    deliveryItemSend.setDeliveryDiscount(itemOnList.getDeliveryDiscount());
+                    deliveryItemSend.setDeliveryFinalPricePerUnit(itemOnList.getDeliveryFinalPricePerUnit());
+                    deliveryItemSend.setDeliverySending(newDeliveryDateTime);
+
+                    //deliveryItemSend.setDeliveryQuantity(123456789);
+                    deliveryItemSend.setDeliveryQuantity(itemOnList.getDeliveryQuantity());
+                    deliveryItemSend.setShop(itemOnList.getDeliveryShop());
+                    System.out.println(itemOnList.getDeliveryShop());
+                    this.warehouseShopDeliveryOrdersSend.save(deliveryItemSend);
+                } else {
+                    System.out.println("The operation is not possible for element" + itemOnList.getCategory() + ", " + itemOnList.getCategory());
+                }
+            }
+
+            //remove the items, which were removable from the order list
+            for (WarehouseNewDeliveryOrderItem itemOnList : currentDeliveryOrderItemEntitiesList) {
+                if (modifiedItems.contains(itemOnList.getId())) {
+                    this.warehouseNewDeliveryOrderRepository.delete(itemOnList);
+                    System.out.println("Element deleted from order list");
+                }
+            }
+        } else {
+            System.out.println("Peristance of list not possible -> requested amount not available on stock ");
         }
 
     }
-
     /**
      * Mapper function: NewDeliveryOrderItem entities-list to NewDeliveryOrderItem DTO-List
      * @param deliveryOrderItemsEntities
