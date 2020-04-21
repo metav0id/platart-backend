@@ -26,7 +26,7 @@ public class MapMarkersController {
      *
      * @return List of MarkerDTO with **TODO "category":string, "quantity": int, "pricePerUnit":long. Price is in pence.
      */
-    @PostMapping("/getallmarkers")
+    @GetMapping("/getallmarkers")
     public List<MarkerDTO> getAllMarkers() {
 
         List<MarkerDTO> markerDTOS = mapMarkersService.getAllMarkers();

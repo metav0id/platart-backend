@@ -13,8 +13,9 @@ public class MarkerDTO {
     public String lat;
 
     public String lng;
-    public String titulo ;
-    public String desc;
+    public String category;
+    public String name;
+    public String address;
     public String link ;
 }
 

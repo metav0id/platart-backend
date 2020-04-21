@@ -8,16 +8,16 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-public class MapMarker {
+public class Comerce {
+
     @Id
     @GeneratedValue
     private Long id;
 
-    public String lat;
+    private String category;
+    private String name;
+    private String address;
 
-    public String lng;
-    public String category;
-    public String name;
-    public String address;
-    public String link ;
+
+
 }

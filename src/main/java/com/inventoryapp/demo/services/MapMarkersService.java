@@ -37,8 +37,9 @@ public class MapMarkersService {
             MarkerDTO markerDTO = new MarkerDTO();
             markerDTO.setLat(marker.getLat());
             markerDTO.setLng(marker.getLng());
-            markerDTO.setTitulo(marker.getTitulo());
-            markerDTO.setDesc(marker.getDesc());
+            markerDTO.setName(marker.getName());
+            markerDTO.setAddress(marker.getAddress());
+            markerDTO.setLink(marker.getLink());
             markerDTO.setLink(marker.getLink());
             markerDTO.setId( marker.getId());
 
@@ -54,8 +55,9 @@ public class MapMarkersService {
             MarkerDTO markerDTO = new MarkerDTO();
             markerDTO.setLat(marker.getLat());
             markerDTO.setLng(marker.getLng());
-            markerDTO.setTitulo(marker.getTitulo());
-            markerDTO.setDesc(marker.getDesc());
+            markerDTO.setName(marker.getName());
+            markerDTO.setAddress(marker.getAddress());
+            markerDTO.setLink(marker.getLink());
             markerDTO.setLink(marker.getLink());
             markerDTO.setId( marker.getId());
 
@@ -66,6 +68,7 @@ public class MapMarkersService {
     //create new marker methods
     public void createNewMarker(MarkerDTO markerDTO){
         MapMarker mapMarker = covertUnitDTOToEntity(markerDTO);
+
         mapMarkerRapository.save(mapMarker);
     }
 
@@ -73,10 +76,10 @@ public class MapMarkersService {
             MapMarker mapMarker = new MapMarker();
             mapMarker.setLat(marker.getLat());
             mapMarker.setLng(marker.getLng());
-            mapMarker.setTitulo(marker.getTitulo());
-            mapMarker.setDesc(marker.getDesc());
+            mapMarker.setCategory(marker.getCategory());
+            mapMarker.setName(marker.getName());
+            mapMarker.setAddress(marker.getAddress());
             mapMarker.setLink(marker.getLink());
-            mapMarker.setId( marker.getId());
             return mapMarker;
     }
 
@@ -87,10 +90,10 @@ public class MapMarkersService {
             MapMarker mapMarker = new MapMarker();
             mapMarker.setLat(marker.getLat());
             mapMarker.setLng(marker.getLng());
-            mapMarker.setTitulo(marker.getTitulo());
-            mapMarker.setDesc(marker.getDesc());
+            mapMarker.setName(marker.getName());
+            mapMarker.setAddress(marker.getAddress());
             mapMarker.setLink(marker.getLink());
-            mapMarker.setId( marker.getId());
+            mapMarker.setLink(marker.getLink());
             listMarker.add(mapMarker);
         }
         return listMarker;
@@ -119,8 +122,9 @@ public class MapMarkersService {
     System.out.println(id);
         mapMarker.setLat(marker.getLat());
         mapMarker.setLng(marker.getLng());
-        mapMarker.setTitulo(marker.getTitulo());
-        mapMarker.setDesc(marker.getDesc());
+        mapMarker.setName(marker.getName());
+        mapMarker.setAddress(marker.getAddress());
+        mapMarker.setLink(marker.getLink());
         mapMarker.setLink(marker.getLink());
         mapMarkerRapository.save(mapMarker);
         return mapMarker;
