@@ -24,8 +24,10 @@ public class MapMarkersController {
     /**
      * You get all markers which are currently available in database.
      *
-     * @return List of MarkerDTO with **TODO "category":string, "quantity": int, "pricePerUnit":long. Price is in pence.
+     * @return List of MarkerDTO with ** "category":string, "name": String, "address": String,"lat": String, "lng": String, "link": String,
+     *
      */
+
     @GetMapping("/getallmarkers")
     public List<MarkerDTO> getAllMarkers() {
 
@@ -33,7 +35,11 @@ public class MapMarkersController {
         System.out.println("List of stock loaded.");
         return markerDTOS;
     }
-
+    /**
+     * You create a new marker that will be saved in the database.
+     *
+     * @return List of void
+     */
     @PostMapping("/savemarker")
     public void saveMarker(@RequestBody MarkerDTO markerDTO) {
         mapMarkersService.createNewMarker(markerDTO);

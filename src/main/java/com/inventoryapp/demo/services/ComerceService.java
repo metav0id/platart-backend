@@ -8,6 +8,7 @@ import com.inventoryapp.demo.repositories.ComerceRepository;
 import com.inventoryapp.demo.repositories.MapMarkerRapository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,5 +72,22 @@ public class ComerceService {
         markerDTO.setName(comerceDTO.getName());
 
         return markerDTO;
+    }
+
+
+    @Transactional
+    public void delete(Long id) {
+
+        Comerce comerce = findById(id);
+        if (comerce!= null){
+            comerceRepository.deleteById(id);
+        }else {
+            System.out.println("The user doesnt exists");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Comerce findById(Long id) {
+        return comerceRepository.findById(id).orElse(null);
     }
 }
