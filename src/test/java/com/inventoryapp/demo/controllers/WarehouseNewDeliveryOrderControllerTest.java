@@ -1,9 +1,12 @@
 package com.inventoryapp.demo.controllers;
 
+import com.inventoryapp.demo.dtos.WarehouseItemPersistanceErrorDTO;
 import com.inventoryapp.demo.dtos.WarehouseNewDeliveryOrderItemDTO;
+import com.inventoryapp.demo.dtos.WarehouseNewDeliveryPersistanceResponseDTO;
 import com.inventoryapp.demo.dtos.WarehouseVerifyAmountItemsOnStockDTO;
 import com.inventoryapp.demo.services.WarehouseNewDeliveryOrderService;
 import com.inventoryapp.demo.services.WarehouseVerifyAmountItemsOnStockService;
+import org.hibernate.mapping.Any;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -191,16 +194,37 @@ public class WarehouseNewDeliveryOrderControllerTest {
 
     @Test
     public void sendDeliveryOrderPositiveTest(){
+
+        // 0. Define Data Dto
+        WarehouseNewDeliveryPersistanceResponseDTO responseDTO =  new WarehouseNewDeliveryPersistanceResponseDTO();
+        responseDTO.setPersistanceInitialized(true);
+        responseDTO.setPersistanceSuccessful(false);
+
+        List<WarehouseItemPersistanceErrorDTO> itemPersistanceErrorDtoList = new ArrayList<>();
+        WarehouseItemPersistanceErrorDTO error1 = new WarehouseItemPersistanceErrorDTO();
+        error1.setCategory("Category1");
+        error1.setDeliveryFinalPricePerUnit(10L);
+        error1.setErrorQuantity(10L);
+        itemPersistanceErrorDtoList.add(error1);
+
+        WarehouseItemPersistanceErrorDTO error2 = new WarehouseItemPersistanceErrorDTO();
+        error2.setCategory("Category2");
+        error2.setDeliveryFinalPricePerUnit(20L);
+        error2.setErrorQuantity(20L);
+        itemPersistanceErrorDtoList.add(error2);
+
+        responseDTO.setItemPersistanceErrorDtoList(itemPersistanceErrorDtoList);
+
         // 1. Define Service-Method Mock
-        Mockito.doNothing().when(warehouseNewDeliveryOrderService).setAllDeliveryOrderItems(Mockito.anyList());
+        Mockito.when(warehouseNewDeliveryOrderService.sendDeliveryOrder(Mockito.anyList())).thenReturn(responseDTO);
 
         // 2. Use the Controller-method
-        warehouseNewDeliveryOrderController.setAllNewOrderItems(warehouseDeliveryOrderDTOList);
-        warehouseNewDeliveryOrderController.setAllNewOrderItems(warehouseDeliveryOrderDTOList);
-        warehouseNewDeliveryOrderController.setAllNewOrderItems(warehouseDeliveryOrderDTOList);
+        WarehouseNewDeliveryPersistanceResponseDTO responseDTOfetched =  warehouseNewDeliveryOrderController.sendDeliveryOrder(warehouseDeliveryOrderDTOList);
 
         // 3. Verify
-        Mockito.verify(warehouseNewDeliveryOrderService, Mockito.times(3)).setAllDeliveryOrderItems(Mockito.anyList());
+        Mockito.verify(warehouseNewDeliveryOrderService, Mockito.times(1)).sendDeliveryOrder(Mockito.anyList());
+
+        Assert.assertEquals(responseDTO.toString(), responseDTOfetched.toString());
 
     }
 }

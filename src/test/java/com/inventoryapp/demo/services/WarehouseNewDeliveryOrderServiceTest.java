@@ -1,8 +1,14 @@
 package com.inventoryapp.demo.services;
 
+import com.inventoryapp.demo.dtos.WarehouseItemPersistanceErrorDTO;
 import com.inventoryapp.demo.dtos.WarehouseNewDeliveryOrderItemDTO;
+import com.inventoryapp.demo.dtos.WarehouseNewDeliveryPersistanceResponseDTO;
 import com.inventoryapp.demo.entities.WarehouseNewDeliveryOrderItem;
+import com.inventoryapp.demo.entities.WarehouseSendDeliveryOrderItem;
+import com.inventoryapp.demo.entities.WarehouseStockItem;
 import com.inventoryapp.demo.repositories.WarehouseNewDeliveryOrderRepository;
+import com.inventoryapp.demo.repositories.WarehouseRepository;
+import com.inventoryapp.demo.repositories.WarehouseShopDeliveryOrdersSend;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +26,10 @@ import java.util.List;
 public class WarehouseNewDeliveryOrderServiceTest {
     @Autowired
     WarehouseNewDeliveryOrderRepository warehouseNewDeliveryOrderRepository;
+    @Autowired
+    private WarehouseRepository warehouseRepository;
+    @Autowired
+    private WarehouseShopDeliveryOrdersSend warehouseShopDeliveryOrdersSend;
 
     List<WarehouseNewDeliveryOrderItem> deliveryOrderItemsEntities = new ArrayList<>();
     List<WarehouseNewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
@@ -116,6 +127,134 @@ public class WarehouseNewDeliveryOrderServiceTest {
             Assert.assertEquals(deliveryOrderItemEntityListsTest.get(i).getCategory(), deliveryOrderItemsEntities.get(i).getCategory());
         }
 
+    }
+
+    @Test
+    public void sendDeliveryOrderNegativeTest(){
+        // use the following input List: deliveryOrderItemsEntities
+        //Setup: simulate stock in database
+        List<WarehouseStockItem> tempListDatabase = new ArrayList<>();
+        WarehouseStockItem item4 = new WarehouseStockItem("Earring", 100, 10);
+        WarehouseStockItem item5 = new WarehouseStockItem("Necklace", 150, 100);
+        WarehouseStockItem item6 = new WarehouseStockItem("Ring", 225, 15);
+        WarehouseStockItem item7 = new WarehouseStockItem("Ring", 230, 10);
+        WarehouseStockItem item8 = new WarehouseStockItem("Bracelet", 100, 25);
+        tempListDatabase.add(item4);
+        tempListDatabase.add(item5);
+        tempListDatabase.add(item6);
+        tempListDatabase.add(item7);
+        tempListDatabase.add(item8);
+        warehouseRepository.saveAll(tempListDatabase);
+
+        // 0. Define return Dto - if this point was reached, set persistance initalized true
+        WarehouseNewDeliveryPersistanceResponseDTO responseDTO =  new WarehouseNewDeliveryPersistanceResponseDTO();
+        responseDTO.setPersistanceInitialized(true);
+        List<WarehouseItemPersistanceErrorDTO> itemPersistanceErrorDtoList = new ArrayList<>();
+
+
+        // 1.
+        this.warehouseNewDeliveryOrderRepository.deleteAll();
+        this.warehouseNewDeliveryOrderRepository.saveAll(deliveryOrderItemsEntities);
+
+        // 2. Data Management
+        List<WarehouseNewDeliveryOrderItem> currentDeliveryOrderItemEntitiesList = this.warehouseNewDeliveryOrderRepository.findAll();
+        currentDeliveryOrderItemEntitiesList.stream().forEach(o-> System.out.println("Delivery Quantity" + o.getDeliveryQuantity() + " Category "+ o.getCategory() + " price " + o.getDeliveryFinalPricePerUnit()));
+
+        // 3. cumulate for each category and PricePerUnit new quantity on list.
+        List<WarehouseNewDeliveryOrderItem> currentDeliveriesAggregated = new ArrayList<>();
+
+        for (WarehouseNewDeliveryOrderItem item : currentDeliveryOrderItemEntitiesList) {
+
+            currentDeliveriesAggregated.stream()
+                    .filter(
+                            o -> item.getCategory().equals(o.getCategory()) &&
+                                    item.getDeliveryFinalPricePerUnit() == item.getDeliveryFinalPricePerUnit())
+                    .forEach(o -> o.setDeliveryQuantity(o.getDeliveryQuantity() + item.getDeliveryQuantity()));
+
+            boolean isNotItemFound = currentDeliveriesAggregated.stream()
+                    .noneMatch(
+                            o -> item.getCategory().equals(o.getCategory()) &&
+                                    item.getDeliveryFinalPricePerUnit() == item.getDeliveryFinalPricePerUnit());
+
+            if (isNotItemFound) {
+                WarehouseNewDeliveryOrderItem newItem = new WarehouseNewDeliveryOrderItem();
+                newItem.setId(item.getId());
+                newItem.setCategory(item.getCategory());
+                newItem.setDeliveryQuantity(item.getDeliveryQuantity());
+                newItem.setDeliveryDiscount(item.getDeliveryDiscount());
+                newItem.setDeliveryDisplayPricePerUnit(item.getDeliveryDisplayPricePerUnit());
+                newItem.setDeliveryFinalPricePerUnit(item.getDeliveryFinalPricePerUnit());
+                newItem.setDeliveryShop(item.getDeliveryShop());
+
+                currentDeliveriesAggregated.add(newItem);
+            }
+        }
+
+        // 4. verify if transaction is feasible for all items in delivery list
+        boolean isTransactionFeasible = true;
+        for (WarehouseNewDeliveryOrderItem item : currentDeliveriesAggregated) {
+            System.out.println("ITEM ITEM: " + item.getCategory() + " " + item.getDeliveryQuantity());
+
+            // verify if amount of item in stock
+            WarehouseStockItem itemWarehouse = this.warehouseRepository.findItemByCategoryAndPricePerUnit(item.getCategory(), item.getDeliveryFinalPricePerUnit());
+            try {
+                Long differenceQuantity = itemWarehouse.getQuantity() - item.getDeliveryQuantity();
+                if (differenceQuantity < 0) {
+                    isTransactionFeasible = false;
+
+                    WarehouseItemPersistanceErrorDTO error = new WarehouseItemPersistanceErrorDTO();
+                    error.setCategory(item.getCategory());
+                    error.setDeliveryFinalPricePerUnit(item.getDeliveryFinalPricePerUnit());
+                    error.setErrorQuantity(differenceQuantity);
+                    itemPersistanceErrorDtoList.add(error);
+                }
+            } catch (NullPointerException exception){
+                System.err.println("We have a Nulllpointer Exception");
+            }
+        }
+        responseDTO.setItemPersistanceErrorDtoList(itemPersistanceErrorDtoList);
+
+        // 5. update the item amount on the warehouse table and add them to the OrderSendTable
+        //List<Long> modifiedItems = new ArrayList<>();
+        if(isTransactionFeasible){
+
+            LocalDateTime newDeliveryDateTime = LocalDateTime.now();
+            for (WarehouseNewDeliveryOrderItem itemOnList : currentDeliveryOrderItemEntitiesList) {
+                WarehouseStockItem itemWarehouse = this.warehouseRepository.findItemByCategoryAndPricePerUnit(itemOnList.getCategory(), itemOnList.getDeliveryFinalPricePerUnit());
+                try {
+                    long newWarehouseQuantity = itemWarehouse.getQuantity() - itemOnList.getDeliveryQuantity();
+                    itemWarehouse.setQuantity(newWarehouseQuantity);
+
+                    // modifiedItems.add(itemOnList.getId());
+                    this.warehouseRepository.save(itemWarehouse);
+
+                    WarehouseSendDeliveryOrderItem deliveryItemSend = new WarehouseSendDeliveryOrderItem();
+                    //deliveryItemSend.setId(itemOnList.getId());
+                    deliveryItemSend.setCategory(itemOnList.getCategory());
+                    deliveryItemSend.setDeliveryDisplayPricePerUnit(itemOnList.getDeliveryDisplayPricePerUnit());
+                    deliveryItemSend.setDeliveryDiscount(itemOnList.getDeliveryDiscount());
+                    deliveryItemSend.setDeliveryFinalPricePerUnit(itemOnList.getDeliveryFinalPricePerUnit());
+                    deliveryItemSend.setDeliverySending(newDeliveryDateTime);
+                    deliveryItemSend.setDeliveryQuantity(itemOnList.getDeliveryQuantity());
+                    deliveryItemSend.setShop(itemOnList.getDeliveryShop());
+                    System.out.println(itemOnList.getDeliveryShop());
+                    this.warehouseShopDeliveryOrdersSend.save(deliveryItemSend);
+                } catch (NullPointerException exception){
+                    System.err.println("We have a Nulllpointer Exception");
+                }
+            }
+            //delete all items on the temporary item-order list
+            this.warehouseNewDeliveryOrderRepository.deleteAll();
+            responseDTO.setPersistanceSuccessful(true);
+        } else {
+            responseDTO.setPersistanceSuccessful(false);
+            System.out.println("Peristance of list not possible -> requested amount not available on stock ");
+        }
+
+        System.out.println(" Result: "+ responseDTO.toString());
+        Assert.assertTrue(responseDTO.isPersistanceInitialized());
+        Assert.assertTrue(responseDTO.isPersistanceSuccessful());
+        Assert.assertEquals(responseDTO.getItemPersistanceErrorDtoList().size(), 0);
     }
 
 }

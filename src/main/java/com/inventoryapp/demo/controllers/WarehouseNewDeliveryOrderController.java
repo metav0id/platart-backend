@@ -1,6 +1,8 @@
 package com.inventoryapp.demo.controllers;
 
+import com.inventoryapp.demo.dtos.WarehouseItemPersistanceErrorDTO;
 import com.inventoryapp.demo.dtos.WarehouseNewDeliveryOrderItemDTO;
+import com.inventoryapp.demo.dtos.WarehouseNewDeliveryPersistanceResponseDTO;
 import com.inventoryapp.demo.dtos.WarehouseVerifyAmountItemsOnStockDTO;
 import com.inventoryapp.demo.services.WarehouseNewDeliveryOrderService;
 import com.inventoryapp.demo.services.WarehouseVerifyAmountItemsOnStockService;
@@ -65,8 +67,8 @@ public class WarehouseNewDeliveryOrderController {
      * Save current list of Orders.
      */
     @PostMapping("sendDeliveryOrder")
-    public void sendDeliveryOrder(@RequestBody List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
-        this.warehouseNewDeliveryOrderService.sendDeliveryOrder(newDeliveryOrderItemDTOList);
-        System.out.println("Controller shop: "+ newDeliveryOrderItemDTOList.get(0).getDeliveryShop());
+    public WarehouseNewDeliveryPersistanceResponseDTO sendDeliveryOrder(@RequestBody List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
+        return this.warehouseNewDeliveryOrderService.sendDeliveryOrder(newDeliveryOrderItemDTOList);
+
     }
 }
