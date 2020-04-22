@@ -115,7 +115,7 @@ public class MapMarkersService {
         return mapMarkerRapository.findById(id).orElse(null);
     }
 
-@Transactional
+    @Transactional
     public MapMarker update (MarkerDTO marker, Long id){
     System.out.println("in method ");
         MapMarker mapMarker = findById(id);
