@@ -122,10 +122,6 @@ public class MapMarkersService {
     System.out.println(id);
         mapMarker.setLat(marker.getLat());
         mapMarker.setLng(marker.getLng());
-        mapMarker.setName(marker.getName());
-        mapMarker.setAddress(marker.getAddress());
-        mapMarker.setLink(marker.getLink());
-        mapMarker.setLink(marker.getLink());
         mapMarkerRapository.save(mapMarker);
         return mapMarker;
     }
