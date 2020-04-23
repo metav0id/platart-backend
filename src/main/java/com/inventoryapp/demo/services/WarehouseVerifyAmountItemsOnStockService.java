@@ -22,7 +22,7 @@ public class WarehouseVerifyAmountItemsOnStockService {
         WarehouseStockItem amountVerificationItem
                 = this.warehouseRepository.findItemByCategoryAndPricePerUnit(
                         verifyAmountItemsOnStockDTO.getCategory(),
-                        verifyAmountItemsOnStockDTO.getPricePerUnit()
+                        verifyAmountItemsOnStockDTO.getPriceListPerUnit()
                 );
 
         if (amountVerificationItem != null) {

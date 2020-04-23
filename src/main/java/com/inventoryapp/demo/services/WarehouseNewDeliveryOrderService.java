@@ -77,7 +77,7 @@ public class WarehouseNewDeliveryOrderService {
 
         // 2. Data Management
         List<WarehouseNewDeliveryOrderItem> currentDeliveryOrderItemEntitiesList = this.warehouseNewDeliveryOrderRepository.findAll();
-        currentDeliveryOrderItemEntitiesList.stream().forEach(o-> System.out.println("Delivery Quantity" + o.getDeliveryQuantity() + " Category "+ o.getCategory() + " price " + o.getDeliveryFinalPricePerUnit()));
+        currentDeliveryOrderItemEntitiesList.stream().forEach(o-> System.out.println("Delivery Quantity" + o.getQuantity() + " Category "+ o.getCategory() + " price " + o.getPriceListPerUnit()));
 
         // 3. cumulate for each category and PricePerUnit new quantity on list.
         List<WarehouseNewDeliveryOrderItem> currentDeliveriesAggregated = new ArrayList<>();
@@ -87,22 +87,22 @@ public class WarehouseNewDeliveryOrderService {
             currentDeliveriesAggregated.stream()
                     .filter(
                             o -> item.getCategory().equals(o.getCategory()) &&
-                                    item.getDeliveryFinalPricePerUnit() == item.getDeliveryFinalPricePerUnit())
-                    .forEach(o -> o.setDeliveryQuantity(o.getDeliveryQuantity() + item.getDeliveryQuantity()));
+                                    item.getPriceListPerUnit() == item.getPriceListPerUnit())
+                    .forEach(o -> o.setQuantity(o.getQuantity() + item.getQuantity()));
 
             boolean isNotItemFound = currentDeliveriesAggregated.stream()
                     .noneMatch(
                             o -> item.getCategory().equals(o.getCategory()) &&
-                                    item.getDeliveryFinalPricePerUnit() == item.getDeliveryFinalPricePerUnit());
+                                    item.getPriceListPerUnit() == item.getPriceListPerUnit());
 
             if (isNotItemFound) {
                 WarehouseNewDeliveryOrderItem newItem = new WarehouseNewDeliveryOrderItem();
                 newItem.setId(item.getId());
                 newItem.setCategory(item.getCategory());
-                newItem.setDeliveryQuantity(item.getDeliveryQuantity());
-                newItem.setDeliveryDiscount(item.getDeliveryDiscount());
-                newItem.setDeliveryDisplayPricePerUnit(item.getDeliveryDisplayPricePerUnit());
-                newItem.setDeliveryFinalPricePerUnit(item.getDeliveryFinalPricePerUnit());
+                newItem.setQuantity(item.getQuantity());
+                newItem.setDiscountPercent(item.getDiscountPercent());
+                newItem.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
+                newItem.setPriceListPerUnit(item.getPriceListPerUnit());
                 newItem.setDeliveryShop(item.getDeliveryShop());
 
                 currentDeliveriesAggregated.add(newItem);
@@ -112,18 +112,18 @@ public class WarehouseNewDeliveryOrderService {
         // 4. verify if transaction is feasible for all items in delivery list
         boolean isTransactionFeasible = true;
         for (WarehouseNewDeliveryOrderItem item : currentDeliveriesAggregated) {
-            System.out.println("ITEM ITEM: " + item.getCategory() + " " + item.getDeliveryQuantity());
+            System.out.println("ITEM ITEM: " + item.getCategory() + " " + item.getQuantity());
 
             // verify if amount of item in stock
-            WarehouseStockItem itemWarehouse = this.warehouseRepository.findItemByCategoryAndPricePerUnit(item.getCategory(), item.getDeliveryFinalPricePerUnit());
+            WarehouseStockItem itemWarehouse = this.warehouseRepository.findItemByCategoryAndPricePerUnit(item.getCategory(), item.getPriceListPerUnit());
 
-            Long differenceQuantity = itemWarehouse.getQuantity() - item.getDeliveryQuantity();
+            Long differenceQuantity = itemWarehouse.getQuantity() - item.getQuantity();
             if (differenceQuantity < 0) {
                 isTransactionFeasible = false;
 
                 WarehouseItemPersistanceErrorDTO error = new WarehouseItemPersistanceErrorDTO();
                 error.setCategory(item.getCategory());
-                error.setDeliveryFinalPricePerUnit(item.getDeliveryFinalPricePerUnit());
+                error.setDeliveryFinalPricePerUnit(item.getPriceListPerUnit());
                 error.setErrorQuantity(differenceQuantity);
                 itemPersistanceErrorDtoList.add(error);
             }
@@ -136,9 +136,9 @@ public class WarehouseNewDeliveryOrderService {
 
             LocalDateTime newDeliveryDateTime = LocalDateTime.now();
             for (WarehouseNewDeliveryOrderItem itemOnList : currentDeliveryOrderItemEntitiesList) {
-                WarehouseStockItem itemWarehouse = this.warehouseRepository.findItemByCategoryAndPricePerUnit(itemOnList.getCategory(), itemOnList.getDeliveryFinalPricePerUnit());
+                WarehouseStockItem itemWarehouse = this.warehouseRepository.findItemByCategoryAndPricePerUnit(itemOnList.getCategory(), itemOnList.getPriceListPerUnit());
 
-                long newWarehouseQuantity = itemWarehouse.getQuantity() - itemOnList.getDeliveryQuantity();
+                long newWarehouseQuantity = itemWarehouse.getQuantity() - itemOnList.getQuantity();
                 itemWarehouse.setQuantity(newWarehouseQuantity);
 
                 // modifiedItems.add(itemOnList.getId());
@@ -147,11 +147,11 @@ public class WarehouseNewDeliveryOrderService {
                 WarehouseSendDeliveryOrderItem deliveryItemSend = new WarehouseSendDeliveryOrderItem();
                 //deliveryItemSend.setId(itemOnList.getId());
                 deliveryItemSend.setCategory(itemOnList.getCategory());
-                deliveryItemSend.setDeliveryDisplayPricePerUnit(itemOnList.getDeliveryDisplayPricePerUnit());
-                deliveryItemSend.setDeliveryDiscount(itemOnList.getDeliveryDiscount());
-                deliveryItemSend.setDeliveryFinalPricePerUnit(itemOnList.getDeliveryFinalPricePerUnit());
+                deliveryItemSend.setPriceSalesPerUnit(itemOnList.getPriceSalesPerUnit());
+                deliveryItemSend.setDiscountPercent(itemOnList.getDiscountPercent());
+                deliveryItemSend.setPriceListPerUnit(itemOnList.getPriceListPerUnit());
                 deliveryItemSend.setDeliverySending(newDeliveryDateTime);
-                deliveryItemSend.setDeliveryQuantity(itemOnList.getDeliveryQuantity());
+                deliveryItemSend.setQuantity(itemOnList.getQuantity());
                 deliveryItemSend.setShop(itemOnList.getDeliveryShop());
                 System.out.println(itemOnList.getDeliveryShop());
                 this.warehouseShopDeliveryOrdersSend.save(deliveryItemSend);
@@ -179,10 +179,10 @@ public class WarehouseNewDeliveryOrderService {
             WarehouseNewDeliveryOrderItemDTO newDeliveryOrderItemDTO = new WarehouseNewDeliveryOrderItemDTO();
             newDeliveryOrderItemDTO.setId(item.getId());
             newDeliveryOrderItemDTO.setCategory(item.getCategory());
-            newDeliveryOrderItemDTO.setDeliveryQuantity(item.getDeliveryQuantity());
-            newDeliveryOrderItemDTO.setDeliveryDisplayPricePerUnit(item.getDeliveryDisplayPricePerUnit());
-            newDeliveryOrderItemDTO.setDeliveryDiscount(item.getDeliveryDiscount());
-            newDeliveryOrderItemDTO.setDeliveryFinalPricePerUnit(item.getDeliveryFinalPricePerUnit());
+            newDeliveryOrderItemDTO.setQuantity(item.getQuantity());
+            newDeliveryOrderItemDTO.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
+            newDeliveryOrderItemDTO.setDiscountPercent(item.getDiscountPercent());
+            newDeliveryOrderItemDTO.setPriceListPerUnit(item.getPriceListPerUnit());
 
             deliveryOrderItemDTOS.add(newDeliveryOrderItemDTO);
         }
@@ -201,10 +201,10 @@ public class WarehouseNewDeliveryOrderService {
             WarehouseNewDeliveryOrderItem newDeliveryOrderItem = new WarehouseNewDeliveryOrderItem();
             newDeliveryOrderItem.setId(item.getId());
             newDeliveryOrderItem.setCategory(item.getCategory());
-            newDeliveryOrderItem.setDeliveryQuantity(item.getDeliveryQuantity());
-            newDeliveryOrderItem.setDeliveryDisplayPricePerUnit(item.getDeliveryDisplayPricePerUnit());
-            newDeliveryOrderItem.setDeliveryDiscount(item.getDeliveryDiscount());
-            newDeliveryOrderItem.setDeliveryFinalPricePerUnit(item.getDeliveryFinalPricePerUnit());
+            newDeliveryOrderItem.setQuantity(item.getQuantity());
+            newDeliveryOrderItem.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
+            newDeliveryOrderItem.setDiscountPercent(item.getDiscountPercent());
+            newDeliveryOrderItem.setPriceListPerUnit(item.getPriceListPerUnit());
             newDeliveryOrderItem.setDeliveryShop(item.getDeliveryShop());
 
             deliveryOrderItemEntityLists.add(newDeliveryOrderItem);

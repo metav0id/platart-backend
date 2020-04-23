@@ -16,14 +16,14 @@ public class WarehouseStockItem {
 
     private String category;
     private long quantity;
-    private long pricePerUnit;
+    private long priceListPerUnit;
 
     public WarehouseStockItem() {
     }
 
-    public WarehouseStockItem(String category, long quantity, long pricePerUnit) {
+    public WarehouseStockItem(String category, long quantity, long priceListPerUnit) {
         this.category = category;
         this.quantity = quantity;
-        this.pricePerUnit = pricePerUnit;
+        this.priceListPerUnit = priceListPerUnit;
     }
 }

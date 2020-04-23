@@ -4,7 +4,6 @@ import com.inventoryapp.demo.dtos.WarehouseGetAllItemsDTO;
 import com.inventoryapp.demo.services.WarehouseInStockService;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -39,21 +38,21 @@ public class WarehouseInStockControllerTest {
         warehouseItemDTO1.setId(1L);
         warehouseItemDTO1.setCategory("Category1");
         warehouseItemDTO1.setQuantity(100);
-        warehouseItemDTO1.setPricePerUnit(1);
+        warehouseItemDTO1.setPriceListPerUnit(1);
         warehouseItemsDTOList.add(warehouseItemDTO1);
 
         WarehouseGetAllItemsDTO warehouseItemDTO2 = new WarehouseGetAllItemsDTO();
         warehouseItemDTO2.setId(2L);
         warehouseItemDTO2.setCategory("Category2");
         warehouseItemDTO2.setQuantity(200);
-        warehouseItemDTO2.setPricePerUnit(2);
+        warehouseItemDTO2.setPriceListPerUnit(2);
         warehouseItemsDTOList.add(warehouseItemDTO2);
 
         WarehouseGetAllItemsDTO warehouseItemDTO3 = new WarehouseGetAllItemsDTO();
         warehouseItemDTO3.setId(3L);
         warehouseItemDTO3.setCategory("Category3");
         warehouseItemDTO3.setQuantity(300);
-        warehouseItemDTO3.setPricePerUnit(3);
+        warehouseItemDTO3.setPriceListPerUnit(3);
         warehouseItemsDTOList.add(warehouseItemDTO3);
 
         // 1. Define Mock

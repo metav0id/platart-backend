@@ -17,21 +17,21 @@ public class WarehouseSupplierItem {
 
     private String category;
     private long quantity;
-    private long pricePerUnit;
-    private long price;
     private String supplierName;
-
+    private long priceListPerUnit;
+    private long priceSupplierPerUnit;
     @CreationTimestamp
     private LocalDateTime createDateTime;
 
     public WarehouseSupplierItem() {
     }
 
-    public WarehouseSupplierItem(String category, long quantity, long pricePerUnit, long price, String supplierName){
+    public WarehouseSupplierItem(String category, long quantity, long priceSupplierPerUnit, long priceListPerUnit, String supplierName){
         this.category = category;
         this.quantity = quantity;
-        this.pricePerUnit = pricePerUnit;
-        this.price = price;
+        this.priceSupplierPerUnit = priceSupplierPerUnit;
+        this.priceListPerUnit = priceListPerUnit;
         this.supplierName = supplierName;
     }
+
 }

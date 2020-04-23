@@ -22,7 +22,7 @@ public interface WarehouseRepository extends JpaRepository<WarehouseStockItem,Lo
      */
     @Modifying(clearAutomatically = true)
     @Transactional
-    @Query("UPDATE WarehouseStockItem item SET item.quantity = :quantity WHERE item.category = :category AND item.pricePerUnit = :pricePerUnit")
+    @Query("UPDATE WarehouseStockItem item SET item.quantity = :quantity WHERE item.category = :category AND item.priceListPerUnit = :pricePerUnit")
     int updateStock(@Param("category") String category, @Param("pricePerUnit") long pricePerUnit, @Param("quantity") long quantity);
 
     WarehouseStockItem findByCategory (String category);
@@ -33,7 +33,7 @@ public interface WarehouseRepository extends JpaRepository<WarehouseStockItem,Lo
      * @param pricePerUnit
      * @return list of stock items
      */
-    @Query("SELECT item from WarehouseStockItem item where item.category = :category AND item.pricePerUnit = :pricePerUnit")
+    @Query("SELECT item from WarehouseStockItem item where item.category = :category AND item.priceListPerUnit = :pricePerUnit")
     WarehouseStockItem findItemByCategoryAndPricePerUnit(@Param("category") String category, @Param("pricePerUnit") long pricePerUnit);
 
 
