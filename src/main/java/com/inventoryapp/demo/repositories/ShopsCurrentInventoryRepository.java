@@ -18,7 +18,7 @@ public interface ShopsCurrentInventoryRepository extends JpaRepository<ShopsCurr
      * @param itemInShop
      * @return
      */
-    @Query("SELECT item FROM ShopsCurrentInventory item WHERE item.itemInShop = :itemInShop")
+    @Query("SELECT item FROM ShopsCurrentInventory item WHERE item.shop = :itemInShop")
     List<ShopsCurrentInventory> findByShop(@Param("itemInShop") String itemInShop);
 
 }

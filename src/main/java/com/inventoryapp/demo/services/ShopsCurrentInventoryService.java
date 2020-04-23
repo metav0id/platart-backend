@@ -52,12 +52,12 @@ public class ShopsCurrentInventoryService {
             ShopsCurrentInventoryDTO newInventoryDTO = new ShopsCurrentInventoryDTO();
             newInventoryDTO.setId(item.getId());
             newInventoryDTO.setCategory(item.getCategory());
-            newInventoryDTO.setItemInShop(item.getItemInShop());
-            newInventoryDTO.setItemQuantity(item.getItemQuantity());
-            newInventoryDTO.setItemFinalPricePerUnit(item.getItemFinalPricePerUnit());
-            newInventoryDTO.setItemDisplayPricePerUnit(item.getItemDisplayPricePerUnit());
-            newInventoryDTO.setItemDiscount(item.getItemDiscount());
-            newInventoryDTO.setItemLastDelivery(item.getItemLastDelivery());
+            newInventoryDTO.setItemInShop(item.getShop());
+            newInventoryDTO.setQuantity(item.getQuantity());
+            newInventoryDTO.setItemFinalPricePerUnit(item.getPriceListPerUnit());
+            newInventoryDTO.setItemDisplayPricePerUnit(item.getPriceSalesPerUnit());
+            newInventoryDTO.setItemDiscount(item.getDiscountPercent());
+            newInventoryDTO.setItemLastDelivery(item.getDeliverySending());
             newInventoryDTO.setItemLastSold(item.getItemLastSold());
             shopsCurrentInventoryDTOList.add(newInventoryDTO);
         }
@@ -72,12 +72,12 @@ public class ShopsCurrentInventoryService {
             ShopsCurrentInventory newInventoryDTO = new ShopsCurrentInventory();
             newInventoryDTO.setId(item.getId());
             newInventoryDTO.setCategory(item.getCategory());
-            newInventoryDTO.setItemInShop(item.getItemInShop());
-            newInventoryDTO.setItemQuantity(item.getItemQuantity());
-            newInventoryDTO.setItemFinalPricePerUnit(item.getItemFinalPricePerUnit());
-            newInventoryDTO.setItemDisplayPricePerUnit(item.getItemDisplayPricePerUnit());
-            newInventoryDTO.setItemDiscount(item.getItemDiscount());
-            newInventoryDTO.setItemLastDelivery(item.getItemLastDelivery());
+            newInventoryDTO.setShop(item.getItemInShop());
+            newInventoryDTO.setQuantity(item.getQuantity());
+            newInventoryDTO.setPriceListPerUnit(item.getItemFinalPricePerUnit());
+            newInventoryDTO.setPriceSalesPerUnit(item.getItemDisplayPricePerUnit());
+            newInventoryDTO.setDiscountPercent(item.getItemDiscount());
+            newInventoryDTO.setDeliverySending(item.getItemLastDelivery());
             newInventoryDTO.setItemLastSold(item.getItemLastSold());
             shopsCurrentInventoryList.add(newInventoryDTO);
         }

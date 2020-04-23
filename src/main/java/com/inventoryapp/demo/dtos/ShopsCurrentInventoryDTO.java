@@ -12,7 +12,7 @@ public class ShopsCurrentInventoryDTO {
     private Long id;
 
     private String category;
-    private long itemQuantity;
+    private long quantity;
     private long itemFinalPricePerUnit;
     private long itemDisplayPricePerUnit;
     private int itemDiscount;

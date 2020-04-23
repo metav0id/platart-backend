@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,25 +33,25 @@ public class ShopsCurrentInventoryTest {
         ShopsCurrentInventory item1 = new ShopsCurrentInventory();
         item1.setId(1L);
         item1.setCategory("Category 1");
-        item1.setItemInShop("Shop1");
-        item1.setItemDisplayPricePerUnit(20);
-        item1.setItemFinalPricePerUnit(10);
-        item1.setItemDiscount(50);
-        item1.setItemInShop("Shop1");
-        item1.setItemLastDelivery(LocalDateTime.now().minusDays(7));
+        item1.setShop("Shop1");
+        item1.setPriceSalesPerUnit(20);
+        item1.setPriceListPerUnit(10);
+        item1.setDiscountPercent(50);
+        item1.setDeliverySending(LocalDateTime.now().minusDays(7));
         item1.setItemLastSold(LocalDateTime.now().minusDays(1));
+        item1.setQuantity(100);
         shopsCurrentInventoryList.add(item1);
 
         ShopsCurrentInventory item2 = new ShopsCurrentInventory();
         item2.setId(2L);
         item2.setCategory("Category 2");
-        item2.setItemInShop("Shop2");
-        item2.setItemDisplayPricePerUnit(30);
-        item2.setItemFinalPricePerUnit(15);
-        item2.setItemDiscount(50);
-        item2.setItemInShop("Shop2");
-        item2.setItemLastDelivery(LocalDateTime.now().minusDays(7));
+        item2.setShop("Shop2");
+        item2.setPriceSalesPerUnit(30);
+        item2.setPriceListPerUnit(15);
+        item2.setDiscountPercent(50);
+        item2.setDeliverySending(LocalDateTime.now().minusDays(7));
         item2.setItemLastSold(LocalDateTime.now().minusDays(1));
+        item2.setQuantity(100);
         shopsCurrentInventoryList.add(item2);
     }
 
@@ -62,11 +61,11 @@ public class ShopsCurrentInventoryTest {
         this.shopsCurrentInventoryRepository.saveAll(this.shopsCurrentInventoryList);
 
         // 1. Fetch Specific Shop Data from Database data
-        String specificShop = this.shopsCurrentInventoryList.get(0).getItemInShop();
+        String specificShop = this.shopsCurrentInventoryList.get(0).getShop();
         List<ShopsCurrentInventory> inventoryListFetched =  this.shopsCurrentInventoryRepository.findByShop(specificShop);
 
         for(int i =0; i<inventoryListFetched.size() ; i++){
-            Assert.assertEquals(inventoryListFetched.get(i).getItemInShop(), specificShop );
+            Assert.assertEquals(inventoryListFetched.get(i).getShop(), specificShop );
         }
 
         // 2. transform Entities to Dtos
@@ -124,7 +123,7 @@ public class ShopsCurrentInventoryTest {
         // 2. Verify if elements were saved correctly
         List<ShopsCurrentInventory> shopsCurrentInventoryListFetched = this.shopsCurrentInventoryRepository.findAll();
         for(int i=0;i< shopsCurrentInventoryListFetched.size(); i++){
-            Assert.assertEquals(shopsCurrentInventoryListFetched.get(i).getItemInShop(), shopsCurrentInventoryDTOList.get(i).getItemInShop());
+            Assert.assertEquals(shopsCurrentInventoryListFetched.get(i).getShop(), shopsCurrentInventoryDTOList.get(i).getItemInShop());
         }
 
     }
@@ -136,12 +135,12 @@ public class ShopsCurrentInventoryTest {
             ShopsCurrentInventoryDTO newInventoryDTO = new ShopsCurrentInventoryDTO();
             newInventoryDTO.setId(item.getId());
             newInventoryDTO.setCategory(item.getCategory());
-            newInventoryDTO.setItemInShop(item.getItemInShop());
-            newInventoryDTO.setItemQuantity(item.getItemQuantity());
-            newInventoryDTO.setItemFinalPricePerUnit(item.getItemFinalPricePerUnit());
-            newInventoryDTO.setItemDisplayPricePerUnit(item.getItemDisplayPricePerUnit());
-            newInventoryDTO.setItemDiscount(item.getItemDiscount());
-            newInventoryDTO.setItemLastDelivery(item.getItemLastDelivery());
+            newInventoryDTO.setItemInShop(item.getShop());
+            newInventoryDTO.setQuantity(item.getQuantity());
+            newInventoryDTO.setItemFinalPricePerUnit(item.getPriceListPerUnit());
+            newInventoryDTO.setItemDisplayPricePerUnit(item.getPriceListPerUnit());
+            newInventoryDTO.setItemDiscount(item.getDiscountPercent());
+            newInventoryDTO.setItemLastDelivery(item.getDeliverySending());
             newInventoryDTO.setItemLastSold(item.getItemLastSold());
             shopsCurrentInventoryDTOList.add(newInventoryDTO);
         }
@@ -155,12 +154,12 @@ public class ShopsCurrentInventoryTest {
             ShopsCurrentInventory newInventoryDTO = new ShopsCurrentInventory();
             newInventoryDTO.setId(item.getId());
             newInventoryDTO.setCategory(item.getCategory());
-            newInventoryDTO.setItemInShop(item.getItemInShop());
-            newInventoryDTO.setItemQuantity(item.getItemQuantity());
-            newInventoryDTO.setItemFinalPricePerUnit(item.getItemFinalPricePerUnit());
-            newInventoryDTO.setItemDisplayPricePerUnit(item.getItemDisplayPricePerUnit());
-            newInventoryDTO.setItemDiscount(item.getItemDiscount());
-            newInventoryDTO.setItemLastDelivery(item.getItemLastDelivery());
+            newInventoryDTO.setShop(item.getItemInShop());
+            newInventoryDTO.setQuantity(item.getQuantity());
+            newInventoryDTO.setPriceSalesPerUnit(item.getItemFinalPricePerUnit());
+            newInventoryDTO.setPriceListPerUnit(item.getItemDisplayPricePerUnit());
+            newInventoryDTO.setDiscountPercent(item.getItemDiscount());
+            newInventoryDTO.setDeliverySending(item.getItemLastDelivery());
             newInventoryDTO.setItemLastSold(item.getItemLastSold());
             shopsCurrentInventoryList.add(newInventoryDTO);
         }

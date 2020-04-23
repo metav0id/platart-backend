@@ -18,7 +18,7 @@ public class WarehouseSendDeliveryOrderItem {
     private String category;
     private int quantity;
     private long priceSalesPerUnit;
-    private int discountPercent;
     private long priceListPerUnit;
+    private int discountPercent;
     private LocalDateTime deliverySending;
 }

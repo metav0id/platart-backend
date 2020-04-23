@@ -16,12 +16,12 @@ public class ShopsCurrentInventory {
     private Long id;
 
     private String category;
-    private long itemQuantity;
-    private long itemFinalPricePerUnit;
-    private long itemDisplayPricePerUnit;
-    private int itemDiscount;
-    private String itemInShop;
-    private LocalDateTime itemLastDelivery;
+    private long quantity;
+    private long priceListPerUnit;
+    private long priceSalesPerUnit;
+    private int discountPercent;
+    private String shop;
+    private LocalDateTime deliverySending;
     private LocalDateTime itemLastSold;
 
 }
