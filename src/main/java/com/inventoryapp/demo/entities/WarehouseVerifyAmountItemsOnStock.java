@@ -7,5 +7,5 @@ public class WarehouseVerifyAmountItemsOnStock {
 
     private String category;
     private int quantity;
-    private Long pricePerUnit;
+    private Long priceListPerUnit;
 }

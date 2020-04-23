@@ -61,9 +61,14 @@ public class WarehouseNewDeliveryOrderService {
     public void setAllDeliveryOrderItems(List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList) {
         List<WarehouseNewDeliveryOrderItem> newDeliveryOrderItemEntitiesList = convertDtosToEntities(newDeliveryOrderItemDTOList);
 
+        System.out.println("Entity Send Delivery List:");
+        System.out.println(newDeliveryOrderItemEntitiesList.toString());
+
         System.out.println("New Delivery Order Service:");
         this.warehouseNewDeliveryOrderRepository.deleteAll();
+        System.out.println("Saving to temp table");
         this.warehouseNewDeliveryOrderRepository.saveAll(newDeliveryOrderItemEntitiesList);
+        System.out.println("Saved temp table");
     }
 
     public WarehouseNewDeliveryPersistanceResponseDTO sendDeliveryOrder(List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList) {
@@ -93,7 +98,7 @@ public class WarehouseNewDeliveryOrderService {
             boolean isNotItemFound = currentDeliveriesAggregated.stream()
                     .noneMatch(
                             o -> item.getCategory().equals(o.getCategory()) &&
-                                    item.getPriceListPerUnit() == item.getPriceListPerUnit());
+                                    o.getPriceListPerUnit() == item.getPriceListPerUnit());
 
             if (isNotItemFound) {
                 WarehouseNewDeliveryOrderItem newItem = new WarehouseNewDeliveryOrderItem();

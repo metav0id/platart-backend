@@ -50,6 +50,7 @@ public class WarehouseNewDeliveryOrderController {
      */
     @PostMapping("/setAllNewOrderItems")
     public void setAllNewOrderItems(@RequestBody List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
+        System.out.println(newDeliveryOrderItemDTOList.toString());
         warehouseNewDeliveryOrderService.setAllDeliveryOrderItems(newDeliveryOrderItemDTOList);
     }
 
@@ -68,6 +69,7 @@ public class WarehouseNewDeliveryOrderController {
      */
     @PostMapping("sendDeliveryOrder")
     public WarehouseNewDeliveryPersistanceResponseDTO sendDeliveryOrder(@RequestBody List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
+        System.out.println(newDeliveryOrderItemDTOList.toString());
         return this.warehouseNewDeliveryOrderService.sendDeliveryOrder(newDeliveryOrderItemDTOList);
 
     }
