@@ -52,6 +52,7 @@ public class MapMarkersService {
             markerDTO.setName(marker.getName());
             markerDTO.setAddress(marker.getAddress());
             markerDTO.setCategory(marker.getCategory());
+            markerDTO.setId(marker.getId());
 //            markerDTO.setLink(marker.getLink());
 
 
