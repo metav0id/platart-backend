@@ -27,8 +27,8 @@ public class WarehouseDeliverySupplierService {
         List<WarehouseSupplierItem> listEntity = new ArrayList<>();
         for(WarehouseSupplierItemDTO entry : listDTO){
             WarehouseSupplierItem itemEntity = new WarehouseSupplierItem(entry.getCategory(),
-                    entry.getQuantity(), entry.getPricePerUnit(),
-                    entry.getPrice(), entry.getSupplierName());
+                    entry.getQuantity(),entry.getPriceSupplierPerUnit(), entry.getPriceListPerUnit(),
+                    entry.getSupplierName());
             listEntity.add(itemEntity);
         }
         warehouseDeliverySupplierRepository.saveAll(listEntity);

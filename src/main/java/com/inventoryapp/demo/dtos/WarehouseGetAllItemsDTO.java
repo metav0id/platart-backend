@@ -9,16 +9,16 @@ import javax.persistence.Id;
 public class WarehouseGetAllItemsDTO {
     private String category;
     private long quantity;
-    private long pricePerUnit;
+    private long priceListPerUnit;
     @Id
     @GeneratedValue
     private long id;
     public WarehouseGetAllItemsDTO() {
     }
 
-    public WarehouseGetAllItemsDTO(String category, long quantity, long pricePerUnit) {
+    public WarehouseGetAllItemsDTO(String category, long quantity, long priceListPerUnit) {
         this.category = category;
         this.quantity = quantity;
-        this.pricePerUnit = pricePerUnit;
+        this.priceListPerUnit = priceListPerUnit;
     }
 }

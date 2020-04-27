@@ -7,5 +7,5 @@ public class WarehouseVerifyAmountItemsOnStockDTO {
 
     private String category;
     private long quantity;
-    private Long pricePerUnit;
+    private long priceListPerUnit;
 }

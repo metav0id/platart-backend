@@ -43,13 +43,13 @@ public class WarehouseInStockServiceTest {
     public void removeDuplicatesFromListDtoTest() {
         //Setup
         List<WarehouseSupplierItemDTO> itemListDTO = new ArrayList<>();
-        WarehouseSupplierItemDTO item1 = new WarehouseSupplierItemDTO("Earring", 50, 30, 1500, "Enrico");
-        WarehouseSupplierItemDTO item2 = new WarehouseSupplierItemDTO("Necklace", 10, 200, 2000, "Alonzo");
-        WarehouseSupplierItemDTO item3 = new WarehouseSupplierItemDTO("Necklace", 11, 200, 2000, "Steffi");
-        WarehouseSupplierItemDTO item4 = new WarehouseSupplierItemDTO("Necklace", 20, 201, 2000, "Alonzo");
-        WarehouseSupplierItemDTO item5 = new WarehouseSupplierItemDTO("Earring", 40, 30, 2000, "Michael");
-        WarehouseSupplierItemDTO item6 = new WarehouseSupplierItemDTO("Shoes", 50, 200, 2000, "Michael");
-        WarehouseSupplierItemDTO item7 = new WarehouseSupplierItemDTO("Shoes", -50, 200, 2000, "Negativo");
+        WarehouseSupplierItemDTO item1 = new WarehouseSupplierItemDTO("Earring", 50, 30, 15, "Enrico");
+        WarehouseSupplierItemDTO item2 = new WarehouseSupplierItemDTO("Necklace", 10, 200, 20, "Alonzo");
+        WarehouseSupplierItemDTO item3 = new WarehouseSupplierItemDTO("Necklace", 11, 200, 20, "Steffi");
+        WarehouseSupplierItemDTO item4 = new WarehouseSupplierItemDTO("Necklace", 20, 201, 20, "Alonzo");
+        WarehouseSupplierItemDTO item5 = new WarehouseSupplierItemDTO("Earring", 40, 30, 20, "Michael");
+        WarehouseSupplierItemDTO item6 = new WarehouseSupplierItemDTO("Shoes", 50, 200, 2, "Michael");
+        WarehouseSupplierItemDTO item7 = new WarehouseSupplierItemDTO("Shoes", -50, 200, 2, "Negativo");
 
         itemListDTO.add(item1);
         itemListDTO.add(item2);
@@ -71,10 +71,10 @@ public class WarehouseInStockServiceTest {
         //Build list without duplicates containing categories and pricePerUnit
         for (WarehouseStockItem outerItem : listStockItemsContainingDuplicates) {
             if (listStockItemsWithoutDuplicates.stream().noneMatch(o -> o.getCategory().equals(outerItem.getCategory()) &&
-                    o.getPricePerUnit() == outerItem.getPricePerUnit())) {
+                    o.getPriceListPerUnit() == outerItem.getPriceListPerUnit())) {
                 WarehouseStockItem newItem = new WarehouseStockItem();
                 newItem.setCategory(outerItem.getCategory());
-                newItem.setPricePerUnit(outerItem.getPricePerUnit());
+                newItem.setPriceListPerUnit(outerItem.getPriceListPerUnit());
                 listStockItemsWithoutDuplicates.add(newItem);
             }
         }
@@ -82,7 +82,7 @@ public class WarehouseInStockServiceTest {
         // Step 3 Iterrate through reference stock list and cumulate quantities in new list without duplicates
         for (WarehouseStockItem outerItem : listStockItemsContainingDuplicates) {
             listStockItemsWithoutDuplicates.stream().filter(o -> o.getCategory().equals(outerItem.getCategory()) &&
-                    o.getPricePerUnit() == outerItem.getPricePerUnit()).forEach(o -> {
+                    o.getPriceListPerUnit() == outerItem.getPriceListPerUnit()).forEach(o -> {
                 o.setQuantity(o.getQuantity() + outerItem.getQuantity());
             });
         }
@@ -101,7 +101,7 @@ public class WarehouseInStockServiceTest {
     private WarehouseStockItem convertToEntity(WarehouseSupplierItemDTO itemDto) {
         WarehouseStockItem item = new WarehouseStockItem();
         item.setCategory(itemDto.getCategory());
-        item.setPricePerUnit(itemDto.getPricePerUnit());
+        item.setPriceListPerUnit(itemDto.getPriceListPerUnit());
         boolean isNegativeQuantity = itemDto.getQuantity() < 0;
         if (isNegativeQuantity) {
             item.setQuantity(0);
@@ -145,7 +145,7 @@ public class WarehouseInStockServiceTest {
         System.out.println("Loading stock inventory for categories and pricePerUnits mentioned in supplier list...");
         List<WarehouseStockItem> listStockDatabase = new ArrayList<>();
         for (WarehouseStockItem item : listStockItemsWithoutDuplicates) {
-            WarehouseStockItem newItem = warehouseRepository.findItemByCategoryAndPricePerUnit(item.getCategory(), item.getPricePerUnit());
+            WarehouseStockItem newItem = warehouseRepository.findItemByCategoryAndPricePerUnit(item.getCategory(), item.getPriceListPerUnit());
             //If an item with a certain category and pricePerUnit is not available in stock inventory it will be added
             if (newItem != null) {
                 listStockDatabase.add(newItem);
@@ -155,15 +155,15 @@ public class WarehouseInStockServiceTest {
 
         // Test 1
         boolean isEqualCategoryAndPricePerUnitItem1 = listStockDatabase.get(0).getCategory().equals(item1.getCategory()) &&
-                listStockDatabase.get(0).getPricePerUnit() == item1.getPricePerUnit();
+                listStockDatabase.get(0).getPriceListPerUnit() == item1.getPriceListPerUnit();
         Assert.assertTrue(isEqualCategoryAndPricePerUnitItem1);
         Assert.assertEquals(100, listStockDatabase.get(0).getQuantity());
         boolean isEqualCategoryAndPricePerUnitItem2 = listStockDatabase.get(1).getCategory().equals(item2.getCategory()) &&
-                listStockDatabase.get(1).getPricePerUnit() == item2.getPricePerUnit();
+                listStockDatabase.get(1).getPriceListPerUnit() == item2.getPriceListPerUnit();
         Assert.assertTrue(isEqualCategoryAndPricePerUnitItem2);
         Assert.assertEquals(150, listStockDatabase.get(1).getQuantity());
         boolean isEqualCategoryAndPricePerUnitItem3 = listStockDatabase.get(2).getCategory().equals(item3.getCategory()) &&
-                listStockDatabase.get(2).getPricePerUnit() == item3.getPricePerUnit();
+                listStockDatabase.get(2).getPriceListPerUnit() == item3.getPriceListPerUnit();
         Assert.assertTrue(isEqualCategoryAndPricePerUnitItem3);
         Assert.assertEquals(230, listStockDatabase.get(2).getQuantity());
 
@@ -174,9 +174,9 @@ public class WarehouseInStockServiceTest {
         System.out.println("Cumulating quantities in list...");
         for (WarehouseStockItem item : listStockItemsWithoutDuplicates) {
             listStockDatabase.stream().filter(o -> item.getCategory().equals(o.getCategory()) &&
-                    item.getPricePerUnit() == o.getPricePerUnit()).forEach(o -> o.setQuantity(o.getQuantity() + item.getQuantity()));
+                    item.getPriceListPerUnit() == o.getPriceListPerUnit()).forEach(o -> o.setQuantity(o.getQuantity() + item.getQuantity()));
             if (listStockDatabase.stream().noneMatch(o -> item.getCategory().equals(o.getCategory()) &&
-                    item.getPricePerUnit() == o.getPricePerUnit())) {
+                    item.getPriceListPerUnit() == o.getPriceListPerUnit())) {
                 listStockDatabase.add(item);
             }
         }
@@ -195,7 +195,7 @@ public class WarehouseInStockServiceTest {
         //Step 3 persist new stock list to inventory table
         System.out.println("Saving new cumulated stock list to database...");
         for (WarehouseStockItem item : listStockDatabase) {
-            int modifiedRow = warehouseRepository.updateStock(item.getCategory(), item.getPricePerUnit(), item.getQuantity());
+            int modifiedRow = warehouseRepository.updateStock(item.getCategory(), item.getPriceListPerUnit(), item.getQuantity());
             if (modifiedRow == 0) {
                 warehouseRepository.save(item);
             }
@@ -209,7 +209,7 @@ public class WarehouseInStockServiceTest {
         Assert.assertEquals(7, completeListStockDatabase.size());
         for (WarehouseStockItem item : listStockDatabase) {
             completeListStockDatabase.stream().filter(o -> item.getCategory().equals(o.getCategory()) &&
-                    item.getPricePerUnit() == o.getPricePerUnit()).forEach(o -> Assert.assertEquals(item.getQuantity(), o.getQuantity()));
+                    item.getPriceListPerUnit() == o.getPriceListPerUnit()).forEach(o -> Assert.assertEquals(item.getQuantity(), o.getQuantity()));
             ;
         }
         for (WarehouseStockItem item : completeListStockDatabase) {
@@ -221,7 +221,7 @@ public class WarehouseInStockServiceTest {
     public void updateRecordInDatabase() {
         WarehouseStockItem item1 = new WarehouseStockItem("Bracelet", 100, 10);
 
-        int modified = warehouseRepository.updateStock(item1.getCategory(), item1.getPricePerUnit(), item1.getQuantity());
+        int modified = warehouseRepository.updateStock(item1.getCategory(), item1.getPriceListPerUnit(), item1.getQuantity());
 
         System.out.println("Result modification: " + modified);
     }

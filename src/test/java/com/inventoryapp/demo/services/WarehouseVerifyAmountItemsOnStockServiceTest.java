@@ -29,35 +29,35 @@ public class WarehouseVerifyAmountItemsOnStockServiceTest {
         warehouseStockItem1.setId(1L);
         warehouseStockItem1.setCategory("Category1");
         warehouseStockItem1.setQuantity(100);
-        warehouseStockItem1.setPricePerUnit(10);
+        warehouseStockItem1.setPriceListPerUnit(10);
         warehouseStockItemsEntities.add(warehouseStockItem1);
 
         WarehouseStockItem warehouseStockItem2 = new WarehouseStockItem();
         warehouseStockItem2.setId(2L);
         warehouseStockItem2.setCategory("Category2");
         warehouseStockItem2.setQuantity(200);
-        warehouseStockItem2.setPricePerUnit(20);
+        warehouseStockItem2.setPriceListPerUnit(20);
         warehouseStockItemsEntities.add(warehouseStockItem2);
 
         WarehouseStockItem warehouseStockItem3 = new WarehouseStockItem();
         warehouseStockItem3.setId(3L);
         warehouseStockItem3.setCategory("Category3");
         warehouseStockItem3.setQuantity(300);
-        warehouseStockItem3.setPricePerUnit(30);
+        warehouseStockItem3.setPriceListPerUnit(30);
         warehouseStockItemsEntities.add(warehouseStockItem3);
 
         WarehouseStockItem warehouseStockItem4 = new WarehouseStockItem();
         warehouseStockItem4.setId(4L);
         warehouseStockItem4.setCategory("Category4");
         warehouseStockItem4.setQuantity(400);
-        warehouseStockItem4.setPricePerUnit(40);
+        warehouseStockItem4.setPriceListPerUnit(40);
         warehouseStockItemsEntities.add(warehouseStockItem4);
 
         WarehouseStockItem warehouseStockItem5 = new WarehouseStockItem();
         warehouseStockItem5.setId(5L);
         warehouseStockItem5.setCategory("Category4");
         warehouseStockItem5.setQuantity(500);
-        warehouseStockItem5.setPricePerUnit(50);
+        warehouseStockItem5.setPriceListPerUnit(50);
         warehouseStockItemsEntities.add(warehouseStockItem5);
     }
 
@@ -74,13 +74,13 @@ public class WarehouseVerifyAmountItemsOnStockServiceTest {
         WarehouseVerifyAmountItemsOnStockDTO verifyAmountItemsOnStockDTO = new WarehouseVerifyAmountItemsOnStockDTO();
         verifyAmountItemsOnStockDTO.setCategory(warehouseStockItemRandom.getCategory());
         verifyAmountItemsOnStockDTO.setQuantity(warehouseStockItemRandom.getQuantity());
-        verifyAmountItemsOnStockDTO.setPricePerUnit(warehouseStockItemRandom.getPricePerUnit());
+        verifyAmountItemsOnStockDTO.setPriceListPerUnit(warehouseStockItemRandom.getPriceListPerUnit());
         verifyAmountItemsOnStockDTO.setQuantity(warehouseStockItemRandom.getQuantity());
 
         WarehouseStockItem amountVerificationItem
                 = this.warehouseRepository.findItemByCategoryAndPricePerUnit(
                 verifyAmountItemsOnStockDTO.getCategory(),
-                verifyAmountItemsOnStockDTO.getPricePerUnit()
+                verifyAmountItemsOnStockDTO.getPriceListPerUnit()
         );
 
         // 2. Check if the quantity is correct
