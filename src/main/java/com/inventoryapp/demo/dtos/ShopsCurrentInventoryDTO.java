@@ -13,9 +13,9 @@ public class ShopsCurrentInventoryDTO {
 
     private String category;
     private long quantity;
-    private long itemFinalPricePerUnit;
-    private long itemDisplayPricePerUnit;
-    private int itemDiscount;
+    private long priceListPricePerUnit;
+    private long priceSalesPricePerUnit;
+    private int discountPercent;
     private String itemInShop;
     private LocalDateTime itemLastDelivery;
     private LocalDateTime itemLastSold;
