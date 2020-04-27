@@ -128,7 +128,7 @@ public class WarehouseNewDeliveryOrderService {
 
                 WarehouseItemPersistanceErrorDTO error = new WarehouseItemPersistanceErrorDTO();
                 error.setCategory(item.getCategory());
-                error.setDeliveryFinalPricePerUnit(item.getPriceListPerUnit());
+                error.setPriceListPricePerUnit(item.getPriceListPerUnit());
                 error.setErrorQuantity(differenceQuantity);
                 itemPersistanceErrorDtoList.add(error);
             }

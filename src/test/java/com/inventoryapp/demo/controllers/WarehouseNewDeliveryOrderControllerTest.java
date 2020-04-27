@@ -201,13 +201,13 @@ public class WarehouseNewDeliveryOrderControllerTest {
         List<WarehouseItemPersistanceErrorDTO> itemPersistanceErrorDtoList = new ArrayList<>();
         WarehouseItemPersistanceErrorDTO error1 = new WarehouseItemPersistanceErrorDTO();
         error1.setCategory("Category1");
-        error1.setDeliveryFinalPricePerUnit(10L);
+        error1.setPriceListPricePerUnit(10L);
         error1.setErrorQuantity(10L);
         itemPersistanceErrorDtoList.add(error1);
 
         WarehouseItemPersistanceErrorDTO error2 = new WarehouseItemPersistanceErrorDTO();
         error2.setCategory("Category2");
-        error2.setDeliveryFinalPricePerUnit(20L);
+        error2.setPriceListPricePerUnit(20L);
         error2.setErrorQuantity(20L);
         itemPersistanceErrorDtoList.add(error2);
 

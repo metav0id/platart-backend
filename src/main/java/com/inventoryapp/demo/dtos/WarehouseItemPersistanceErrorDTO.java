@@ -6,7 +6,7 @@ import lombok.Data;
 public class WarehouseItemPersistanceErrorDTO {
 
     private String category;
-    private Long deliveryFinalPricePerUnit;
+    private Long priceListPricePerUnit;
     private Long errorQuantity;
 
 }
