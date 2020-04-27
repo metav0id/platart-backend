@@ -2,6 +2,7 @@ package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.ComerceDTO;
 import com.inventoryapp.demo.dtos.MarkerDTO;
+import com.inventoryapp.demo.entities.Comerce;
 import com.inventoryapp.demo.services.ComerceService;
 import com.inventoryapp.demo.services.MapMarkersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,15 @@ public class ComerceController {
      * @return List of void
      */
     @PostMapping("/savecomerce")
-    public void saveMarker(@RequestBody ComerceDTO comerceDTO) {
+    public void saveComerce(@RequestBody ComerceDTO comerceDTO) {
         comerceService.createNewComerce(comerceDTO);
+
+    }
+
+    @PostMapping("/find")
+    public void findComerce (@RequestBody ComerceDTO comerceDTO) {
+        ComerceDTO comerce= comerceService.findById2(comerceDTO);
+        System.out.println(comerce);
 
     }
 
@@ -55,7 +63,7 @@ public class ComerceController {
     //resquesbody asks for the whole entity
     public void delete(@PathVariable Long id){
 
-        comerceService.delete(id);
+        comerceService.deleteComerce(id);
     }
 
 

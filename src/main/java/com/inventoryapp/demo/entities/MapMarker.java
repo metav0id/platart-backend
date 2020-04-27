@@ -19,5 +19,5 @@ public class MapMarker {
     public String category;
     public String name;
     public String address;
-    public String link ;
+//    public String link ;
 }

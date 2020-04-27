@@ -8,14 +8,12 @@ import javax.persistence.Id;
 @Data
 public class MarkerDTO {
 
-    private Long id;
-
+    public Long id;
     public String lat;
-
     public String lng;
     public String category;
     public String name;
     public String address;
-    public String link ;
+//    public String link ;
 }
 
