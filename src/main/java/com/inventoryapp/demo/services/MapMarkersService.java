@@ -135,6 +135,7 @@ public class MapMarkersService {
         }
     }
 
+
     @Transactional(readOnly = true)
     public MapMarker findById(Long id) {
         return mapMarkerRapository.findById(id).orElse(null);

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController("")
@@ -21,6 +22,7 @@ public class MapMarkersController {
 
     @Autowired
     private final MapMarkersService mapMarkersService;
+    @Autowired
     MapMarkerRapository mapMarkerRapository;
 
     public MapMarkersController(MapMarkersService mapMarkersService) {
@@ -56,13 +58,22 @@ public class MapMarkersController {
      * http://localhost:8081/marker/delete/1  in postman. the 1 is an example.
      * @return is void.
      */
+
 //methods to delete a marker
-    @DeleteMapping("/delete/{id}")
+//    @DeleteMapping("/delete/{id}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    //resquesbody asks for the whole entity
+//    public void delete(@PathVariable Long id){
+//
+//        mapMarkersService.deleteMarker(id);
+//    }
+
+    @PostMapping("/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-
     //resquesbody asks for the whole entity
-    public void delete(@PathVariable Long id){
-
+    public void delete(@RequestBody MarkerDTO markerDTO){
+        MapMarker mapMarker = mapMarkerRapository.findByName(markerDTO.getName());
+        Long id = mapMarker.getId();
         mapMarkersService.deleteMarker(id);
     }
 
