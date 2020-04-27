@@ -23,5 +23,4 @@ public class ShopsCurrentInventory {
     private String shop;
     private LocalDateTime deliverySending;
     private LocalDateTime itemLastSold;
-
 }

@@ -6,8 +6,6 @@ import lombok.Data;
 public class WarehouseSupplierItemDTO {
     private String category;
     private long quantity;
-//    private long pricePerUnit;
-//    private long price;
     private String supplierName;
     private long priceListPerUnit;
     private long priceSupplierPerUnit;
@@ -18,7 +16,5 @@ public class WarehouseSupplierItemDTO {
         this.priceListPerUnit = priceListPerUnit;
         this.priceSupplierPerUnit = priceSupplierPerUnit;
         this.supplierName = supplierName;
-//        this.price = price;
-//        this.pricePerUnit = pricePerUnit;
     }
 }

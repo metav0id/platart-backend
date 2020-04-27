@@ -15,5 +15,4 @@ public class WarehouseItemCategory {
     private Long id;
 
     private String category;
-
 }
