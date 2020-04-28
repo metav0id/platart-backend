@@ -8,7 +8,7 @@ import com.inventoryapp.demo.entities.WarehouseSendDeliveryOrderItem;
 import com.inventoryapp.demo.entities.WarehouseStockItem;
 import com.inventoryapp.demo.repositories.WarehouseNewDeliveryOrderRepository;
 import com.inventoryapp.demo.repositories.WarehouseRepository;
-import com.inventoryapp.demo.repositories.WarehouseShopDeliveryOrdersSend;
+import com.inventoryapp.demo.repositories.WarehouseShopDeliveryOrdersSendRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class WarehouseNewDeliveryOrderServiceTest {
     @Autowired
     private WarehouseRepository warehouseRepository;
     @Autowired
-    private WarehouseShopDeliveryOrdersSend warehouseShopDeliveryOrdersSend;
+    private WarehouseShopDeliveryOrdersSendRepository warehouseShopDeliveryOrdersSendRepository;
 
     List<WarehouseNewDeliveryOrderItem> deliveryOrderItemsEntities = new ArrayList<>();
     List<WarehouseNewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
@@ -238,7 +238,7 @@ public class WarehouseNewDeliveryOrderServiceTest {
                     deliveryItemSend.setQuantity(itemOnList.getQuantity());
                     deliveryItemSend.setShop(itemOnList.getDeliveryShop());
                     System.out.println(itemOnList.getDeliveryShop());
-                    this.warehouseShopDeliveryOrdersSend.save(deliveryItemSend);
+                    this.warehouseShopDeliveryOrdersSendRepository.save(deliveryItemSend);
                 } catch (NullPointerException exception){
                     System.err.println("We have a Nulllpointer Exception");
                 }
