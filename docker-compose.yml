@@ -18,7 +18,7 @@ services:
 #      - backend
 
   app-server:
-    image: enrico2507/platart
+    image: enrico2507/testjava
     restart: on-failure
     depends_on:
       - db
