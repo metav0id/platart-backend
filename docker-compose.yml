@@ -19,7 +19,7 @@ services:
 #      - backend
 
   app-server:
-    image: enrico2507/testjava
+    image: enrico2507/platart
     container_name: inventory-backend
     restart: on-failure
     depends_on:
