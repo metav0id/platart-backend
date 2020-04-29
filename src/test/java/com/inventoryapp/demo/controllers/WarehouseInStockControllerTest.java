@@ -4,6 +4,7 @@ import com.inventoryapp.demo.dtos.WarehouseGetAllItemsDTO;
 import com.inventoryapp.demo.services.WarehouseInStockService;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,6 +30,7 @@ public class WarehouseInStockControllerTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    @Ignore
     @Test
     public void getAllItemsTest(){
         // 0. Define Data

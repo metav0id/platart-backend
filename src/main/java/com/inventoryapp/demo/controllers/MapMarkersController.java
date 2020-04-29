@@ -1,14 +1,19 @@
 package com.inventoryapp.demo.controllers;
 
+import com.inventoryapp.demo.dtos.ComerceDTO;
 import com.inventoryapp.demo.dtos.MarkerDTO;
 import com.inventoryapp.demo.dtos.WarehouseGetAllItemsDTO;
+import com.inventoryapp.demo.entities.Comerce;
 import com.inventoryapp.demo.entities.MapMarker;
+import com.inventoryapp.demo.repositories.MapMarkerRapository;
 import com.inventoryapp.demo.services.MapMarkersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController("")
@@ -16,7 +21,9 @@ import java.util.List;
 public class MapMarkersController {
 
     @Autowired
-   private final MapMarkersService mapMarkersService;
+    private final MapMarkersService mapMarkersService;
+    @Autowired
+    MapMarkerRapository mapMarkerRapository;
 
     public MapMarkersController(MapMarkersService mapMarkersService) {
         this.mapMarkersService = mapMarkersService;
@@ -51,14 +58,23 @@ public class MapMarkersController {
      * http://localhost:8081/marker/delete/1  in postman. the 1 is an example.
      * @return is void.
      */
+
 //methods to delete a marker
-    @DeleteMapping("/delete/{id}")
+//    @DeleteMapping("/delete/{id}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    //resquesbody asks for the whole entity
+//    public void delete(@PathVariable Long id){
+//
+//        mapMarkersService.deleteMarker(id);
+//    }
+
+    @PostMapping("/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-
     //resquesbody asks for the whole entity
-    public void delete(@PathVariable Long id){
-
-        mapMarkersService.delete(id);
+    public void delete(@RequestBody MarkerDTO markerDTO){
+        MapMarker mapMarker = mapMarkerRapository.findByName(markerDTO.getName());
+        Long id = mapMarker.getId();
+        mapMarkersService.deleteMarker(id);
     }
 
     /**
@@ -66,14 +82,37 @@ public class MapMarkersController {
      *
      * @return the modified Entity of the Marker.
      */
-    @PostMapping("/update/{id}")
+    @PostMapping("/update")
     @ResponseStatus (HttpStatus.CREATED)
-    public MapMarker update (@RequestBody MarkerDTO selectedMarker, @PathVariable Long id){
+    public void update (@RequestBody MarkerDTO[] markerDTO){
+        System.out.println("in controller");
+        mapMarkersService.update(markerDTO[0],markerDTO[1]);
+//        return updatedmarker;
+    }
 
-        MapMarker mapMarker = mapMarkersService.update(selectedMarker, id);
-        return mapMarker;
+    @PostMapping("/find")
+    public void findMarker (@RequestBody MarkerDTO markerDTO) {
+//        Long id = markerDTO.getId();
+//        MapMarker mapMarker = mapMarkersService.findById(id);
+//        System.out.println(mapMarker);
+        MarkerDTO markerDTOFounf= mapMarkersService.findById2(markerDTO);
+
+        System.out.println(markerDTOFounf);
 
     }
+
+//    @PostMapping("/update/{lng}")
+//    @ResponseStatus (HttpStatus.CREATED)
+//    public MapMarker update (@RequestBody MarkerDTO markerDTO, @PathVariable String lng, @PathVariable String lat){
+//        Long id = markerDTO.getId();
+//
+//        MapMarker marketToEdit =mapMarkersService.findById(id);
+//        marketToEdit.setLng(lng);
+//        marketToEdit.setLat(lat);
+//
+//        return mapMarkersService.save(marketToEdit);
+//
+//    }
 
 
 }

@@ -21,6 +21,11 @@ public class ComerceService {
     @Autowired
     MapMarkersService mapMarkersService;
 
+    /**
+     * Gets you all the markers saved in DataBase
+     *
+     * @return a list of ComerceDTOs
+     */
     public List<ComerceDTO> getAllComerces() {
 
         List<Comerce> findAllComerces = comerceRepository.findAll();
@@ -34,7 +39,11 @@ public class ComerceService {
         }
         return findAllMarkersDTO;
     }
-
+    /**
+     * Created a new comerce
+     *
+     * @return vod
+     */
     public void createNewComerce(ComerceDTO comerceDTO){
 
         Comerce comerce = covertUnitDTOToEntity(comerceDTO);
@@ -48,6 +57,17 @@ public class ComerceService {
         comerce.setAddress(comerceDTO.getAddress());
         comerce.setCategory(comerceDTO.getCategory());
         comerce.setName(comerceDTO.getName());
+        comerce.setId(comerceDTO.getId());
+
+        return comerce;
+    }
+
+    public ComerceDTO covertUnitEntityToDTO(Comerce comerceDTO){
+        ComerceDTO comerce = new ComerceDTO();
+        comerce.setAddress(comerceDTO.getAddress());
+        comerce.setCategory(comerceDTO.getCategory());
+        comerce.setName(comerceDTO.getName());
+        comerce.setId(comerceDTO.getId());
 
         return comerce;
     }
@@ -70,13 +90,18 @@ public class ComerceService {
         markerDTO.setAddress(comerceDTO.getAddress());
         markerDTO.setCategory(comerceDTO.getCategory());
         markerDTO.setName(comerceDTO.getName());
+        markerDTO.setId(comerceDTO.getId());
 
         return markerDTO;
     }
 
-
+    /**
+     * Delets a comerce when id given (todo update by giving complete entitiy)
+     *
+     * @return void
+     */
     @Transactional
-    public void delete(Long id) {
+    public void deleteComerce(Long id) {
 
         Comerce comerce = findById(id);
         if (comerce!= null){
@@ -85,9 +110,29 @@ public class ComerceService {
             System.out.println("The user doesnt exists");
         }
     }
-
+    /**
+     * Gets you a comerce by id
+     *
+     * @return a Comerde
+     */
     @Transactional(readOnly = true)
     public Comerce findById(Long id) {
         return comerceRepository.findById(id).orElse(null);
+    }
+    /**
+     * Gets you a comerce by comercedto
+     *
+     * @return a Comerde
+     */
+    @Transactional(readOnly = true)
+    public ComerceDTO findById2(ComerceDTO comerceDTO) {
+        Long id = comerceDTO.getId();
+
+        Comerce comerce = comerceRepository.findById(id).orElse(null);
+
+        return covertUnitEntityToDTO(comerce);
+
+
+
     }
 }

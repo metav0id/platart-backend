@@ -4,6 +4,7 @@ import com.inventoryapp.demo.dtos.WarehouseItemCategoryDTO;
 import com.inventoryapp.demo.services.WarehouseItemCategoryService;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,6 +34,7 @@ public class WarehouseItemCategoriesControllerTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    @Ignore
     @Test
     public void getAllCategoriesPositiveTest(){
         // 0. generate some test data
@@ -60,6 +62,7 @@ public class WarehouseItemCategoriesControllerTest {
         Assert.assertNotNull(warehouseItemListControllerFetched);
     }
 
+    @Ignore
     @Test
     public void getAllCategoriesNegativeTest(){
         // 0. generate empty test data

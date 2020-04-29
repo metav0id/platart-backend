@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+
+#Database Service
+  db:
+    image: mariadb
+    container_name: inventory-database
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: platart
+      MYSQL_USER: developer
+      MYSQL_PASSWORD: Del2020
+    volumes:
+      - db-data:/var/lib/mysql/data
+#    networks:
+#      - backend
+
+  app-server:
+    image: enrico2507/platart
+    container_name: inventory-backend
+    restart: on-failure
+    depends_on:
+      - db
+    ports:
+      - 8081:8081
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/platart?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: developer
+      SPRING_DATASOURCE_PASSWORD: Del2020
+    links:
+      - db
+
+  app-ui:
+    image: enrico2507/angularplatart
+    container_name: inventory-frontend
+    ports:
+      - 4200:80
+    links:
+      - app-server
+volumes:
+  db-data:
+
+#
+#volumes:
+#  db-data:
+#
+#networks:
+#  backend:

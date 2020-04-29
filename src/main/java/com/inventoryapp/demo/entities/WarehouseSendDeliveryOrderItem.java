@@ -1,10 +1,9 @@
 package com.inventoryapp.demo.entities;
 
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -21,4 +20,10 @@ public class WarehouseSendDeliveryOrderItem {
     private long priceListPerUnit;
     private int discountPercent;
     private LocalDateTime deliverySending;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="checkin_id", referencedColumnName = "id")
+    private SalesCheckedInProductsFromWarehouse salesCheckedInProductsFromWarehouse;
+
+
 }

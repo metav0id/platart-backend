@@ -3,12 +3,13 @@ package com.inventoryapp.demo.services;
 import com.inventoryapp.demo.dtos.WarehouseItemPersistanceErrorDTO;
 import com.inventoryapp.demo.dtos.WarehouseNewDeliveryOrderItemDTO;
 import com.inventoryapp.demo.dtos.WarehouseNewDeliveryPersistanceResponseDTO;
+import com.inventoryapp.demo.entities.SalesCheckedInProductsFromWarehouse;
 import com.inventoryapp.demo.entities.WarehouseNewDeliveryOrderItem;
 import com.inventoryapp.demo.entities.WarehouseSendDeliveryOrderItem;
 import com.inventoryapp.demo.entities.WarehouseStockItem;
 import com.inventoryapp.demo.repositories.WarehouseNewDeliveryOrderRepository;
 import com.inventoryapp.demo.repositories.WarehouseRepository;
-import com.inventoryapp.demo.repositories.WarehouseShopDeliveryOrdersSend;
+import com.inventoryapp.demo.repositories.WarehouseShopDeliveryOrdersSendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +20,15 @@ import java.util.List;
 @Service
 public class WarehouseNewDeliveryOrderService {
 
-    private WarehouseShopDeliveryOrdersSend warehouseShopDeliveryOrdersSend;
+    private WarehouseShopDeliveryOrdersSendRepository warehouseShopDeliveryOrdersSendRepository;
     private WarehouseNewDeliveryOrderRepository warehouseNewDeliveryOrderRepository;
     private WarehouseRepository warehouseRepository;
 
     @Autowired
-    public WarehouseNewDeliveryOrderService(WarehouseShopDeliveryOrdersSend warehouseShopDeliveryOrdersSend, WarehouseNewDeliveryOrderRepository newDeliveryOrderRepository, WarehouseRepository warehouseRepository) {
-        this.warehouseShopDeliveryOrdersSend = warehouseShopDeliveryOrdersSend;
+    public WarehouseNewDeliveryOrderService(WarehouseShopDeliveryOrdersSendRepository warehouseShopDeliveryOrdersSendRepository,
+                                            WarehouseNewDeliveryOrderRepository newDeliveryOrderRepository,
+                                            WarehouseRepository warehouseRepository) {
+        this.warehouseShopDeliveryOrdersSendRepository = warehouseShopDeliveryOrdersSendRepository;
         this.warehouseNewDeliveryOrderRepository = newDeliveryOrderRepository;
         this.warehouseRepository = warehouseRepository;
     }
@@ -141,16 +144,15 @@ public class WarehouseNewDeliveryOrderService {
 
             LocalDateTime newDeliveryDateTime = LocalDateTime.now();
             for (WarehouseNewDeliveryOrderItem itemOnList : currentDeliveryOrderItemEntitiesList) {
-                WarehouseStockItem itemWarehouse = this.warehouseRepository.findItemByCategoryAndPricePerUnit(itemOnList.getCategory(), itemOnList.getPriceListPerUnit());
+                WarehouseStockItem itemWarehouse = this.warehouseRepository.
+                        findItemByCategoryAndPricePerUnit(itemOnList.getCategory(), itemOnList.getPriceListPerUnit());
 
                 long newWarehouseQuantity = itemWarehouse.getQuantity() - itemOnList.getQuantity();
                 itemWarehouse.setQuantity(newWarehouseQuantity);
 
-                // modifiedItems.add(itemOnList.getId());
                 this.warehouseRepository.save(itemWarehouse);
 
                 WarehouseSendDeliveryOrderItem deliveryItemSend = new WarehouseSendDeliveryOrderItem();
-                //deliveryItemSend.setId(itemOnList.getId());
                 deliveryItemSend.setCategory(itemOnList.getCategory());
                 deliveryItemSend.setPriceSalesPerUnit(itemOnList.getPriceSalesPerUnit());
                 deliveryItemSend.setDiscountPercent(itemOnList.getDiscountPercent());
@@ -158,8 +160,12 @@ public class WarehouseNewDeliveryOrderService {
                 deliveryItemSend.setDeliverySending(newDeliveryDateTime);
                 deliveryItemSend.setQuantity(itemOnList.getQuantity());
                 deliveryItemSend.setShop(itemOnList.getDeliveryShop());
+
+                //Test one-one-relationship
+                deliveryItemSend.setSalesCheckedInProductsFromWarehouse(new SalesCheckedInProductsFromWarehouse());
+
                 System.out.println(itemOnList.getDeliveryShop());
-                this.warehouseShopDeliveryOrdersSend.save(deliveryItemSend);
+                this.warehouseShopDeliveryOrdersSendRepository.save(deliveryItemSend);
             }
             //delete all items on the temporary item-order list
             this.warehouseNewDeliveryOrderRepository.deleteAll();
