@@ -23,6 +23,10 @@ public class MapMarkersService {
     @Autowired
     ComerceRepository comerceRepository;
 
+    public MapMarkersService(MapMarkerRapository mapMarkerRapository) {
+        this.mapMarkerRapository = mapMarkerRapository;
+    }
+
     /**
      * Finds all the markers in the database
      *
@@ -34,7 +38,7 @@ public class MapMarkersService {
         List<MapMarker> findAllMarkers = mapMarkerRapository.findAll();
         List<MarkerDTO> findAllMarkersDTO = new ArrayList<>();
 
-        if (findAllMarkers.size() > 0) {
+        if (findAllMarkers.size() >= 0) {
             findAllMarkersDTO =covertListEntityToDTO(findAllMarkers);
             return findAllMarkersDTO;
         } else {
