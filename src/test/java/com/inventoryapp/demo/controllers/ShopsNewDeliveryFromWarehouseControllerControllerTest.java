@@ -20,7 +20,7 @@ import java.util.List;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class ShopsNewDeliveryFromWarehouseControllerTest {
+public class ShopsNewDeliveryFromWarehouseControllerControllerTest {
     @Autowired
     private ShopsNewDeliveryFromWarehouseService shopsNewDeliveryFromWarehouseService;
 

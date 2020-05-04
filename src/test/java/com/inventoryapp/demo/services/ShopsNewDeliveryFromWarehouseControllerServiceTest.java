@@ -1,5 +1,6 @@
 package com.inventoryapp.demo.services;
 
+import com.inventoryapp.demo.dtos.ShopDeliveryItemFromWarehouseDTO;
 import com.inventoryapp.demo.entities.ShopsCheckedInProductsFromWarehouse;
 import com.inventoryapp.demo.entities.WarehouseSendDeliveryOrderItem;
 import com.inventoryapp.demo.repositories.WarehouseShopDeliveryOrdersSendRepository;
@@ -17,14 +18,14 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class ShopsNewDeliveryFromWarehouseServiceTest {
+public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
     @Autowired
     private WarehouseShopDeliveryOrdersSendRepository warehouseShopDeliveryOrdersSendRepository;
 
     private List<WarehouseSendDeliveryOrderItem> listSendItems = new ArrayList<>();
 
     @Before
-    public void setUp(){
+    public void setUp() {
         WarehouseSendDeliveryOrderItem item1 = new WarehouseSendDeliveryOrderItem();
         item1.setCategory("Pulsera");
         item1.setDeliverySending(LocalDateTime.now());
@@ -72,7 +73,7 @@ public class ShopsNewDeliveryFromWarehouseServiceTest {
     }
 
     @Test
-    public void getAllItemsNotInShopInventory(){
+    public void getAllItemsNotInShopInventory() {
 
         // 1. step: prepare data
         warehouseShopDeliveryOrdersSendRepository.saveAll(this.listSendItems);
@@ -88,9 +89,27 @@ public class ShopsNewDeliveryFromWarehouseServiceTest {
         List<WarehouseSendDeliveryOrderItem> listItemsNotInShopStock3 = warehouseShopDeliveryOrdersSendRepository.
                 findAllItemsNotAddedToShopInventory("Shop3");
 
+        List<ShopDeliveryItemFromWarehouseDTO> listDTO1 = convertEntityToDTO(listItemsNotInShopStock1);
+        List<ShopDeliveryItemFromWarehouseDTO> listDTO3 = convertEntityToDTO(listItemsNotInShopStock3);
+
         // 3. step: test
         Assert.assertEquals(2, listItemsNotInShopStock1.size());
         Assert.assertEquals(1, listItemsNotInShopStock2.size());
         Assert.assertEquals(0, listItemsNotInShopStock3.size());
+        Assert.assertEquals(2, listDTO1.size());
+        Assert.assertEquals("Arete", listDTO1.get(1).getCategory());
+        Assert.assertEquals(0, listDTO3.size());
     }
+
+    private List<ShopDeliveryItemFromWarehouseDTO> convertEntityToDTO(List<WarehouseSendDeliveryOrderItem> listEntity) {
+        List<ShopDeliveryItemFromWarehouseDTO> listDTO = new ArrayList<>();
+        listEntity.stream().forEach(item -> {
+            ShopDeliveryItemFromWarehouseDTO itemDTO = new ShopDeliveryItemFromWarehouseDTO(
+                    item.getCategory(), item.getPriceListPerUnit(), item.getPriceSalesPerUnit(), item.getQuantity(),
+                    item.getDeliverySending(), "");
+            listDTO.add(itemDTO);
+        });
+        return listDTO;
+    }
+
 }
