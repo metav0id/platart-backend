@@ -6,13 +6,13 @@ import javax.persistence.*;
 
 @Entity
 @Data
-public class SalesCheckedInProductsFromWarehouse {
+public class ShopsCheckedInProductsFromWarehouse {
     @Id
     @GeneratedValue
     @Column(name="id")
     private Long id;
 
-    @OneToOne(mappedBy = "salesCheckedInProductsFromWarehouse")
+    @OneToOne(mappedBy = "shopsCheckedInProductsFromWarehouse")
     private WarehouseSendDeliveryOrderItem warehouseSendDeliveryOrderItem;
 
     private Boolean isArrivedAtStore = false;
