@@ -1,7 +1,6 @@
 package com.inventoryapp.demo.entities;
 
 import lombok.Data;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,7 +22,6 @@ public class WarehouseSendDeliveryOrderItem {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="checkin_id", referencedColumnName = "id")
-    private SalesCheckedInProductsFromWarehouse salesCheckedInProductsFromWarehouse;
-
+    private ShopsCheckedInProductsFromWarehouse shopsCheckedInProductsFromWarehouse;
 
 }

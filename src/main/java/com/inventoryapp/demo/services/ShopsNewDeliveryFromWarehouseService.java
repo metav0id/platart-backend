@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SalesNewDeliveryFromWarehouseService {
+public class ShopsNewDeliveryFromWarehouseService {
     @Autowired
     private WarehouseShopDeliveryOrdersSendRepository warehouseShopDeliveryOrdersSendRepository;
 
-    public void getAllItemsNotInShopInventory(){
-        List<WarehouseSendDeliveryOrderItem> liste =  warehouseShopDeliveryOrdersSendRepository.
-                findAllItemsNotAddedToShopInventory();
+    public List<WarehouseSendDeliveryOrderItem> getAllItemsNotInShopInventory(String shop){
+        return warehouseShopDeliveryOrdersSendRepository.
+                findAllItemsNotAddedToShopInventory(shop);
     }
 }

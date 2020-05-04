@@ -25,8 +25,6 @@ public interface WarehouseRepository extends JpaRepository<WarehouseStockItem,Lo
     @Query("UPDATE WarehouseStockItem item SET item.quantity = :quantity WHERE item.category = :category AND item.priceListPerUnit = :pricePerUnit")
     int updateStock(@Param("category") String category, @Param("pricePerUnit") long pricePerUnit, @Param("quantity") long quantity);
 
-    WarehouseStockItem findByCategory (String category);
-
     /**
      * Returns a list of stock items filtered by category and pricePerUnit
      * @param category

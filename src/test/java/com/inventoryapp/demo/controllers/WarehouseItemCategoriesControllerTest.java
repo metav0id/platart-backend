@@ -1,6 +1,7 @@
 package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.WarehouseItemCategoryDTO;
+import com.inventoryapp.demo.entities.WarehouseItemCategory;
 import com.inventoryapp.demo.services.WarehouseItemCategoryService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,31 +13,41 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class WarehouseItemCategoriesControllerTest {
 
     //Guide:
     // 1. Mock Service --> Mockito Services Methods
     // 2. InjectMocks Controller
 
-    @Mock
-    private WarehouseItemCategoryService warehouseItemCategoryService;
+//    @Mock
+//    private WarehouseItemCategoryService warehouseItemCategoryService;
+//
+//    @InjectMocks
+//    private WarehouseItemCategoriesController warehouseItemCategoriesController;
+//
+//    @Before
+//    public void setUp(){
+//        MockitoAnnotations.initMocks(this);
+//    }
 
-    @InjectMocks
-    private WarehouseItemCategoriesController warehouseItemCategoriesController;
+    @Autowired
+    private WarehouseItemCategoriesController controller;
 
-    @Before
-    public void setUp(){
-        MockitoAnnotations.initMocks(this);
-    }
+    @MockBean
+    private WarehouseItemCategoryService service;
 
-    @Ignore
     @Test
-    public void getAllCategoriesPositiveTest(){
+    public void getAllCategoriesPositiveTest() {
         // 0. generate some test data
         List<WarehouseItemCategoryDTO> warehouseItemList = new ArrayList<>();
 
@@ -52,47 +63,33 @@ public class WarehouseItemCategoriesControllerTest {
         warehouseItemDto3.setCategory("Category3");
         warehouseItemList.add(warehouseItemDto3);
 
-        // 1. define service-mocking-function
-        Mockito.when(warehouseItemCategoryService.getAllCategories()).thenReturn(warehouseItemList);
+        Mockito.when(service.getAllCategories()).thenReturn(warehouseItemList);
 
-        // 2. Call the method
-        List<WarehouseItemCategoryDTO> warehouseItemListControllerFetched = this.warehouseItemCategoriesController.getAllCategories();
+        Assert.assertEquals(3, controller.getAllCategories().size());
 
-        // 3. JUnit Assert method
-        Assert.assertNotNull(warehouseItemListControllerFetched);
     }
 
-    @Ignore
     @Test
-    public void getAllCategoriesNegativeTest(){
+    public void getAllCategoriesNegativeTest() {
         // 0. generate empty test data
         List<WarehouseItemCategoryDTO> warehouseItemList = new ArrayList<>();
 
         // 1. define service-mocking-function
-        Mockito.when(warehouseItemCategoryService.getAllCategories()).thenReturn(warehouseItemList);
+        Mockito.when(service.getAllCategories()).thenReturn(warehouseItemList);
 
         // 2. Call the method
-        List<WarehouseItemCategoryDTO> warehouseItemListControllerFetched = this.warehouseItemCategoriesController.getAllCategories();
-
-        // 3. JUnit Assert method
-        int expectedNumberElements = warehouseItemListControllerFetched.size();
-        Assert.assertEquals(0,  expectedNumberElements);
+        Assert.assertEquals(0, controller.getAllCategories().size());
     }
 
     @Test
-    public void saveNewCategoryPositiveTest(){
+    public void saveNewCategoryPositiveTest() {
         // 0. Define Data
         WarehouseItemCategoryDTO warehouseItemDto1 = new WarehouseItemCategoryDTO();
         warehouseItemDto1.setCategory("Category1");
 
-        // 1. Service-function mock
-        Mockito.doNothing().when(warehouseItemCategoryService).saveNewCategory(Mockito.any());
-
-        // 2. Use the method
-        warehouseItemCategoryService.saveNewCategory(warehouseItemDto1);
-
-        // 3. Verify with Mockito
-        Mockito.verify(warehouseItemCategoryService, Mockito.times(1)).saveNewCategory(Mockito.any());
+        controller.saveNewCategory(warehouseItemDto1);
+        Mockito.verify(service, Mockito.times(1)).
+                saveNewCategory(Mockito.any(WarehouseItemCategoryDTO.class));
     }
 
     @Test
@@ -104,22 +101,12 @@ public class WarehouseItemCategoriesControllerTest {
         warehouseItemDto1.setCategory("Category1");
         warehouseItemList.add(warehouseItemDto1);
 
-        WarehouseItemCategoryDTO warehouseItemDto2 = new WarehouseItemCategoryDTO();
-        warehouseItemDto2.setCategory("Category2");
-        warehouseItemList.add(warehouseItemDto2);
-
-        WarehouseItemCategoryDTO warehouseItemDto3 = new WarehouseItemCategoryDTO();
-        warehouseItemDto3.setCategory("Category3");
-        warehouseItemList.add(warehouseItemDto3);
-
-        // 1. Define Service Mock
-        Mockito.doNothing().when(warehouseItemCategoryService).deleteCategory(Mockito.any());
-
         // 2. Use the method
-        warehouseItemCategoryService.deleteCategory(warehouseItemDto1);
+        controller.deleteCategory(warehouseItemDto1);
 
         // 3. Verify with Mockito
-        Mockito.verify(warehouseItemCategoryService, Mockito.times(1)).deleteCategory(Mockito.any());
+        Mockito.verify(service, Mockito.times(1)).
+                deleteCategory(Mockito.any(WarehouseItemCategoryDTO.class));
     }
 
 }
