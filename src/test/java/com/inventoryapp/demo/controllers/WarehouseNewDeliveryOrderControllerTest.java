@@ -71,15 +71,20 @@ public class WarehouseNewDeliveryOrderControllerTest {
     @Test
     public void getAllNewOrderItemsPositiveTest(){
         // 1. Define Service-Mock
-        Mockito.when(warehouseNewDeliveryOrderService.getAllDeliveryOrderItems()).thenReturn(warehouseDeliveryOrderDTOList);
+        Mockito.when(warehouseNewDeliveryOrderService.getAllDeliveryOrderItems()).
+                thenReturn(warehouseDeliveryOrderDTOList);
 
         // 2. Call method in Controlle
-        List<WarehouseNewDeliveryOrderItemDTO> warehouseDeliveryOrderDTOListFetched1 = this.warehouseNewDeliveryOrderController.getAllNewOrderItems();
-        List<WarehouseNewDeliveryOrderItemDTO> warehouseDeliveryOrderDTOListFetched2 = this.warehouseNewDeliveryOrderController.getAllNewOrderItems();
-        List<WarehouseNewDeliveryOrderItemDTO> warehouseDeliveryOrderDTOListFetched3 = this.warehouseNewDeliveryOrderController.getAllNewOrderItems();
+        List<WarehouseNewDeliveryOrderItemDTO> warehouseDeliveryOrderDTOListFetched1 =
+                this.warehouseNewDeliveryOrderController.getAllNewOrderItems();
+        List<WarehouseNewDeliveryOrderItemDTO> warehouseDeliveryOrderDTOListFetched2 =
+                this.warehouseNewDeliveryOrderController.getAllNewOrderItems();
+        List<WarehouseNewDeliveryOrderItemDTO> warehouseDeliveryOrderDTOListFetched3 =
+                this.warehouseNewDeliveryOrderController.getAllNewOrderItems();
 
         // 3. Assert Correctness of methods
-        Mockito.verify(warehouseNewDeliveryOrderService, Mockito.times(3)).getAllDeliveryOrderItems();
+        Mockito.verify(warehouseNewDeliveryOrderService, Mockito.times(3)).
+                getAllDeliveryOrderItems();
 
         for (int i = 0; i < warehouseDeliveryOrderDTOListFetched1.size() ; i++) {
             String fetchedCategory = warehouseDeliveryOrderDTOListFetched1.get(i).getCategory();

@@ -3,7 +3,7 @@ package com.inventoryapp.demo.services;
 import com.inventoryapp.demo.dtos.WarehouseItemPersistanceErrorDTO;
 import com.inventoryapp.demo.dtos.WarehouseNewDeliveryOrderItemDTO;
 import com.inventoryapp.demo.dtos.WarehouseNewDeliveryPersistanceResponseDTO;
-import com.inventoryapp.demo.entities.SalesCheckedInProductsFromWarehouse;
+import com.inventoryapp.demo.entities.ShopsCheckedInProductsFromWarehouse;
 import com.inventoryapp.demo.entities.WarehouseNewDeliveryOrderItem;
 import com.inventoryapp.demo.entities.WarehouseSendDeliveryOrderItem;
 import com.inventoryapp.demo.entities.WarehouseStockItem;
@@ -162,7 +162,7 @@ public class WarehouseNewDeliveryOrderService {
                 deliveryItemSend.setShop(itemOnList.getDeliveryShop());
 
                 //Test one-one-relationship
-                deliveryItemSend.setSalesCheckedInProductsFromWarehouse(new SalesCheckedInProductsFromWarehouse());
+                deliveryItemSend.setShopsCheckedInProductsFromWarehouse(new ShopsCheckedInProductsFromWarehouse());
 
                 System.out.println(itemOnList.getDeliveryShop());
                 this.warehouseShopDeliveryOrdersSendRepository.save(deliveryItemSend);

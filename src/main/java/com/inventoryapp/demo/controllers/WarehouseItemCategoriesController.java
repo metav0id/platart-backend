@@ -29,12 +29,12 @@ public class WarehouseItemCategoriesController {
     }
 
     @PostMapping("/saveNewCategory")
-    private void saveNewCategory(@RequestBody WarehouseItemCategoryDTO newWarehouseItemCategory){
+    public void saveNewCategory(@RequestBody WarehouseItemCategoryDTO newWarehouseItemCategory){
         this.warehouseItemCategoryService.saveNewCategory(newWarehouseItemCategory);
     }
 
     @PostMapping("/Ware")
-    private void deleteCategory(@RequestBody WarehouseItemCategoryDTO categoryToBeDeletedDTO){
+    public void deleteCategory(@RequestBody WarehouseItemCategoryDTO categoryToBeDeletedDTO){
         System.out.println("Test delete category Contoller"+ categoryToBeDeletedDTO.getCategory());
         this.warehouseItemCategoryService.deleteCategory(categoryToBeDeletedDTO);
     }
