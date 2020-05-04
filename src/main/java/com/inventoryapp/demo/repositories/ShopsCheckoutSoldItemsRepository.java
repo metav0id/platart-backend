@@ -1,9 +1,9 @@
 package com.inventoryapp.demo.repositories;
 
-import com.inventoryapp.demo.entities.Comerce;
+import com.inventoryapp.demo.entities.ShopsCheckoutSoldItems;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ComerceRepository extends JpaRepository<Comerce, Long> {
+public interface ShopsCheckoutSoldItemsRepository extends JpaRepository<ShopsCheckoutSoldItems, Long> {
 }
