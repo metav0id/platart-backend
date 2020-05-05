@@ -5,7 +5,9 @@ import com.inventoryapp.demo.dtos.MarkerDTO;
 import com.inventoryapp.demo.dtos.WarehouseGetAllItemsDTO;
 import com.inventoryapp.demo.entities.Comerce;
 import com.inventoryapp.demo.entities.MapMarker;
+import com.inventoryapp.demo.repositories.ComerceRepository;
 import com.inventoryapp.demo.repositories.MapMarkerRapository;
+import com.inventoryapp.demo.services.ComerceService;
 import com.inventoryapp.demo.services.MapMarkersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,10 @@ public class MapMarkersController {
     private final MapMarkersService mapMarkersService;
     @Autowired
     MapMarkerRapository mapMarkerRapository;
+    @Autowired
+    ComerceRepository comerceRepository;
+    @Autowired
+    ComerceService comerceService;
 
     public MapMarkersController(MapMarkersService mapMarkersService) {
         this.mapMarkersService = mapMarkersService;
@@ -73,8 +79,12 @@ public class MapMarkersController {
     //resquesbody asks for the whole entity
     public void delete(@RequestBody MarkerDTO markerDTO){
         MapMarker mapMarker = mapMarkerRapository.findByName(markerDTO.getName());
-        Long id = mapMarker.getId();
-        mapMarkersService.deleteMarker(id);
+        Comerce comerce = comerceRepository.findByName(markerDTO.getName());
+        Long idComerce = comerce.getId();
+        Long idMarker = mapMarker.getId();
+        comerceService.deleteComerce(idComerce);
+
+        mapMarkersService.deleteMarker(idMarker);
     }
 
     /**

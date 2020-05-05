@@ -122,7 +122,7 @@ public class ComerceService {
         if (comerce!= null){
             comerceRepository.deleteById(id);
         }else {
-            System.out.println("The user doesnt exists");
+            System.out.println("The comerce doesnt exists");
         }
     }
     /**

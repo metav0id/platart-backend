@@ -136,7 +136,7 @@ public class MapMarkersService {
         if (mapMarker!= null){
             mapMarkerRapository.deleteById(id);
         }else {
-            System.out.println("The user doesnt exists");
+            System.out.println("The marker doesnt exists");
         }
     }
 
