@@ -33,6 +33,14 @@ public class ComerceController {
         System.out.println("List of stock loaded.");
         return comerceDTOS;
     }
+
+    @GetMapping("/getallshops")
+    public List<ComerceDTO> getAllShops() {
+
+        List<ComerceDTO> comerceDTOS = comerceService.getAllShops();
+        System.out.println("List of shops loaded.");
+        return comerceDTOS;
+    }
     /**
      * You create a new comerce that will be saved in the database.
      *

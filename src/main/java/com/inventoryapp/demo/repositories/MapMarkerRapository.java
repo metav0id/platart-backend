@@ -8,4 +8,5 @@ public interface MapMarkerRapository extends JpaRepository<MapMarker, Long> {
     MapMarker findByName (String name);
 
 
+
 }
