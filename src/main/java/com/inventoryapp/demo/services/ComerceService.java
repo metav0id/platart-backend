@@ -39,6 +39,21 @@ public class ComerceService {
         }
         return findAllMarkersDTO;
     }
+
+
+    public List<ComerceDTO> getAllShops() {
+
+        List<Comerce> findAllComerces = comerceRepository.findByCategory();
+        List<ComerceDTO> findAllComerceDTO = new ArrayList<>();
+
+        if (findAllComerces.size() > 0) {
+            findAllComerceDTO =covertListEntityToDTO(findAllComerces);
+            return findAllComerceDTO;
+        } else {
+            System.out.println("----> No items found in the Data Base<----");
+        }
+        return findAllComerceDTO;
+    }
     /**
      * Created a new comerce
      *
@@ -135,4 +150,6 @@ public class ComerceService {
 
 
     }
+
+
 }
