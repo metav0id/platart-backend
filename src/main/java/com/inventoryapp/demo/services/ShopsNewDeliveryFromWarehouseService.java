@@ -18,6 +18,8 @@ public class ShopsNewDeliveryFromWarehouseService {
     public List<ShopDeliveryItemFromWarehouseDTO> getAllItemsNotInShopInventory(String shop) {
         List<WarehouseSendDeliveryOrderItem> listEntity = warehouseShopDeliveryOrdersSendRepository.
                 findAllItemsNotAddedToShopInventory(shop);
+        List<ShopDeliveryItemFromWarehouseDTO> listDTO = convertEntityToDTO(listEntity);
+        System.out.println("Shop value: + " + shop + " and list items " + listDTO);
         return convertEntityToDTO(listEntity);
     }
 
