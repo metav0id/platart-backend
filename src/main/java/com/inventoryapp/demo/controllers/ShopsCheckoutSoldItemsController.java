@@ -17,7 +17,6 @@ public class ShopsCheckoutSoldItemsController {
     @Autowired
     private ShopsCheckoutSoldItemsService shopsCheckoutSoldItemsService;
 
-
     /**
      * save current list of sold items.
      * @return List of WarehouseGetAllItemsDTO with "category":string, "quantity": int, "pricePerUnit":long. Price is in pence.

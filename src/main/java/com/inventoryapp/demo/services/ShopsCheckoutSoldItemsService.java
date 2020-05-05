@@ -3,8 +3,10 @@ package com.inventoryapp.demo.services;
 import com.inventoryapp.demo.dtos.ShopsCheckoutSoldItemsDTO;
 import com.inventoryapp.demo.entities.ShopsAllSoldItems;
 import com.inventoryapp.demo.entities.ShopsCheckoutSoldItems;
+import com.inventoryapp.demo.entities.ShopsStockItem;
 import com.inventoryapp.demo.repositories.ShopsAllSoldItemsRepository;
 import com.inventoryapp.demo.repositories.ShopsCheckoutSoldItemsRepository;
+import com.inventoryapp.demo.repositories.ShopsStockItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +16,20 @@ import java.util.List;
 @Service
 public class ShopsCheckoutSoldItemsService {
 
-
-    @Autowired
     private ShopsCheckoutSoldItemsRepository shopsCheckoutSoldItemsRepository;
+    private ShopsAllSoldItemsRepository shopsAllSoldItemsRepository;
+    private ShopsStockItemRepository shopsStockItemRepository;
 
     @Autowired
-    private ShopsAllSoldItemsRepository shopsAllSoldItemsRepository;
+    public ShopsCheckoutSoldItemsService(
+            ShopsCheckoutSoldItemsRepository shopsCheckoutSoldItemsRepository,
+            ShopsAllSoldItemsRepository shopsAllSoldItemsRepository,
+            ShopsStockItemRepository shopsStockItemRepository
+            ) {
+        this.shopsCheckoutSoldItemsRepository = shopsCheckoutSoldItemsRepository;
+        this.shopsAllSoldItemsRepository = shopsAllSoldItemsRepository;
+        this.shopsStockItemRepository = shopsStockItemRepository;
+    }
 
     public void saveAllSoldItemsList(List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
         // first clear the repository
@@ -49,7 +59,8 @@ public class ShopsCheckoutSoldItemsService {
                     .filter(
                         o ->
                         itemDTO.getCategory().equals(o.getCategory()) &&
-                        itemDTO.getPriceListPerUnit()==o.getPriceListPerUnit())
+                        itemDTO.getPriceListPerUnit()==o.getPriceListPerUnit() &&
+                        itemDTO.getPriceSalesPerUnit()==o.getPriceSalesPerUnit() )
                     .forEach(
                         o -> o.setQuantity(o.getQuantity() + itemDTO.getQuantity())
                     );
@@ -60,7 +71,8 @@ public class ShopsCheckoutSoldItemsService {
                         .noneMatch(
                                 o ->
                                 o.getCategory().equals(itemDTO.getCategory()) &&
-                                o.getPriceListPerUnit() == itemDTO.getPriceListPerUnit()
+                                o.getPriceListPerUnit() == itemDTO.getPriceListPerUnit() &&
+                                o.getPriceSalesPerUnit() == itemDTO.getPriceSalesPerUnit()
                         );
 
             // add new item category and list-price, if not already existant
@@ -83,7 +95,18 @@ public class ShopsCheckoutSoldItemsService {
         }
 
         // verify if transaction is feasible for all items in sold-item-list
-        
+
+        // for comparison fetch shop-related items from shop warehouse list
+        String shopRelevant = shopsCheckoutSoldItemsDTOList.get(0).getShop();
+        List<ShopsStockItem> shopsStockItemList = this.shopsStockItemRepository.findAllItemsByShop(shopRelevant);
+
+        for(ShopsCheckoutSoldItemsDTO itemSold: soldItemsAggregatedDTOList){
+
+            // todo finish comparison
+            /*boolean itemAvailable = shopsStockItemList.stream()
+                            .*/
+
+        }
 
 
         // Persist data, if List available on database
