@@ -18,7 +18,7 @@ public interface ShopsStockItemRepository extends JpaRepository<ShopsStockItem, 
             "AND item.priceListPerUnit = :priceListPerUnit " +
             "AND item.priceSalesPerUnit = :priceSalesPerUnit"
     )
-    Long findAmountItemsAvailableShopsByShopAndCategoryAndAndPriceListPerUnitAndPriceSalesPerUnit(
+    Long findAmountItemsByAllInfo(
             @Param("shop") String shop,
             @Param("category") String category,
             @Param("priceListPerUnit") Long priceListPerUnit,

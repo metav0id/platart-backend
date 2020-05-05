@@ -51,4 +51,15 @@ public class ShopsCheckoutSoldItemsController {
         this.shopsCheckoutSoldItemsService.deleteCurrentSoldItemsList();
     }
 
+    /**
+     * get currenty saved list of sold items.
+     * @return List of WarehouseGetAllItemsDTO with "category":string, "quantity": int, "pricePerUnit":long. Price is in pence.
+     */
+    @PostMapping("/sendAllSoldItemsList")
+    public void sendCurrentSoldItemsList(@RequestBody List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
+        System.out.println("Controller: Send current Sold item list.");
+        System.out.println(shopsCheckoutSoldItemsDTOList);
+        this.shopsCheckoutSoldItemsService.sendAllSoldItemsList(shopsCheckoutSoldItemsDTOList);
+    }
+
 }

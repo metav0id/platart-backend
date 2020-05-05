@@ -47,8 +47,8 @@ public class ShopsCheckoutSoldItemsService {
         List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsEntitiesList = mapDTOListToEntityList(shopsCheckoutSoldItemsDTOList);
         System.out.println(shopsCheckoutSoldItemsEntitiesList);
 
+        // Boolean for verification-Logic, if items are available on the shop inventory
         boolean allSoldItemsAvailable = true ;
-        // TODO: Logic for verification, if items are available on the
 
         // aggregate items by category
         List<ShopsCheckoutSoldItemsDTO> soldItemsAggregatedDTOList =  new ArrayList<>();
@@ -101,19 +101,30 @@ public class ShopsCheckoutSoldItemsService {
         List<ShopsStockItem> shopsStockItemList = this.shopsStockItemRepository.findAllItemsByShop(shopRelevant);
 
         for(ShopsCheckoutSoldItemsDTO itemSold: soldItemsAggregatedDTOList){
+            Long amountItemsShopWarehouse = shopsStockItemRepository.findAmountItemsByAllInfo(itemSold.getShop(), itemSold.getCategory(), itemSold.getPriceListPerUnit(), itemSold.getPriceSalesPerUnit());
 
-            // todo finish comparison
-            /*boolean itemAvailable = shopsStockItemList.stream()
-                            .*/
+            System.out.println("amount wanted: "+ itemSold.getQuantity() + " amount on warehouse: " + amountItemsShopWarehouse);
+            if(amountItemsShopWarehouse != null && (amountItemsShopWarehouse -itemSold.getQuantity() >= 0 )){
+                System.out.println("transaction possible!");
+            } else if (amountItemsShopWarehouse == null || amountItemsShopWarehouse <= 0 ) {
+                System.out.println("transaction NOT possible!");
+                allSoldItemsAvailable = false;
+            } else {
+                allSoldItemsAvailable = false;
+                System.out.println("transaction NOT possible!");
+            }
 
         }
 
-
         // Persist data, if List available on database
-        if(allSoldItemsAvailable){
-            List<ShopsAllSoldItems> shopsAllSoldItemsList = mapCheckoutDTOListToSoldItemsList(shopsCheckoutSoldItemsDTOList);
-            this.shopsAllSoldItemsRepository.saveAll(shopsAllSoldItemsList);
-            this.shopsCheckoutSoldItemsRepository.deleteAll();
+        try {
+            if(allSoldItemsAvailable){
+                List<ShopsAllSoldItems> shopsAllSoldItemsList = mapCheckoutDTOListToSoldItemsList(shopsCheckoutSoldItemsDTOList);
+                this.shopsAllSoldItemsRepository.saveAll(shopsAllSoldItemsList);
+                this.shopsCheckoutSoldItemsRepository.deleteAll();
+            }
+        } catch (Exception e){
+            System.err.println("ShopsCheckoutSoldItemsService -> sendAllSoldItemsList -> persistance error.");
         }
     }
 
