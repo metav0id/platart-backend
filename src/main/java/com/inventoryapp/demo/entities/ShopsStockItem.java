@@ -6,9 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Data
 @Entity
-public class ShopsCheckoutSoldItems {
+@Data
+public class ShopsStockItem {
     @Id
     @GeneratedValue
     private Long id;
@@ -19,10 +19,4 @@ public class ShopsCheckoutSoldItems {
     private Long priceSalesPerUnit;
     private Long priceListPerUnit;
     private int discountPercent;
-
-    private String deliverySending;
-
-    private Long revenuePerUnit;
-    private String itemLastSold;
-    private String comment;
 }

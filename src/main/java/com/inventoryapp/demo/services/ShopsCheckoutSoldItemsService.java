@@ -41,6 +41,49 @@ public class ShopsCheckoutSoldItemsService {
         // TODO: Logic for verification, if items are available on the
 
         // aggregate items by category
+        List<ShopsCheckoutSoldItemsDTO> soldItemsAggregatedDTOList =  new ArrayList<>();
+        for(ShopsCheckoutSoldItemsDTO itemDTO: shopsCheckoutSoldItemsDTOList){
+
+            // aggregate quantity with streams
+            soldItemsAggregatedDTOList.stream()
+                    .filter(
+                        o ->
+                        itemDTO.getCategory().equals(o.getCategory()) &&
+                        itemDTO.getPriceListPerUnit()==o.getPriceListPerUnit())
+                    .forEach(
+                        o -> o.setQuantity(o.getQuantity() + itemDTO.getQuantity())
+                    );
+
+            // check if category and List-price exist
+            boolean itemIsNotFound = soldItemsAggregatedDTOList
+                        .stream()
+                        .noneMatch(
+                                o ->
+                                o.getCategory().equals(itemDTO.getCategory()) &&
+                                o.getPriceListPerUnit() == itemDTO.getPriceListPerUnit()
+                        );
+
+            // add new item category and list-price, if not already existant
+            if(itemIsNotFound){
+                ShopsCheckoutSoldItemsDTO newItemToAggregatedList = new ShopsCheckoutSoldItemsDTO();
+                newItemToAggregatedList.setPosition(itemDTO.getPosition());
+                newItemToAggregatedList.setCategory(itemDTO.getCategory());
+                newItemToAggregatedList.setQuantity(itemDTO.getQuantity());
+                newItemToAggregatedList.setPriceListPerUnit(itemDTO.getPriceListPerUnit());
+                newItemToAggregatedList.setPriceSalesPerUnit(itemDTO.getPriceSalesPerUnit());
+                newItemToAggregatedList.setRevenuePerUnit(itemDTO.getRevenuePerUnit());
+                newItemToAggregatedList.setDiscountPercent(itemDTO.getDiscountPercent());
+                newItemToAggregatedList.setShop(itemDTO.getShop());
+                newItemToAggregatedList.setDeliverySending(itemDTO.getDeliverySending());
+                newItemToAggregatedList.setItemLastSold(itemDTO.getItemLastSold());
+                newItemToAggregatedList.setComment(itemDTO.getComment());
+
+                soldItemsAggregatedDTOList.add(newItemToAggregatedList);
+            }
+        }
+
+        // verify if transaction is feasible for all items in sold-item-list
+        
 
 
         // Persist data, if List available on database
