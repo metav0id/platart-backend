@@ -42,19 +42,16 @@ public class ShopsCheckoutSoldItemsService {
     }
 
     public void sendAllSoldItemsList(List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
-        System.out.println("List of stock loaded in Service Backend.");
+        System.out.println("ShopsCheckoutSoldItemsService -> sendAllSoldItemsList()");
 
-        List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsEntitiesList = mapDTOListToEntityList(shopsCheckoutSoldItemsDTOList);
-        System.out.println(shopsCheckoutSoldItemsEntitiesList);
-
-        // Boolean for verification-Logic, if items are available on the shop inventory
+        // 1. Boolean for verification-Logic, if items are available on the shop inventory
         boolean allSoldItemsAvailable = true ;
 
-        // aggregate items by category
+        // 2. aggregate items by category
         List<ShopsCheckoutSoldItemsDTO> soldItemsAggregatedDTOList =  new ArrayList<>();
         for(ShopsCheckoutSoldItemsDTO itemDTO: shopsCheckoutSoldItemsDTOList){
 
-            // aggregate quantity with streams
+            // 2.1 aggregate quantity with streams
             soldItemsAggregatedDTOList.stream()
                     .filter(
                         o ->
@@ -65,7 +62,7 @@ public class ShopsCheckoutSoldItemsService {
                         o -> o.setQuantity(o.getQuantity() + itemDTO.getQuantity())
                     );
 
-            // check if category and List-price exist
+            // 2.2 check if category and List-price exist
             boolean itemIsNotFound = soldItemsAggregatedDTOList
                         .stream()
                         .noneMatch(
@@ -75,7 +72,7 @@ public class ShopsCheckoutSoldItemsService {
                                 o.getPriceSalesPerUnit() == itemDTO.getPriceSalesPerUnit()
                         );
 
-            // add new item category and list-price, if not already existant
+            // 2.3 add new item category and list-price, if not already existant
             if(itemIsNotFound){
                 ShopsCheckoutSoldItemsDTO newItemToAggregatedList = new ShopsCheckoutSoldItemsDTO();
                 newItemToAggregatedList.setPosition(itemDTO.getPosition());
@@ -94,9 +91,9 @@ public class ShopsCheckoutSoldItemsService {
             }
         }
 
-        // verify if transaction is feasible for all items in sold-item-list
+        // 3. verify if transaction is feasible for all items in sold-item-list
 
-        // for comparison fetch shop-related items from shop warehouse list
+        // 3.1 for comparison fetch shop-related items from shop warehouse list
         String shopRelevant = shopsCheckoutSoldItemsDTOList.get(0).getShop();
         List<ShopsStockItem> shopsStockItemList = this.shopsStockItemRepository.findAllItemsByShop(shopRelevant);
 
@@ -116,7 +113,7 @@ public class ShopsCheckoutSoldItemsService {
 
         }
 
-        // Persist data, if List available on database
+        // 3.2 Persist data, if List available on database
         try {
             if(allSoldItemsAvailable){
                 List<ShopsAllSoldItems> shopsAllSoldItemsList = mapCheckoutDTOListToSoldItemsList(shopsCheckoutSoldItemsDTOList);
@@ -128,7 +125,19 @@ public class ShopsCheckoutSoldItemsService {
         }
     }
 
-    //
+    public List<ShopsCheckoutSoldItemsDTO> getAllSoldItemsList(){
+        List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsList = this.shopsCheckoutSoldItemsRepository.findAll();
+
+        List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList = mapEntityListToDTOList(shopsCheckoutSoldItemsList);
+
+        return shopsCheckoutSoldItemsDTOList;
+    }
+
+    public void deleteCurrentSoldItemsList() {
+        this.shopsCheckoutSoldItemsRepository.deleteAll();
+    }
+
+    // Mapping functions
     public List<ShopsAllSoldItems> mapCheckoutDTOListToSoldItemsList(List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList ){
         List<ShopsAllSoldItems> shopsAllSoldItemsList = new ArrayList<>();
 
@@ -151,18 +160,6 @@ public class ShopsCheckoutSoldItemsService {
         }
 
         return shopsAllSoldItemsList;
-    }
-
-    public List<ShopsCheckoutSoldItemsDTO> getAllSoldItemsList(){
-        List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsList = this.shopsCheckoutSoldItemsRepository.findAll();
-
-        List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList = mapEntityListToDTOList(shopsCheckoutSoldItemsList);
-
-        return shopsCheckoutSoldItemsDTOList;
-    }
-
-    public void deleteCurrentSoldItemsList() {
-        this.shopsCheckoutSoldItemsRepository.deleteAll();
     }
 
     public List<ShopsCheckoutSoldItems> mapDTOListToEntityList(List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList){
