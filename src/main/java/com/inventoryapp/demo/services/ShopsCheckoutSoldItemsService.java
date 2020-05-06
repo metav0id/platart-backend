@@ -41,7 +41,7 @@ public class ShopsCheckoutSoldItemsService {
         this.shopsCheckoutSoldItemsRepository.saveAll(shopsCheckoutSoldItemsEntitiesList);
     }
 
-    public void sendAllSoldItemsList(List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
+    public List<ShopsCheckoutSoldItemsDTO> sendAllSoldItemsList(List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
         System.out.println("ShopsCheckoutSoldItemsService -> sendAllSoldItemsList()");
 
         // 1. Boolean for verification-Logic, if items are available on the shop inventory
@@ -119,10 +119,15 @@ public class ShopsCheckoutSoldItemsService {
                 List<ShopsAllSoldItems> shopsAllSoldItemsList = mapCheckoutDTOListToSoldItemsList(shopsCheckoutSoldItemsDTOList);
                 this.shopsAllSoldItemsRepository.saveAll(shopsAllSoldItemsList);
                 this.shopsCheckoutSoldItemsRepository.deleteAll();
+
+                List<ShopsCheckoutSoldItemsDTO> returnList = new ArrayList<>();
+                return returnList;
             }
         } catch (Exception e){
             System.err.println("ShopsCheckoutSoldItemsService -> sendAllSoldItemsList -> persistance error.");
         }
+
+        return shopsCheckoutSoldItemsDTOList;
     }
 
     public List<ShopsCheckoutSoldItemsDTO> getAllSoldItemsList(){

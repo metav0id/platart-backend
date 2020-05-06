@@ -23,13 +23,9 @@ public class ShopsCheckoutSoldItemsController {
      */
     @PostMapping("/saveAllSoldItemsList")
     public void saveAllSoldItemsList(@RequestBody List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
-
-        //List<WarehouseGetAllItemsDTO> warehouseItemList = warehouseInStockService.getAllStockItems();
-        System.out.println("List of stock loaded.");
-
+        System.out.println("Controller: Save current Sold item list.");
         this.shopsCheckoutSoldItemsService.saveAllSoldItemsList(shopsCheckoutSoldItemsDTOList);
     }
-
 
     /**
      * get currenty saved list of sold items.
@@ -56,10 +52,9 @@ public class ShopsCheckoutSoldItemsController {
      * @return List of WarehouseGetAllItemsDTO with "category":string, "quantity": int, "pricePerUnit":long. Price is in pence.
      */
     @PostMapping("/sendAllSoldItemsList")
-    public void sendCurrentSoldItemsList(@RequestBody List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
+    public List<ShopsCheckoutSoldItemsDTO> sendCurrentSoldItemsList(@RequestBody List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
         System.out.println("Controller: Send current Sold item list.");
-        System.out.println(shopsCheckoutSoldItemsDTOList);
-        this.shopsCheckoutSoldItemsService.sendAllSoldItemsList(shopsCheckoutSoldItemsDTOList);
+        return this.shopsCheckoutSoldItemsService.sendAllSoldItemsList(shopsCheckoutSoldItemsDTOList);
     }
 
 }
