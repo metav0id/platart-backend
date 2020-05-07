@@ -7,6 +7,7 @@ import com.inventoryapp.demo.entities.ShopsStockItem;
 import com.inventoryapp.demo.repositories.ShopsAllSoldItemsRepository;
 import com.inventoryapp.demo.repositories.ShopsCheckoutSoldItemsRepository;
 import com.inventoryapp.demo.repositories.ShopsStockItemRepository;
+import com.sun.xml.bind.v2.runtime.output.SAXOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -116,8 +117,29 @@ public class ShopsCheckoutSoldItemsService {
         // 3.2 Persist data, if List available on database
         try {
             if(allSoldItemsAvailable){
+                // 3.2.1 save all sold items and reduce amount from ShopsStockItem table
                 List<ShopsAllSoldItems> shopsAllSoldItemsList = mapCheckoutDTOListToSoldItemsList(shopsCheckoutSoldItemsDTOList);
+                for(ShopsAllSoldItems shopItem: shopsAllSoldItemsList){
+                    Long amountOnShopsStockItem = this.shopsStockItemRepository.findAmountItemsByAllInfo(
+                                                                            shopItem.getShop(),
+                                                                            shopItem.getCategory(),
+                                                                            shopItem.getPriceListPerUnit(),
+                                                                            shopItem.getPriceSalesPerUnit() );
+
+                    Long newAmountOnShopsStockItem = amountOnShopsStockItem-shopItem.getQuantity();
+                    System.out.println("REDUCE AMOUNT ! -> "+ newAmountOnShopsStockItem);
+
+                    this.shopsStockItemRepository.updateAmountByAllInfo(
+                            newAmountOnShopsStockItem,
+                            shopItem.getShop(),
+                            shopItem.getCategory(),
+                            shopItem.getPriceListPerUnit(),
+                            shopItem.getPriceSalesPerUnit() );
+                }
+
                 this.shopsAllSoldItemsRepository.saveAll(shopsAllSoldItemsList);
+
+                // 3.2.2 Delete items from repository
                 this.shopsCheckoutSoldItemsRepository.deleteAll();
 
                 // 3.2.1 Delete current order list before returning empty list
