@@ -120,13 +120,17 @@ public class ShopsCheckoutSoldItemsService {
                 this.shopsAllSoldItemsRepository.saveAll(shopsAllSoldItemsList);
                 this.shopsCheckoutSoldItemsRepository.deleteAll();
 
+                // 3.2.1 Delete current order list before returning empty list
                 List<ShopsCheckoutSoldItemsDTO> returnList = new ArrayList<>();
+                this.deleteCurrentSoldItemsList();
                 return returnList;
             }
         } catch (Exception e){
             System.err.println("ShopsCheckoutSoldItemsService -> sendAllSoldItemsList -> persistance error.");
         }
 
+        // 4. Save new List before returning it
+        this.saveAllSoldItemsList(shopsCheckoutSoldItemsDTOList);
         return shopsCheckoutSoldItemsDTOList;
     }
 
