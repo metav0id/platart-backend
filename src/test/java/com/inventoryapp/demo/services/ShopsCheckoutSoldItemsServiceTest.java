@@ -75,7 +75,6 @@ public class ShopsCheckoutSoldItemsServiceTest {
         itemStock1.setQuantity(1000L);
         itemStock1.setPriceListPerUnit(100L);
         itemStock1.setPriceSalesPerUnit(95L);
-        itemStock1.setDiscountPercent(5);
         shopsStockItemList.add(itemStock1);
 
         ShopsStockItem itemStock2 =  new ShopsStockItem();
@@ -85,7 +84,6 @@ public class ShopsCheckoutSoldItemsServiceTest {
         itemStock2.setQuantity(1000L);
         itemStock2.setPriceListPerUnit(100L);
         itemStock2.setPriceSalesPerUnit(95L);
-        itemStock2.setDiscountPercent(5);
         shopsStockItemList.add(itemStock2);
 
         // 3. Add Items to

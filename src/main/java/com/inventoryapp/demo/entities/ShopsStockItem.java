@@ -18,5 +18,4 @@ public class ShopsStockItem {
     private Long quantity;
     private Long priceSalesPerUnit;
     private Long priceListPerUnit;
-    private int discountPercent;
 }
