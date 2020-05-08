@@ -16,5 +16,4 @@ public interface WarehouseShopDeliveryOrdersSendRepository extends JpaRepository
             "item.shopsCheckedInProductsFromWarehouse.isAddedToStockOfShop = false AND item.shop = :shop")
     List<WarehouseSendDeliveryOrderItem> findAllItemsNotAddedToShopInventory(@Param("shop") String shop);
 
-    Optional<WarehouseSendDeliveryOrderItem> findById(Long id);
 }

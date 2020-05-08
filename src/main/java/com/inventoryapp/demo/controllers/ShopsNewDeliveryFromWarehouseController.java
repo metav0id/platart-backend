@@ -2,6 +2,7 @@ package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.ShopDeliveryDTO;
 import com.inventoryapp.demo.dtos.ShopDeliveryItemFromWarehouseDTO;
+import com.inventoryapp.demo.dtos.ShopSaveToStockDTO;
 import com.inventoryapp.demo.services.ShopsNewDeliveryFromWarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -19,5 +20,11 @@ public class ShopsNewDeliveryFromWarehouseController {
     @PostMapping("/getalldeliveriesnotinstock")
     public List<ShopDeliveryItemFromWarehouseDTO> getAllDeliveriesNotInStock(@RequestBody ShopDeliveryDTO shop){
         return service.getAllItemsNotInShopInventory(shop.getShop());
+    }
+
+    @PostMapping("/saveNewDeliveryFromWarehouse")
+    public boolean saveNewDeliveryFromWarehouseList(@RequestBody List<ShopSaveToStockDTO> listDTO){
+        System.out.println("Controller: Saving list to database...");
+        return service.saveList(listDTO);
     }
 }

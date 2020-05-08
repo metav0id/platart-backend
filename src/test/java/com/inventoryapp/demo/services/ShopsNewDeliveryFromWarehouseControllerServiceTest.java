@@ -143,10 +143,11 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
 
 
 
-        //TEST Logic
+        //TEST Logic: items from listDTO are updated by id in deliveryList in database.
         for(ShopSaveToStockDTO itemDTO : listDTO){
             System.out.println("Print Entry in Database by id");
-            Optional<WarehouseSendDeliveryOrderItem> item = warehouseShopDeliveryOrdersSendRepository.findById(itemDTO.getIdentifierOnDeliveryList());
+            Optional<WarehouseSendDeliveryOrderItem> item = warehouseShopDeliveryOrdersSendRepository.
+                    findById(itemDTO.getIdentifierOnDeliveryList());
             if(item.isPresent()){
                 WarehouseSendDeliveryOrderItem itemEntity = item.get();
                 System.out.println(itemEntity);
