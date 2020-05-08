@@ -125,16 +125,18 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
 
         //Delivery table in database
         List<WarehouseSendDeliveryOrderItem> listDatabase = warehouseShopDeliveryOrdersSendRepository.saveAll(this.listSendItems);
+        List<WarehouseSendDeliveryOrderItem> listBeforeSaving = warehouseShopDeliveryOrdersSendRepository.findAllItemsNotAddedToShopInventory("Shop1");
         System.out.println("List Database:");
         System.out.println(listDatabase);
         //DTO List
         List<ShopSaveToStockDTO> listDTO = new ArrayList<>();
-        listDTO.add(new ShopSaveToStockDTO(listDatabase.get(0).getId(), "shop1", "Pulsera",
+        listDTO.add(new ShopSaveToStockDTO(listDatabase.get(0).getId(), "Shop1", "Pulsera",
                 70, 100, 90, 80,
                 "6.5.2020", "Da fehlt was"));
-        listDTO.add(new ShopSaveToStockDTO(listDatabase.get(1).getId(), "shop1", "Arete",
+        listDTO.add(new ShopSaveToStockDTO(listDatabase.get(1).getId(), "Shop1", "Arete",
                 120, 100, 80, 120,
                 "8.5.2020", "Alles gut"));
+        //Item which was added manually as delivery
         listDTO.add(new ShopSaveToStockDTO(-1, "shop1", "Pulsera",
                 50, 120, 80, 90,
                 "7.5.2020", "Kam ausversehen am Shop an"));
@@ -148,9 +150,20 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
             if(item.isPresent()){
                 WarehouseSendDeliveryOrderItem itemEntity = item.get();
                 System.out.println(itemEntity);
-
+                itemEntity.getShopsCheckedInProductsFromWarehouse().setIsArrivedAtShop(true);
+                //TODO implement UTC localdatetime persistence of arriving at shop
+                itemEntity.getShopsCheckedInProductsFromWarehouse().setIsAddedToStockOfShop(true);
+                itemEntity.getShopsCheckedInProductsFromWarehouse().setTimestampIsAddedToStockOfShop(LocalDateTime.now());
+                itemEntity.getShopsCheckedInProductsFromWarehouse().setQuantityCheckedIn(itemDTO.getQuantity());
+                itemEntity.getShopsCheckedInProductsFromWarehouse().setComment(itemDTO.getComment());
+                warehouseShopDeliveryOrdersSendRepository.save(itemEntity);
             }
         }
+
+        //TEST result
+        List<WarehouseSendDeliveryOrderItem> listAfterSaving = warehouseShopDeliveryOrdersSendRepository.findAllItemsNotAddedToShopInventory("Shop1");
+        Assert.assertEquals(2, listBeforeSaving.size());
+        Assert.assertEquals(0, listAfterSaving.size());
 
     }
 }
