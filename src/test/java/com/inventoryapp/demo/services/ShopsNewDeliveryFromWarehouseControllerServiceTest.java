@@ -150,7 +150,6 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
                     findById(itemDTO.getIdentifierOnDeliveryList());
             if(item.isPresent()){
                 WarehouseSendDeliveryOrderItem itemEntity = item.get();
-                System.out.println(itemEntity);
                 itemEntity.getShopsCheckedInProductsFromWarehouse().setIsArrivedAtShop(true);
                 //TODO implement UTC localdatetime persistence of arriving at shop
                 itemEntity.getShopsCheckedInProductsFromWarehouse().setIsAddedToStockOfShop(true);

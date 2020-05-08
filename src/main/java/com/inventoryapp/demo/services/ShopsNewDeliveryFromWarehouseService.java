@@ -60,9 +60,10 @@ public class ShopsNewDeliveryFromWarehouseService {
             System.out.println("Print Entry in Database by id");
             Optional<WarehouseSendDeliveryOrderItem> item = warehouseShopDeliveryOrdersSendRepository.
                     findById(itemDTO.getIdentifierOnDeliveryList());
+            System.out.println("Checked for item in database...");
             if(item.isPresent()){
                 WarehouseSendDeliveryOrderItem itemEntity = item.get();
-                System.out.println(itemEntity);
+//                System.out.println(itemEntity);
                 itemEntity.getShopsCheckedInProductsFromWarehouse().setIsArrivedAtShop(true);
                 //TODO implement UTC localdatetime persistence of arriving at shop
                 itemEntity.getShopsCheckedInProductsFromWarehouse().setIsAddedToStockOfShop(true);
