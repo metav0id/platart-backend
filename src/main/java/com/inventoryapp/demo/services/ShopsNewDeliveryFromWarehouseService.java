@@ -27,7 +27,8 @@ public class ShopsNewDeliveryFromWarehouseService {
         List<ShopDeliveryItemFromWarehouseDTO> listDTO = new ArrayList<>();
         listEntity.stream().forEach(item -> {
             ShopDeliveryItemFromWarehouseDTO itemDTO = new ShopDeliveryItemFromWarehouseDTO(
-                    item.getCategory(), item.getPriceListPerUnit(), item.getPriceSalesPerUnit(), item.getQuantity(),
+                    item.getId(), item.getCategory(), item.getPriceListPerUnit(),
+                    item.getPriceSalesPerUnit(), item.getQuantity(),
                     item.getDeliverySending(), "");
             listDTO.add(itemDTO);
         });

@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface WarehouseShopDeliveryOrdersSendRepository extends JpaRepository<WarehouseSendDeliveryOrderItem, Long> {
@@ -14,4 +15,6 @@ public interface WarehouseShopDeliveryOrdersSendRepository extends JpaRepository
     @Query("SELECT item FROM WarehouseSendDeliveryOrderItem item WHERE " +
             "item.shopsCheckedInProductsFromWarehouse.isAddedToStockOfShop = false AND item.shop = :shop")
     List<WarehouseSendDeliveryOrderItem> findAllItemsNotAddedToShopInventory(@Param("shop") String shop);
+
+    Optional<WarehouseSendDeliveryOrderItem> findById(Long id);
 }

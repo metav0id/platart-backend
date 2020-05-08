@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class ShopDeliveryItemFromWarehouseDTO {
+    private long identifierOnDeliveryList;
     private String category;
     private long listPrice;
     private long salesPrice;
@@ -13,8 +14,9 @@ public class ShopDeliveryItemFromWarehouseDTO {
     private LocalDateTime timestamp;
     private String comment;
 
-    public ShopDeliveryItemFromWarehouseDTO(String category, long listPrice, long salesPrice,
+    public ShopDeliveryItemFromWarehouseDTO(long identifierOnDeliveryList, String category, long listPrice, long salesPrice,
                                             long quantity, LocalDateTime timestamp, String comment) {
+        this.identifierOnDeliveryList = identifierOnDeliveryList;
         this.category = category;
         this.listPrice = listPrice;
         this.salesPrice = salesPrice;

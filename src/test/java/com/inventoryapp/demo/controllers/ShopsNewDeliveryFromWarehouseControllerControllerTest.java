@@ -32,6 +32,7 @@ public class ShopsNewDeliveryFromWarehouseControllerControllerTest {
     @Before
     public void setUp() {
         WarehouseSendDeliveryOrderItem item1 = new WarehouseSendDeliveryOrderItem();
+        item1.setId(0L);
         item1.setCategory("Pulsera");
         item1.setDeliverySending(LocalDateTime.now());
         item1.setDiscountPercent(10);
@@ -43,6 +44,7 @@ public class ShopsNewDeliveryFromWarehouseControllerControllerTest {
         this.listSendItems.add(item1);
 
         WarehouseSendDeliveryOrderItem item2 = new WarehouseSendDeliveryOrderItem();
+        item2.setId(1L);
         item2.setCategory("Arete");
         item2.setDeliverySending(LocalDateTime.now());
         item2.setDiscountPercent(20);
