@@ -52,7 +52,7 @@ public interface ShopsStockItemRepository extends JpaRepository<ShopsStockItem, 
             "AND item.category = :category " +
             "AND item.priceListPerUnit = :priceListPerUnit " +
             "AND item.priceSalesPerUnit = :priceSalesPerUnit")
-    void updateAmountByAllInfo(
+    void    updateAmountByAllInfo(
             @Param("quantity") Long quantity,
             @Param("shop") String shop,
             @Param("category") String category,
