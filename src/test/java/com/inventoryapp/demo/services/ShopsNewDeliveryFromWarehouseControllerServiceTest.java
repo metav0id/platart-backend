@@ -1,6 +1,7 @@
 package com.inventoryapp.demo.services;
 
 import com.inventoryapp.demo.dtos.ShopDeliveryItemFromWarehouseDTO;
+import com.inventoryapp.demo.dtos.ShopSaveToStockDTO;
 import com.inventoryapp.demo.entities.ShopsCheckedInProductsFromWarehouse;
 import com.inventoryapp.demo.entities.WarehouseSendDeliveryOrderItem;
 import com.inventoryapp.demo.repositories.WarehouseShopDeliveryOrdersSendRepository;
@@ -15,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -27,6 +29,7 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
     @Before
     public void setUp() {
         WarehouseSendDeliveryOrderItem item1 = new WarehouseSendDeliveryOrderItem();
+        item1.setId(10L);
         item1.setCategory("Pulsera");
         item1.setDeliverySending(LocalDateTime.now());
         item1.setDiscountPercent(10);
@@ -38,6 +41,7 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
         this.listSendItems.add(item1);
 
         WarehouseSendDeliveryOrderItem item2 = new WarehouseSendDeliveryOrderItem();
+        item2.setId(35L);
         item2.setCategory("Arete");
         item2.setDeliverySending(LocalDateTime.now());
         item2.setDiscountPercent(20);
@@ -49,6 +53,7 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
         this.listSendItems.add(item2);
 
         WarehouseSendDeliveryOrderItem item3 = new WarehouseSendDeliveryOrderItem();
+        item3.setId(55L);
         item3.setCategory("Sabato");
         item3.setDeliverySending(LocalDateTime.now());
         item3.setDiscountPercent(5);
@@ -60,6 +65,7 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
         this.listSendItems.add(item3);
 
         WarehouseSendDeliveryOrderItem item4 = new WarehouseSendDeliveryOrderItem();
+        item4.setId(80L);
         item4.setCategory("Arete");
         item4.setDeliverySending(LocalDateTime.now());
         item4.setDiscountPercent(5);
@@ -105,11 +111,59 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
         List<ShopDeliveryItemFromWarehouseDTO> listDTO = new ArrayList<>();
         listEntity.stream().forEach(item -> {
             ShopDeliveryItemFromWarehouseDTO itemDTO = new ShopDeliveryItemFromWarehouseDTO(
-                    item.getCategory(), item.getPriceListPerUnit(), item.getPriceSalesPerUnit(), item.getQuantity(),
+                    item.getId(), item.getCategory(), item.getPriceListPerUnit(),
+                    item.getPriceSalesPerUnit(), item.getQuantity(),
                     item.getDeliverySending(), "");
             listDTO.add(itemDTO);
         });
         return listDTO;
     }
 
+    @Test
+    public void saveListTest(){
+        //Test Data Preparation
+
+        //Delivery table in database
+        List<WarehouseSendDeliveryOrderItem> listDatabase = warehouseShopDeliveryOrdersSendRepository.saveAll(this.listSendItems);
+        List<WarehouseSendDeliveryOrderItem> listBeforeSaving = warehouseShopDeliveryOrdersSendRepository.findAllItemsNotAddedToShopInventory("Shop1");
+        System.out.println("List Database:");
+        System.out.println(listDatabase);
+        //DTO List
+        List<ShopSaveToStockDTO> listDTO = new ArrayList<>();
+        listDTO.add(new ShopSaveToStockDTO(listDatabase.get(0).getId(), "Shop1", "Pulsera",
+                70, 100, 90, 80,
+                "6.5.2020", "Da fehlt was"));
+        listDTO.add(new ShopSaveToStockDTO(listDatabase.get(1).getId(), "Shop1", "Arete",
+                120, 100, 80, 120,
+                "8.5.2020", "Alles gut"));
+        //Item which was added manually as delivery
+        listDTO.add(new ShopSaveToStockDTO(-1, "shop1", "Pulsera",
+                50, 120, 80, 90,
+                "7.5.2020", "Kam ausversehen am Shop an"));
+
+
+
+        //TEST Logic: items from listDTO are updated by id in deliveryList in database.
+        for(ShopSaveToStockDTO itemDTO : listDTO){
+            System.out.println("Print Entry in Database by id");
+            Optional<WarehouseSendDeliveryOrderItem> item = warehouseShopDeliveryOrdersSendRepository.
+                    findById(itemDTO.getIdentifierOnDeliveryList());
+            if(item.isPresent()){
+                WarehouseSendDeliveryOrderItem itemEntity = item.get();
+                itemEntity.getShopsCheckedInProductsFromWarehouse().setIsArrivedAtShop(true);
+                //TODO implement UTC localdatetime persistence of arriving at shop
+                itemEntity.getShopsCheckedInProductsFromWarehouse().setIsAddedToStockOfShop(true);
+                itemEntity.getShopsCheckedInProductsFromWarehouse().setTimestampIsAddedToStockOfShop(LocalDateTime.now());
+                itemEntity.getShopsCheckedInProductsFromWarehouse().setQuantityCheckedIn(itemDTO.getQuantity());
+                itemEntity.getShopsCheckedInProductsFromWarehouse().setComment(itemDTO.getComment());
+                warehouseShopDeliveryOrdersSendRepository.save(itemEntity);
+            }
+        }
+
+        //TEST result
+        List<WarehouseSendDeliveryOrderItem> listAfterSaving = warehouseShopDeliveryOrdersSendRepository.findAllItemsNotAddedToShopInventory("Shop1");
+        Assert.assertEquals(2, listBeforeSaving.size());
+        Assert.assertEquals(0, listAfterSaving.size());
+
+    }
 }

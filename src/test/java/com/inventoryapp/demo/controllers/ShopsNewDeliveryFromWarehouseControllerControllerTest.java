@@ -1,5 +1,6 @@
 package com.inventoryapp.demo.controllers;
 
+import com.inventoryapp.demo.dtos.ShopSaveToStockDTO;
 import com.inventoryapp.demo.entities.ShopsCheckedInProductsFromWarehouse;
 import com.inventoryapp.demo.entities.WarehouseSendDeliveryOrderItem;
 import com.inventoryapp.demo.repositories.WarehouseShopDeliveryOrdersSendRepository;
@@ -29,9 +30,16 @@ public class ShopsNewDeliveryFromWarehouseControllerControllerTest {
 
     private List<WarehouseSendDeliveryOrderItem> listSendItems = new ArrayList<>();
 
+//    @Autowired
+//    private ShopsNewDeliveryFromWarehouseController controller;
+//
+//    @MockBean
+//    private ShopsNewDeliveryFromWarehouseService service;
+
     @Before
     public void setUp() {
         WarehouseSendDeliveryOrderItem item1 = new WarehouseSendDeliveryOrderItem();
+        item1.setId(0L);
         item1.setCategory("Pulsera");
         item1.setDeliverySending(LocalDateTime.now());
         item1.setDiscountPercent(10);
@@ -43,6 +51,7 @@ public class ShopsNewDeliveryFromWarehouseControllerControllerTest {
         this.listSendItems.add(item1);
 
         WarehouseSendDeliveryOrderItem item2 = new WarehouseSendDeliveryOrderItem();
+        item2.setId(1L);
         item2.setCategory("Arete");
         item2.setDeliverySending(LocalDateTime.now());
         item2.setDiscountPercent(20);
@@ -65,4 +74,12 @@ public class ShopsNewDeliveryFromWarehouseControllerControllerTest {
         Assert.assertEquals(2, shopsNewDeliveryFromWarehouseService.
                 getAllItemsNotInShopInventory("Shop1").size());
     }
+
+//    @Test
+//    public void saveNewDelivery(){
+//        List<ShopSaveToStockDTO> listDTO = new ArrayList<>();
+//
+//        Mockito.when(service.saveList(listDTO)).thenReturn(true);
+//        Assert.assertTrue(controller.saveNewDeliveryFromWarehouseList(listDTO));
+//    }
 }
