@@ -2,7 +2,9 @@ package com.inventoryapp.demo.services;
 
 import com.inventoryapp.demo.dtos.ShopDeliveryItemFromWarehouseDTO;
 import com.inventoryapp.demo.dtos.ShopSaveToStockDTO;
+import com.inventoryapp.demo.entities.ShopsStockItem;
 import com.inventoryapp.demo.entities.WarehouseSendDeliveryOrderItem;
+import com.inventoryapp.demo.repositories.ShopsNewDeliveryFromWarehouseRepository;
 import com.inventoryapp.demo.repositories.WarehouseNewDeliveryOrderRepository;
 import com.inventoryapp.demo.repositories.WarehouseShopDeliveryOrdersSendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ import java.util.Optional;
 public class ShopsNewDeliveryFromWarehouseService {
     @Autowired
     private WarehouseShopDeliveryOrdersSendRepository warehouseShopDeliveryOrdersSendRepository;
+
+    @Autowired
+    ShopsNewDeliveryFromWarehouseRepository shopsNewDeliveryFromWarehouseRepository;
 
     public List<ShopDeliveryItemFromWarehouseDTO> getAllItemsNotInShopInventory(String shop) {
         List<WarehouseSendDeliveryOrderItem> listEntity = warehouseShopDeliveryOrdersSendRepository.
@@ -43,10 +48,15 @@ public class ShopsNewDeliveryFromWarehouseService {
      * @param listDTO
      * @return
      */
+
     public boolean saveList(List<ShopSaveToStockDTO> listDTO){
-        this.updateWarehouseSendDeliveryTable(listDTO);
-        //TODO implement persistence for shop inventory
-        return true;
+        Boolean successfullyUpdatedInventory = persistToStock(listDTO);
+        System.out.println("Updated shop inventory: " + successfullyUpdatedInventory);
+
+        Boolean successfullyUpdatedDeliveryTable = updateWarehouseSendDeliveryTable(listDTO);
+        System.out.println("Updated delivery table: " + successfullyUpdatedDeliveryTable);
+
+        return successfullyUpdatedDeliveryTable && successfullyUpdatedInventory;
     }
 
     /**
@@ -75,5 +85,31 @@ public class ShopsNewDeliveryFromWarehouseService {
         }
         System.out.println("Service: Update process finished for each entry in database.");
         return true;
+    }
+
+
+    private boolean persistToStock(List<ShopSaveToStockDTO> listDTO){
+        System.out.println("Update shop inventory...");
+        List<ShopsStockItem> listEntity = new ArrayList<>();
+        for (ShopSaveToStockDTO itemDTO : listDTO){
+            listEntity.add(convertDTOtoEntity(itemDTO));
+        }
+
+        for (ShopsStockItem itemEntity : listEntity){
+            ShopsStockItem itemDatabase = shopsNewDeliveryFromWarehouseRepository.getShopsStockItemsBySelectors(itemEntity.getShop(),
+                    itemEntity.getCategory(), itemEntity.getPriceListPerUnit(), itemEntity.getPriceSalesPerUnit());
+            if (itemDatabase != null){
+                itemDatabase.setQuantity(itemDatabase.getQuantity()+itemEntity.getQuantity());
+                shopsNewDeliveryFromWarehouseRepository.save(itemDatabase);
+            } else {
+                shopsNewDeliveryFromWarehouseRepository.save(itemEntity);
+            }
+        }
+        return true;
+    }
+
+    private ShopsStockItem convertDTOtoEntity(ShopSaveToStockDTO itemDto) {
+        return new ShopsStockItem(itemDto.getShop(), itemDto.getCategory(),
+                itemDto.getQuantity(), itemDto.getPriceListPerUnit(), itemDto.getPriceSalesPerUnit());
     }
 }
