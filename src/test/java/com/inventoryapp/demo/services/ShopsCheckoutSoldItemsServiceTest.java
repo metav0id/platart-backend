@@ -124,10 +124,19 @@ public class ShopsCheckoutSoldItemsServiceTest {
 
         // 3. Step: Assert Test works correctly
         for(int i=0; i<shopsCheckoutSoldItemsListFetched.size(); i++){
-            String savedItem = shopsCheckoutSoldItemsList.get(i).toString();
-            String fetchedItem = shopsCheckoutSoldItemsListFetched.get(i).toString();
+            String savedItemCategory = shopsCheckoutSoldItemsList.get(i).getCategory();
+            String fetchedItemCategory = shopsCheckoutSoldItemsListFetched.get(i).getCategory();
+            Long savedItemQuantity = shopsCheckoutSoldItemsList.get(i).getQuantity();
+            Long fetchedItemQuantity = shopsCheckoutSoldItemsListFetched.get(i).getQuantity();
+            Long savedItemPriceListPerUnit = shopsCheckoutSoldItemsList.get(i).getPriceListPerUnit();
+            Long fetchedItemPriceListPerUnit = shopsCheckoutSoldItemsListFetched.get(i).getPriceListPerUnit();
+            Long savedItemPriceSalesPerUnit = shopsCheckoutSoldItemsList.get(i).getQuantity();
+            Long fetchedItemPriceSalesPerUnit = shopsCheckoutSoldItemsListFetched.get(i).getQuantity();
 
-            Assert.assertEquals(savedItem, fetchedItem);
+            Assert.assertEquals(savedItemCategory, fetchedItemCategory);
+            Assert.assertEquals(savedItemQuantity, fetchedItemQuantity);
+            Assert.assertEquals(savedItemPriceListPerUnit, fetchedItemPriceListPerUnit);
+            Assert.assertEquals(savedItemPriceSalesPerUnit, fetchedItemPriceSalesPerUnit);
         }
     }
 
