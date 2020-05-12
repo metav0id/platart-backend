@@ -1,8 +1,10 @@
 package com.inventoryapp.demo.services;
 
 import com.inventoryapp.demo.dtos.ShopsCurrentInventoryDTO;
+import com.inventoryapp.demo.dtos.ShopsStockItemDto;
 import com.inventoryapp.demo.entities.ShopsCurrentInventory;
-import com.inventoryapp.demo.repositories.ShopsCurrentInventoryRepository;
+import com.inventoryapp.demo.entities.ShopsStockItem;
+import com.inventoryapp.demo.repositories.ShopsStockItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,59 +15,38 @@ import java.util.List;
 public class ShopsCurrentInventoryService {
 
     @Autowired
-    private ShopsCurrentInventoryRepository shopsCurrentInventoryRepository;
+    private ShopsStockItemRepository shopsStockItemRepository;
 
-    public List<ShopsCurrentInventoryDTO> getAllItemsSpecificShop(String specificShop){
-        // 0. define persist test Data to repository
+    public List<ShopsStockItemDto> getAllItemsSpecificShop(String specificShop){
 
         // 1. Fetch Specific Shop Data from Database data
-        List<ShopsCurrentInventory> inventoryListFetched =  this.shopsCurrentInventoryRepository.findByShop(specificShop);
+        List<ShopsStockItem> inventoryListFetched =  this.shopsStockItemRepository.findByShop(specificShop);
 
         // 2. transform Entities to Dtos
-        List<ShopsCurrentInventoryDTO> shopsCurrentInventoryDTOList = this.shopItemMapEntityToDto(inventoryListFetched);
+        List<ShopsStockItemDto> shopsCurrentInventoryDTOList = this.shopItemMapEntityToDto(inventoryListFetched);
 
         return shopsCurrentInventoryDTOList;
     }
 
-    public List<ShopsCurrentInventoryDTO> getAllItemsAllShops(){
-        // 0. define persist test Data to repository
 
-        // 1. Fetch Specific Shop Data from Database data
-        List<ShopsCurrentInventory> inventoryListFetched =  this.shopsCurrentInventoryRepository.findAll();
+    public List<ShopsStockItemDto> shopItemMapEntityToDto(List<ShopsStockItem> shopsStockItems){
+        List<ShopsStockItemDto> shopsCurrentInventoryDTOList = new ArrayList<>();
 
-        // 2. transform Entities to Dtos
-        List<ShopsCurrentInventoryDTO> shopsCurrentInventoryDTOList = this.shopItemMapEntityToDto(inventoryListFetched);
-
-        return shopsCurrentInventoryDTOList;
-    }
-
-    public void setItemsShops(List<ShopsCurrentInventoryDTO> shopItemDtoList){
-        List<ShopsCurrentInventory> shopsCurrentInventoryList = this.shopItemMapDtoToEntity(shopItemDtoList);
-
-        this.shopsCurrentInventoryRepository.saveAll(shopsCurrentInventoryList);
-    }
-
-    public List<ShopsCurrentInventoryDTO> shopItemMapEntityToDto(List<ShopsCurrentInventory> currentInventoryList){
-        List<ShopsCurrentInventoryDTO> shopsCurrentInventoryDTOList = new ArrayList<>();
-
-        for(ShopsCurrentInventory item: currentInventoryList){
-            ShopsCurrentInventoryDTO newInventoryDTO = new ShopsCurrentInventoryDTO();
-            newInventoryDTO.setId(item.getId());
+        for(ShopsStockItem item: shopsStockItems){
+            ShopsStockItemDto newInventoryDTO = new ShopsStockItemDto();
+            newInventoryDTO.setPosition(item.getId());
+            newInventoryDTO.setShop(item.getShop());
             newInventoryDTO.setCategory(item.getCategory());
-            newInventoryDTO.setItemInShop(item.getShop());
             newInventoryDTO.setQuantity(item.getQuantity());
-            newInventoryDTO.setPriceListPricePerUnit(item.getPriceListPerUnit());
-            newInventoryDTO.setPriceSalesPricePerUnit(item.getPriceSalesPerUnit());
-            newInventoryDTO.setDiscountPercent(item.getDiscountPercent());
-            newInventoryDTO.setItemLastDelivery(item.getDeliverySending());
-            newInventoryDTO.setItemLastSold(item.getItemLastSold());
+            newInventoryDTO.setPriceListPerUnit(item.getPriceListPerUnit());
+            newInventoryDTO.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
             shopsCurrentInventoryDTOList.add(newInventoryDTO);
         }
 
         return shopsCurrentInventoryDTOList;
     }
 
-    public List<ShopsCurrentInventory> shopItemMapDtoToEntity(List<ShopsCurrentInventoryDTO> currentInventoryList){
+    /*public List<ShopsCurrentInventory> shopItemMapDtoToEntity(List<ShopsCurrentInventoryDTO> currentInventoryList){
         List<ShopsCurrentInventory> shopsCurrentInventoryList = new ArrayList<>();
 
         for(ShopsCurrentInventoryDTO item: currentInventoryList){
@@ -82,6 +63,6 @@ public class ShopsCurrentInventoryService {
             shopsCurrentInventoryList.add(newInventoryDTO);
         }
         return shopsCurrentInventoryList;
-    }
+    }*/
 
 }

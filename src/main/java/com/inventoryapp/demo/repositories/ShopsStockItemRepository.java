@@ -1,5 +1,6 @@
 package com.inventoryapp.demo.repositories;
 
+import com.inventoryapp.demo.entities.ShopsCurrentInventory;
 import com.inventoryapp.demo.entities.ShopsStockItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -59,4 +60,12 @@ public interface ShopsStockItemRepository extends JpaRepository<ShopsStockItem, 
             @Param("priceListPerUnit") Long priceListPerUnit,
             @Param("priceSalesPerUnit") Long priceSalesPerUnit
     );
+
+    /**
+     * Returns a list of items in shop inventory, filtered by shop
+     * @param itemInShop
+     * @return
+     */
+    @Query("SELECT item FROM ShopsStockItem item WHERE item.shop = :itemInShop")
+    List<ShopsStockItem> findByShop(@Param("itemInShop") String itemInShop);
 }

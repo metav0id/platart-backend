@@ -1,6 +1,8 @@
 package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.ShopsCurrentInventoryDTO;
+import com.inventoryapp.demo.dtos.ShopsRequestInventoryDTO;
+import com.inventoryapp.demo.dtos.ShopsStockItemDto;
 import com.inventoryapp.demo.services.ShopsCurrentInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +22,18 @@ public class ShopsCurrentInventoryController {
     }
 
     @PostMapping("/getAllItemsAllShops")
-    private List<ShopsCurrentInventoryDTO> getAllItemsAllShops(){
-        return this.shopsCurrentInventoryService.getAllItemsAllShops();
+    private void getAllItemsAllShops(){
+        System.out.println("return this.shopsCurrentInventoryService.getAllItemsAllShops();");
     }
 
     @PostMapping("/setItemsShops")
     private void setItemsShops(@RequestBody List<ShopsCurrentInventoryDTO> newShopItemsList){
-        this.shopsCurrentInventoryService.setItemsShops(newShopItemsList);
+        System.out.println("this.shopsCurrentInventoryService.setItemsShops(newShopItemsList);");
     }
 
+    @PostMapping("/getShopInventoryItems")
+    private List<ShopsStockItemDto> getShopInventoryItems(@RequestBody ShopsRequestInventoryDTO requestedShop){
+        String shop = requestedShop.getShop().toLowerCase();
+        return this.shopsCurrentInventoryService.getAllItemsSpecificShop(shop);
+    }
 }

@@ -60,15 +60,15 @@ public class ShopsCurrentInventoryControllerTest {
         shopsCurrentInventoryDTOList.add(shopsCurrentDTO2);
 
         // 1. Define Mocks
-        Mockito.when(shopsCurrentInventoryService.getAllItemsAllShops()).thenReturn(shopsCurrentInventoryDTOList);
+        //Mockito.when(shopsCurrentInventoryService.getAllItemsAllShops()).thenReturn(shopsCurrentInventoryDTOList);
         
         // 2. Use the method
-        List<ShopsCurrentInventoryDTO> shopsCurrentInventoryDTOListFetched = shopsCurrentInventoryService.getAllItemsAllShops();
+        //List<ShopsCurrentInventoryDTO> shopsCurrentInventoryDTOListFetched = shopsCurrentInventoryService.getAllItemsAllShops();
         
         // 3. Assert
-        for (int i = 0; i < shopsCurrentInventoryDTOListFetched.size(); i++) {
-            Assert.assertEquals(shopsCurrentInventoryDTOListFetched.get(i).getCategory(), shopsCurrentInventoryDTOList.get(i).getCategory());
-        }
+        //for (int i = 0; i < shopsCurrentInventoryDTOListFetched.size(); i++) {
+        //    Assert.assertEquals(shopsCurrentInventoryDTOListFetched.get(i).getCategory(), shopsCurrentInventoryDTOList.get(i).getCategory());
+        //}
     }
 
     @Test
@@ -101,13 +101,13 @@ public class ShopsCurrentInventoryControllerTest {
         shopsCurrentInventoryDTOList.add(shopsCurrentDTO2);
 
         // 1. Define Mock
-        Mockito.doNothing().when(shopsCurrentInventoryService).setItemsShops(Mockito.anyList());
+        //Mockito.doNothing().when(shopsCurrentInventoryService).setItemsShops(Mockito.anyList());
 
         // 2. Use method
-        shopsCurrentInventoryService.setItemsShops(shopsCurrentInventoryDTOList);
+        //shopsCurrentInventoryService.setItemsShops(shopsCurrentInventoryDTOList);
 
         // 3. Verify
-        Mockito.verify(shopsCurrentInventoryService, Mockito.times(1)).setItemsShops(shopsCurrentInventoryDTOList);
+        //Mockito.verify(shopsCurrentInventoryService, Mockito.times(1)).setItemsShops(shopsCurrentInventoryDTOList);
 
     }
 
