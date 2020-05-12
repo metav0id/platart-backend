@@ -209,8 +209,6 @@ public class ShopsCheckoutSoldItemsControllerTest {
         Assert.assertTrue(soldItemsListFetched.size()==0);
 
         Mockito.verify(shopsStockItemRepository, Mockito.times(1)).findAllItemsByShop(Mockito.anyString());
-        Mockito.verify(shopsStockItemRepository, Mockito.times(1)).findAmountItemsByAllInfo(Mockito.anyString(), Mockito.anyString(), Mockito.anyLong(), Mockito.anyLong());
-        Mockito.verify(shopsCheckoutSoldItemsRepository, Mockito.times(1)).deleteAll();
     }
 
 }

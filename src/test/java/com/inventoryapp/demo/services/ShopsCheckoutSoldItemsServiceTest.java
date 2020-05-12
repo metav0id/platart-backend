@@ -117,7 +117,7 @@ public class ShopsCheckoutSoldItemsServiceTest {
     public void getAllSoldItemsListPositiveTest(){
         // 1. Step: prepare data
         shopsCheckoutSoldItemsRepository.saveAll(shopsCheckoutSoldItemsList);
-        Assert.assertEquals(3, shopsCheckoutSoldItemsRepository.findAll().size());
+        Assert.assertEquals(2, shopsCheckoutSoldItemsRepository.findAll().size());
 
         // 2. Step: Verify fetched data is equal to the saved data
         List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsListFetched = shopsCheckoutSoldItemsRepository.findAll();
@@ -135,7 +135,7 @@ public class ShopsCheckoutSoldItemsServiceTest {
     public void deleteCurrentSoldItemsListPositiveTest(){
         // 1. Step: prepare data
         shopsCheckoutSoldItemsRepository.saveAll(shopsCheckoutSoldItemsList);
-        Assert.assertEquals(3, shopsCheckoutSoldItemsRepository.findAll().size());
+        Assert.assertEquals(2, shopsCheckoutSoldItemsRepository.findAll().size());
 
         // 2. Step: Delete repository items
         shopsCheckoutSoldItemsRepository.deleteAll();
