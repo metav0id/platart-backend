@@ -1,6 +1,5 @@
 package com.inventoryapp.demo.repositories;
 
-import com.inventoryapp.demo.entities.ShopsCurrentInventory;
 import com.inventoryapp.demo.entities.ShopsStockItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

@@ -26,11 +26,6 @@ public class ShopsCurrentInventoryController {
         System.out.println("return this.shopsCurrentInventoryService.getAllItemsAllShops();");
     }
 
-    @PostMapping("/setItemsShops")
-    private void setItemsShops(@RequestBody List<ShopsCurrentInventoryDTO> newShopItemsList){
-        System.out.println("this.shopsCurrentInventoryService.setItemsShops(newShopItemsList);");
-    }
-
     @PostMapping("/getShopInventoryItems")
     private List<ShopsStockItemDto> getShopInventoryItems(@RequestBody ShopsRequestInventoryDTO requestedShop){
         String shop = requestedShop.getShop();

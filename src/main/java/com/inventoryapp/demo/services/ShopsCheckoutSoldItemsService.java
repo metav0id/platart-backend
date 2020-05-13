@@ -7,7 +7,6 @@ import com.inventoryapp.demo.entities.ShopsStockItem;
 import com.inventoryapp.demo.repositories.ShopsAllSoldItemsRepository;
 import com.inventoryapp.demo.repositories.ShopsCheckoutSoldItemsRepository;
 import com.inventoryapp.demo.repositories.ShopsStockItemRepository;
-import com.sun.xml.bind.v2.runtime.output.SAXOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
