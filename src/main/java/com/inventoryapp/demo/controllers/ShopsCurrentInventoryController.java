@@ -33,7 +33,7 @@ public class ShopsCurrentInventoryController {
 
     @PostMapping("/getShopInventoryItems")
     private List<ShopsStockItemDto> getShopInventoryItems(@RequestBody ShopsRequestInventoryDTO requestedShop){
-        String shop = requestedShop.getShop().toLowerCase();
+        String shop = requestedShop.getShop();
         return this.shopsCurrentInventoryService.getAllItemsSpecificShop(shop);
     }
 }
