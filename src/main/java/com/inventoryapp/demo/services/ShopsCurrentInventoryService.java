@@ -1,10 +1,12 @@
 package com.inventoryapp.demo.services;
 
+import com.inventoryapp.demo.dtos.ShopsCheckoutSoldItemsDTO;
 import com.inventoryapp.demo.dtos.ShopsStockItemDto;
 import com.inventoryapp.demo.entities.ShopsStockItem;
 import com.inventoryapp.demo.repositories.ShopsStockItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,20 @@ public class ShopsCurrentInventoryService {
         }
 
         return shopsCurrentInventoryDTOList;
+    }
+
+    public ShopsCheckoutSoldItemsDTO getShopInventoryAvailability(ShopsCheckoutSoldItemsDTO shopsCheckoutSoldItemsDTO){
+
+        Long amountItems = this.shopsStockItemRepository.findAmountItemsByAllInfo(
+                shopsCheckoutSoldItemsDTO.getShop(),
+                shopsCheckoutSoldItemsDTO.getCategory(),
+                shopsCheckoutSoldItemsDTO.getPriceListPerUnit(),
+                shopsCheckoutSoldItemsDTO.getPriceSalesPerUnit()
+                );
+
+        shopsCheckoutSoldItemsDTO.setQuantity(amountItems);
+
+        return shopsCheckoutSoldItemsDTO;
     }
 
 }

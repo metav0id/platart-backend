@@ -2,6 +2,8 @@ package com.inventoryapp.demo.dtos;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class ShopsCheckoutSoldItemsDTO {
     private Long position;
@@ -12,7 +14,7 @@ public class ShopsCheckoutSoldItemsDTO {
     private Long revenuePerUnit;
     private int discountPercent;
     private String shop;
-    private String deliverySending;
-    private String itemLastSold;
+    private LocalDateTime deliverySending;
+    private LocalDateTime itemLastSold;
     private String comment;
 }
