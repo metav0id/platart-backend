@@ -5,6 +5,8 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -20,7 +22,7 @@ public class ShopsAllSoldItems {
     private Long revenuePerUnit;
     private int discountPercent;
     private String shop;
-    private String deliverySending;
-    private String itemLastSold;
+    private LocalDateTime deliverySending;
+    private LocalDateTime itemLastSold;
     private String comment;
 }

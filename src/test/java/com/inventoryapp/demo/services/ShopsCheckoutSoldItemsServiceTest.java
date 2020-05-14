@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,9 +49,9 @@ public class ShopsCheckoutSoldItemsServiceTest {
         item1.setPriceListPerUnit(100L);
         item1.setPriceSalesPerUnit(95L);
         item1.setDiscountPercent(5);
-        item1.setDeliverySending("2016-11-09T11:44:44.797");
+        item1.setDeliverySending(LocalDateTime.parse("2016-11-09T11:44:44.797"));
         item1.setRevenuePerUnit(95L);
-        item1.setItemLastSold("2016-11-09T11:44:44.797");
+        item1.setItemLastSold(LocalDateTime.now());
         item1.setComment("Comment1");
         shopsCheckoutSoldItemsList.add(item1);
 
@@ -61,9 +62,9 @@ public class ShopsCheckoutSoldItemsServiceTest {
         item2.setPriceListPerUnit(100L);
         item2.setPriceSalesPerUnit(95L);
         item2.setDiscountPercent(5);
-        item2.setDeliverySending("2016-11-09T11:44:44.797");
+        item2.setDeliverySending(LocalDateTime.now());
         item2.setRevenuePerUnit(95L);
-        item2.setItemLastSold("2016-11-09T11:44:44.797");
+        item2.setItemLastSold(LocalDateTime.now());
         item2.setComment("Comment2");
         shopsCheckoutSoldItemsList.add(item2);
 
