@@ -2,6 +2,8 @@ package com.inventoryapp.demo.dtos;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class MonthToDateReportingDTO {
     private String shop;
@@ -10,5 +12,5 @@ public class MonthToDateReportingDTO {
     private double salesMg;
     private double salesMgAvg;
     private double discountRateAvg;
-    private String date;
+    private LocalDateTime date;
 }
