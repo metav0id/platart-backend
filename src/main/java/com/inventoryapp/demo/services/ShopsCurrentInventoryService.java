@@ -17,6 +17,14 @@ public class ShopsCurrentInventoryService {
     @Autowired
     private ShopsStockItemRepository shopsStockItemRepository;
 
+    public List<ShopsStockItemDto> getAllItemsAllShops() {
+        List<ShopsStockItem> inventoryItems = this.shopsStockItemRepository.findAll();
+
+        List<ShopsStockItemDto> inventoryDTOItems = this.shopItemMapEntityToDto(inventoryItems);
+
+        return inventoryDTOItems;
+    }
+
     public List<ShopsStockItemDto> getAllItemsSpecificShop(String specificShop){
 
         // 1. Fetch Specific Shop Data from Database data
