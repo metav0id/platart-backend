@@ -35,7 +35,6 @@ public class ShopsCurrentInventoryController {
 
     @PostMapping("/getShopInventoryAvailability")
     private ShopsCheckoutSoldItemsDTO getShopInventoryAvailability(@RequestBody ShopsCheckoutSoldItemsDTO shopsCheckoutSoldItemsDTO){
-
         return this.shopsCurrentInventoryService.getShopInventoryAvailability(shopsCheckoutSoldItemsDTO);
     }
 }

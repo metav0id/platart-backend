@@ -36,7 +36,6 @@ public class ShopsCurrentInventoryService {
         return shopsCurrentInventoryDTOList;
     }
 
-
     public List<ShopsStockItemDto> shopItemMapEntityToDto(List<ShopsStockItem> shopsStockItems){
         List<ShopsStockItemDto> shopsCurrentInventoryDTOList = new ArrayList<>();
 
