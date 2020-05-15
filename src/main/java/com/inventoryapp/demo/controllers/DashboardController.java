@@ -25,32 +25,32 @@ public class DashboardController {
     }
 
     @PostMapping("/getVbarData")
-    private List<BarDataDTO> getVbarData(){
+    public List<BarDataDTO> getVbarData(){
         return this.dashboardService.getVbarData();
     }
 
     @PostMapping("/getHbarData")
-    private List<BarDataDTO> getHbarData(){
+    public List<BarDataDTO> getHbarData(){
         return this.dashboardService.getHbarData();
     }
 
     @PostMapping("/getLastMonthData")
-    private MonthToDateReportingDTO getLastMonthData(){
+    public MonthToDateReportingDTO getLastMonthData(){
         return this.dashboardService.getLastMonthData();
     }
 
     @PostMapping("/getCurrentMonthData")
-    private MonthToDateReportingDTO getCurrentMonthData(){
+    public MonthToDateReportingDTO getCurrentMonthData(){
         return this.dashboardService.getCurrentMonthData();
     }
 
     @PostMapping("/getYesterdaysData")
-    private DailyReportingDTO getYesterdaysData(){
+    public DailyReportingDTO getYesterdaysData(){
         return this.dashboardService.getYesterdaysData();
     }
 
-    @PostMapping("/getYesterdaysData")
-    private List <DailyReportingDTO> getActualsData(){
+    @PostMapping("/getActualsData")
+    public List <DailyReportingDTO> getActualsData(){
         return this.dashboardService.getActualsData();
     }
 }

@@ -1,6 +1,7 @@
 package com.inventoryapp.demo.services;
 
 import com.inventoryapp.demo.dtos.BarDataDTO;
+import com.inventoryapp.demo.dtos.BasicReportingDTO;
 import com.inventoryapp.demo.dtos.DailyReportingDTO;
 import com.inventoryapp.demo.dtos.MonthToDateReportingDTO;
 import com.inventoryapp.demo.entities.ShopsAllSoldItems;
@@ -9,20 +10,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 public class DashboardService {
 
     @Autowired
-    DashboardRepository dashboardRepository;
+    private final DashboardRepository dashboardRepository;
 
     private DashboardService dashboardService;
 
     public DashboardService(DashboardRepository dashboardRepository){
         this.dashboardRepository = dashboardRepository;
     }
+
+    // Corresponding Service Methods for Controller-Methods
+
+    /**
+     *
+     * @return
+     */
 
     public List<BarDataDTO> getVbarData(){
         String currentMonth = LocalDate.now().toString();
@@ -51,6 +62,7 @@ public class DashboardService {
     public DailyReportingDTO getYesterdaysData() {
         String yesterday = LocalDate.now().minusDays(1).toString();
         List <ShopsAllSoldItems> soldItemsList = dashboardRepository.findByItemLastSold(yesterday);
+        this.dashboardService.convertSoldItemsToBasicReportingList(soldItemsList);
         return this.dashboardService.convertSoldItemsToYesterdaysData(soldItemsList);
     }
 
@@ -60,8 +72,15 @@ public class DashboardService {
         return this.dashboardService.convertSoldItemsToActualsData(soldItemsList);
     }
 
-    public List<BarDataDTO> convertSoldItemsToVBarData (List <ShopsAllSoldItems> shopsAllSoldItemsList) {
-        return null;
+    // Internal conversion methods transform data into Dashboard DTOs
+
+    /**
+     * Returns List of Shops with yesterday's turnover
+     * @param basicReportingDTOList
+     * @return BarDataDto
+     */
+    public List <BarDataDTO> convertSoldItemsToVBarData (List <BasicReportingDTO> basicReportingDTOList) {
+
     }
 
     public List<BarDataDTO> convertSoldItemsToHBarData (List <ShopsAllSoldItems> shopsAllSoldItemsList) {
@@ -72,16 +91,61 @@ public class DashboardService {
         return null;
     }
 
-    public MonthToDateReportingDTO convertSoldItemsToLastMonthData(List <ShopsAllSoldItems> shopsAllSoldItemsList) {
+    public MonthToDateReportingDTO convertSoldItemsToLastMonthData(List <BasicReportingDTO> basicReportingDTOList) {
         return null;
     }
 
-    public DailyReportingDTO convertSoldItemsToYesterdaysData(List <ShopsAllSoldItems> shopsAllSoldItemsList){
-        return null;
+    /**
+     * Provides yesterday's Data based on previous months' reporting
+     * @param basicReportingDTOList Aggregated List of Sales
+     * @return DailyReportingDTO
+     */
+
+    public DailyReportingDTO convertBasicReportingDTOToYesterdaysData(List <BasicReportingDTO> basicReportingDTOList){
+        DailyReportingDTO dailyReportingDTO = new DailyReportingDTO();
+        dailyReportingDTO.setShop("");
+        dailyReportingDTO.setDate(LocalDate.now().minusDays(1).toString());
+        dailyReportingDTO.setSalesNo(basicReportingDTOList.stream().
+                map(x -> x.getSalesQuantity()).reduce(0L, (a, b) -> a + b));
+        dailyReportingDTO.setSalesTo(basicReportingDTOList.stream().
+                map(x -> x.getSalesPrice()).reduce(0.0, (a, b) -> a + b));
+        dailyReportingDTO.setListPr(basicReportingDTOList.stream().
+                map(x -> x.getListPrice()).reduce(0.0, (a, b) -> a + b));
+        dailyReportingDTO.setDiscountRateAvg((1.0-(dailyReportingDTO.getSalesTo()/dailyReportingDTO.getListPr()))*100);
+        dailyReportingDTO.setPurchCo(dailyReportingDTO.getListPr()); // todo: purchasing price required
+        dailyReportingDTO.setSalesMg(dailyReportingDTO.getSalesTo()-dailyReportingDTO.getPurchCo());
+        dailyReportingDTO.setSalesMgAvg(dailyReportingDTO.getSalesMg()/dailyReportingDTO.getSalesNo());
+        return dailyReportingDTO;
     }
 
     public List<DailyReportingDTO> convertSoldItemsToActualsData(List <ShopsAllSoldItems> shopsAllSoldItemsList){
         return null;
     }
 
+    // Internal conversion methods to aggregate necessary data from different sources
+
+    public List<BasicReportingDTO> aggregateReportingDataCurrentMonth(){
+        return null;
+    }
+
+    public List<BasicReportingDTO> aggregateReportingDataPreviousMonth(){
+        return null;
+    }
+
+    // utility methods
+
+    /**
+     * Predicate function to use for filtering java-stream by date.
+     * Put in separate method to improve readability of code
+     *
+     * @param localdate defines the reuired range (all dates after param)
+     * @return predicate
+     */
+
+    public static Predicate<BasicReportingDTO> dateIsInRange(LocalDate localdate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        return p -> LocalDate.parse(p.getDate(), formatter).isAfter(localdate);
+    }
+
 }
+

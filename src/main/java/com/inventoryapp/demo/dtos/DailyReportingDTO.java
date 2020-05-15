@@ -5,12 +5,12 @@ import lombok.Data;
 @Data
 public class DailyReportingDTO {
     private String shop;
-    private int salesNumber;
-    private double salesTurnover;
-    private double purchasingCost;
-    private double listPrice;
-    private double salesMargin;
-    private double salesMarginAverage;
-    private double discountRateAverage;
+    private long salesNo;
+    private double salesTo;
+    private double purchCo;
+    private double listPr;
+    private double salesMg;
+    private double salesMgAvg;
+    private double discountRateAvg;
     private String date;
 }
