@@ -89,72 +89,110 @@ public class DashboardService {
         lastMonthAggregated.setDate(LocalDateTime.now());
         lastMonthAggregated.setShop("");
         lastMonthAggregated.setCategory("");
-        return dashboardService.convertBasicReportingToLastMonthData(lastMonthAggregated);
+        return dashboardService.mapBasicReportingToMonthToDateReporting(lastMonthAggregated);
     }
 
     public MonthToDateReportingDTO getCurrentMonthData() {
         LocalDateTime start = LocalDateTime.now().withDayOfMonth(1);
         LocalDateTime end = LocalDateTime.now();
         List <BasicReportingDTO> basicReportingDTOS = dashboardService.extractDataByDate(start, end);
-        return null;
+        BasicReportingDTO lastMonthAggregated = new BasicReportingDTO();
+        lastMonthAggregated.setSalesPrice(basicReportingDTOS.stream().map(x -> x.getSalesPrice()).reduce(0L, (a,b) -> a+b));
+        lastMonthAggregated.setSalesQuantity(basicReportingDTOS.stream().map(x -> x.getSalesQuantity()).reduce(0L, (a,b) -> a+b));
+        lastMonthAggregated.setListPrice(basicReportingDTOS.stream().map(x -> x.getListPrice()).reduce(0L, (a,b) -> a+b));
+        lastMonthAggregated.setPurchasingCost(basicReportingDTOS.stream().map(x -> x.getPurchasingCost()).reduce(0L, (a,b) -> a+b));
+        lastMonthAggregated.setDate(LocalDateTime.now());
+        lastMonthAggregated.setShop("");
+        lastMonthAggregated.setCategory("");
+        return dashboardService.mapBasicReportingToMonthToDateReporting(lastMonthAggregated);
     }
 
     public DailyReportingDTO getYesterdaysData() {
         LocalDateTime start = LocalDateTime.now().minusDays(1);
         LocalDateTime end = LocalDateTime.now();
         List <BasicReportingDTO> basicReportingDTOS = dashboardService.extractDataByDate(start, end);
-        return null;
+        BasicReportingDTO lastMonthAggregated = new BasicReportingDTO();
+        lastMonthAggregated.setSalesPrice(basicReportingDTOS.stream().map(x -> x.getSalesPrice()).reduce(0L, (a,b) -> a+b));
+        lastMonthAggregated.setSalesQuantity(basicReportingDTOS.stream().map(x -> x.getSalesQuantity()).reduce(0L, (a,b) -> a+b));
+        lastMonthAggregated.setListPrice(basicReportingDTOS.stream().map(x -> x.getListPrice()).reduce(0L, (a,b) -> a+b));
+        lastMonthAggregated.setPurchasingCost(basicReportingDTOS.stream().map(x -> x.getPurchasingCost()).reduce(0L, (a,b) -> a+b));
+        lastMonthAggregated.setDate(LocalDateTime.now());
+        lastMonthAggregated.setShop("");
+        lastMonthAggregated.setCategory("");
+        return dashboardService.mapBasicReportingDTOToDailyReportingDTO(lastMonthAggregated);
     }
 
     public List<DailyReportingDTO> getActualsData() {
         LocalDateTime start = LocalDateTime.now().withDayOfMonth(1);
         LocalDateTime end = LocalDateTime.now();
         List <BasicReportingDTO> basicReportingDTOS = dashboardService.extractDataByDate(start, end);
+        List<DailyReportingDTO> list = new ArrayList<>();
+        for (int i = 0; i<basicReportingDTOS.size(); i++){
+
+        }
         return null;
+
     }
 
-    // Internal conversion methods transform data into Dashboard DTOs
+    // Mapper methods to transform data into Dashboard DTOs
 
     /**
      * Returns List of Shops with yesterday's turnover
      * @param basicReportingDTOS
      * @return BarDataDto
      */
-    public List <BarDataDTO> convertBasicReportingToVBarData (List <BasicReportingDTO> basicReportingDTOS) {
-        return null;
+    public List <BarDataDTO> mapBasicReportingToVBarData (List <BasicReportingDTO> basicReportingDTOS) {
+        List <BarDataDTO> list = new ArrayList<>();
+        for (BasicReportingDTO basicReportingDTO : basicReportingDTOS) {
+            BarDataDTO barDataDTO = new BarDataDTO();
+            barDataDTO.setName(basicReportingDTO.getShop());
+            barDataDTO.setValue(basicReportingDTO.getSalesPrice() * basicReportingDTO.getSalesQuantity());
+            barDataDTO.setDate(LocalDateTime.now().minusDays(1));
+            list.add(barDataDTO);
+        }
+        return list;
     }
 
-    public List<BarDataDTO> convertBasicReportingToHBarData (List <BasicReportingDTO> basicReportingDTOS) {
-        return null;
+    public List<BarDataDTO> mapBasicReportingToHBarData (List <BasicReportingDTO> basicReportingDTOS) {
+        List <BarDataDTO> list = new ArrayList<>();
+        for (BasicReportingDTO basicReportingDTO : basicReportingDTOS) {
+            BarDataDTO barDataDTO = new BarDataDTO();
+            barDataDTO.setName(basicReportingDTO.getShop());
+            barDataDTO.setValue(basicReportingDTO.getSalesPrice() * basicReportingDTO.getSalesQuantity());
+            barDataDTO.setDate(LocalDateTime.now().minusDays(1));
+            list.add(barDataDTO);
+        }
+        return list;
     }
 
-    public MonthToDateReportingDTO convertBasicReportingToCurrentMonthData(List <BasicReportingDTO> basicReportingDTOS) {
-        return null;
-    }
-
-    public MonthToDateReportingDTO convertBasicReportingToLastMonthData(List <BasicReportingDTO> basicReportingDTOList) {
-        return null;
+    public MonthToDateReportingDTO mapBasicReportingToMonthToDateReporting(BasicReportingDTO basicReportingDTO) {
+        MonthToDateReportingDTO monthToDateReportingDTO = new MonthToDateReportingDTO();
+        monthToDateReportingDTO.setShop(basicReportingDTO.getShop());
+        monthToDateReportingDTO.setSalesNo(basicReportingDTO.getSalesQuantity());
+        monthToDateReportingDTO.setSalesTo((basicReportingDTO.getSalesPrice().doubleValue()/100)*monthToDateReportingDTO.getSalesNo());
+        monthToDateReportingDTO.setSalesMg(monthToDateReportingDTO.getSalesTo()-(basicReportingDTO.getPurchasingCost().doubleValue()
+                *basicReportingDTO.getSalesQuantity())/100);
+        monthToDateReportingDTO.setSalesMgAvg(monthToDateReportingDTO.getSalesMg()/monthToDateReportingDTO.getSalesNo());
+        monthToDateReportingDTO.setDiscountRateAvg(100-(basicReportingDTO.getPurchasingCost()/basicReportingDTO.getListPrice())*100);
+        monthToDateReportingDTO.setDate(basicReportingDTO.getDate());
+        return monthToDateReportingDTO;
     }
 
     /**
      * Provides yesterday's Data based on previous months' reporting
-     * @param basicReportingDTOList Aggregated List of Sales
+     * @param basicReportingDTO Aggregated List of Sales
      * @return DailyReportingDTO
      */
 
-    public DailyReportingDTO convertBasicReportingDTOToYesterdaysData(List <BasicReportingDTO> basicReportingDTOList){
+    public DailyReportingDTO mapBasicReportingDTOToDailyReportingDTO(BasicReportingDTO basicReportingDTO){
         DailyReportingDTO dailyReportingDTO = new DailyReportingDTO();
         dailyReportingDTO.setShop(""); // aggregated data
         dailyReportingDTO.setDate(LocalDateTime.now());
-        dailyReportingDTO.setSalesNo(basicReportingDTOList.stream().
-                map(x -> x.getSalesQuantity()).reduce(0L, (a, b) -> a + b));
-        dailyReportingDTO.setSalesTo(basicReportingDTOList.stream().
-                map(x -> x.getSalesPrice()).reduce(0L, (a, b) -> a + b));
-        dailyReportingDTO.setListPr(basicReportingDTOList.stream().
-                map(x -> x.getListPrice()).reduce(0L, (a, b) -> a + b));
-        dailyReportingDTO.setPurchCo(basicReportingDTOList.stream().
-                map(x -> x.getPurchasingCost()).reduce(0L, (a, b) -> a + b ));
-        dailyReportingDTO.setDiscountRateAvg((1.0-(dailyReportingDTO.getSalesTo()/dailyReportingDTO.getListPr()))*100);
+        dailyReportingDTO.setSalesNo(basicReportingDTO.getSalesQuantity());
+        dailyReportingDTO.setSalesTo((basicReportingDTO.getSalesPrice().doubleValue()/100)*basicReportingDTO.getSalesQuantity());
+        dailyReportingDTO.setListPr(basicReportingDTO.getListPrice().doubleValue()/100);
+        dailyReportingDTO.setPurchCo(basicReportingDTO.getPurchasingCost().doubleValue()/100);
+        dailyReportingDTO.setDiscountRateAvg(dailyReportingDTO.getSalesTo()/(dailyReportingDTO.getListPr()*100));
         dailyReportingDTO.setSalesMg(dailyReportingDTO.getSalesTo()-dailyReportingDTO.getPurchCo());
         dailyReportingDTO.setSalesMgAvg(dailyReportingDTO.getSalesMg()/dailyReportingDTO.getSalesNo());
         return dailyReportingDTO;
