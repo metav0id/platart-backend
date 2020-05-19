@@ -45,9 +45,17 @@ public class MapMarkersController {
     public List<MarkerDTO> getAllMarkers() {
 
         List<MarkerDTO> markerDTOS = mapMarkersService.getAllMarkers();
-        System.out.println("List of stock loaded.");
+        System.out.println("List of markers loaded.");
         return markerDTOS;
     }
+    @GetMapping("/getallmarkersNoCoords")
+    public List<MarkerDTO> getAllMarkersNoCoords() {
+
+        List<MarkerDTO> markerDTOS = mapMarkersService.getAllMarkersWithNoCoords();
+        System.out.println("List of markers loaded.");
+        return markerDTOS;
+    }
+
     /**
      * You create a new marker that will be saved in the database.
      *

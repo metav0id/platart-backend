@@ -46,6 +46,19 @@ public class MapMarkersService {
         }
         return findAllMarkersDTO;
     }
+    public List<MarkerDTO> getAllMarkersWithNoCoords() {
+
+        List<MapMarker> findAllMarkers = mapMarkerRapository.findByCategory();
+        List<MarkerDTO> findAllMarkersDTO = new ArrayList<>();
+
+        if (findAllMarkers.size() >= 0) {
+            findAllMarkersDTO =covertListEntityToDTO(findAllMarkers);
+            return findAllMarkersDTO;
+        } else {
+            System.out.println("----> No items found in the Data Base<----");
+        }
+        return findAllMarkersDTO;
+    }
 
     public List <MarkerDTO> covertListEntityToDTO (List<MapMarker> listMarkers){
         List <MarkerDTO> listMarkerDTO = new ArrayList<>();
