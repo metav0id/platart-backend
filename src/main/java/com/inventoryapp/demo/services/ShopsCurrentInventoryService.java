@@ -62,13 +62,9 @@ public class ShopsCurrentInventoryService {
                 shopsCheckoutSoldItemsDTO.getPriceSalesPerUnit()
                 );
 
-        System.out.println("Before amount of items available: " + amountItems);
-
         if(amountItems == null) {
             amountItems = 0L;
         }
-
-        System.out.println("After amount of items available: " + shopsCheckoutSoldItemsDTO.getQuantity() );
 
         shopsCheckoutSoldItemsDTO.setQuantity(amountItems);
 
