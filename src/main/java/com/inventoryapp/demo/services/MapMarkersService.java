@@ -172,10 +172,14 @@ public class MapMarkersService {
 
     @Transactional
     public void update (MarkerDTO markerDTO, MarkerDTO markerToGetCoords){
-        MapMarker marker = findById(markerDTO.getId());
-        marker.setLat(markerToGetCoords.getLat());
-        marker.setLng(markerToGetCoords.getLng());
-        mapMarkerRapository.save(marker);
+
+        if (markerDTO == null){
+            System.out.println("no marker found in data base");
+        }else {
+            MapMarker marker = findById(markerDTO.getId());
+            marker.setLat(markerToGetCoords.getLat());
+            marker.setLng(markerToGetCoords.getLng());
+            mapMarkerRapository.save(marker);
 
 //        MarkerDTO markerDTO1 = findById2(markerDTO);
 //        markerDTO1.setLat(markerToGetCoords.getLat());
@@ -189,6 +193,7 @@ public class MapMarkersService {
 //        mapMarkerRapository.save(marker);
 
 //        return markerDTO1;
+        }
     }
 
 
