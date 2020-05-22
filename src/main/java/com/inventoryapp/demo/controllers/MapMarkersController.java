@@ -85,13 +85,40 @@ public class MapMarkersController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     //resquesbody asks for the whole entity
     public void delete(@RequestBody MarkerDTO markerDTO){
-        MapMarker mapMarker = mapMarkerRapository.findByName(markerDTO.getName());
-        Comerce comerce = comerceRepository.findByName(markerDTO.getName());
-        Long idComerce = comerce.getId();
-        Long idMarker = mapMarker.getId();
-        comerceService.deleteComerce(idComerce);
 
-        mapMarkersService.deleteMarker(idMarker);
+        MapMarker mapMarker = mapMarkerRapository.findByName(markerDTO.getName());
+        if (mapMarker == null){
+            System.out.println("merker has not assigned comerce");
+
+        }else {
+            Comerce comerce = comerceRepository.findByName(markerDTO.getName());
+            Long idComerce = comerce.getId();
+            Long idMarker = mapMarker.getId();
+            comerceService.deleteComerce(idComerce);
+
+            mapMarkersService.deleteMarker(idMarker);
+        }
+    }
+
+    @PostMapping("/deleteCoords")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    //resquesbody asks for the whole entity
+    public void deleteCoords(@RequestBody MarkerDTO markerDTO){
+
+        MapMarker mapMarker = mapMarkerRapository.findByName(markerDTO.getName());
+        if (mapMarker == null){
+            System.out.println("merker has not assigned comerce");
+
+        }else {
+            Comerce comerce = comerceRepository.findByName(markerDTO.getName());
+            System.out.println(mapMarker.getName());
+            mapMarker.setLng(null);
+            System.out.println(mapMarker.lng);
+            mapMarker.setLat(null);
+            System.out.println(mapMarker.lat);
+            mapMarkerRapository.save(mapMarker);
+
+        }
     }
 
     /**
