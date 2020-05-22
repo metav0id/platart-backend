@@ -144,7 +144,6 @@ public class MapMarkersService {
 
     @Transactional
     public void deleteMarker(Long id) {
-
         MapMarker mapMarker = findById(id);
         if (mapMarker!= null){
             mapMarkerRapository.deleteById(id);
@@ -173,6 +172,9 @@ public class MapMarkersService {
     @Transactional
     public void update (MarkerDTO markerDTO, MarkerDTO markerToGetCoords){
         MapMarker marker = findById(markerDTO.getId());
+        if(marker == null){
+
+        }
         marker.setLat(markerToGetCoords.getLat());
         marker.setLng(markerToGetCoords.getLng());
         mapMarkerRapository.save(marker);
