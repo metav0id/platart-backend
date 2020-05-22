@@ -22,7 +22,7 @@ public class WarehouseItemCategoryService {
     public List<WarehouseItemCategoryDTO> getAllCategories() {
         List<WarehouseItemCategoryDTO> allCategories = new ArrayList<>();
 
-        List<WarehouseItemCategory> allCategoryEntities = this.warehouseItemCategoryRepository.findAll();
+        List<WarehouseItemCategory> allCategoryEntities = this.warehouseItemCategoryRepository.findActiveCategories();
 
         for(WarehouseItemCategory entity: allCategoryEntities){
             WarehouseItemCategoryDTO warehouseItem = new WarehouseItemCategoryDTO();
@@ -35,10 +35,19 @@ public class WarehouseItemCategoryService {
     }
 
     public void saveNewCategory(WarehouseItemCategoryDTO newCategory){
-        WarehouseItemCategory newCategoryItem = new WarehouseItemCategory();
-        newCategoryItem.setCategory(newCategory.getCategory());
 
-        this.warehouseItemCategoryRepository.save(newCategoryItem);
+        int itemInCategoryList = this.warehouseItemCategoryRepository.existsCategoryByName(newCategory.getCategory());
+
+        if ( itemInCategoryList>0 ) {
+            WarehouseItemCategory newCategoryItem = new WarehouseItemCategory();
+            newCategoryItem.setCategory(newCategory.getCategory());
+            newCategoryItem.setActivated(true);
+
+            this.warehouseItemCategoryRepository.save(newCategoryItem);
+        } else {
+            this.warehouseItemCategoryRepository.activateCategory(newCategory.getCategory());
+        }
+
     }
 
 
@@ -48,6 +57,13 @@ public class WarehouseItemCategoryService {
 
         this.warehouseItemCategoryRepository.deleteCategoryByName(categoryToBeDeletedDTO.getCategory());
         System.out.println("Test delete category Service2"+ categoryToBeDeletedDTO.getCategory());
-        //System.out.println("Number elements deleted: "+ numDeleted);
+    }
+
+    // deactivateCategory
+    public void deactivateCategory(WarehouseItemCategoryDTO categoryToBeDeletedDTO) {
+
+        System.out.println("Test delete category Service1"+ categoryToBeDeletedDTO.getCategory());
+
+        this.warehouseItemCategoryRepository.deactivateCategory(categoryToBeDeletedDTO.getCategory());
     }
 }

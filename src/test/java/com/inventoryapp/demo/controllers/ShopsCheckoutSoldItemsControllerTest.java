@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +53,9 @@ public class ShopsCheckoutSoldItemsControllerTest {
         item1.setPriceSalesPerUnit(100L);
         item1.setPriceListPerUnit(95L);
         item1.setDiscountPercent(5);
-        item1.setDeliverySending("someDate");
+        item1.setDeliverySending(LocalDateTime.now());
         item1.setRevenuePerUnit(95L);
-        item1.setItemLastSold("someDate");
+        item1.setItemLastSold(LocalDateTime.now());
         item1.setComment("NoComment");
         shopsCheckoutSoldItemsEntitiesList.add(item1);
 
@@ -66,9 +67,9 @@ public class ShopsCheckoutSoldItemsControllerTest {
         item2.setPriceSalesPerUnit(100L);
         item2.setPriceListPerUnit(95L);
         item2.setDiscountPercent(5);
-        item2.setDeliverySending("someDate");
+        item2.setDeliverySending(LocalDateTime.now());
         item2.setRevenuePerUnit(95L);
-        item2.setItemLastSold("someDate");
+        item2.setItemLastSold(LocalDateTime.now());
         item2.setComment("NoComment");
         shopsCheckoutSoldItemsEntitiesList.add(item2);
 
@@ -80,9 +81,9 @@ public class ShopsCheckoutSoldItemsControllerTest {
         item3.setPriceSalesPerUnit(100L);
         item3.setPriceListPerUnit(95L);
         item3.setDiscountPercent(5);
-        item3.setDeliverySending("someDate");
+        item3.setDeliverySending(LocalDateTime.now());
         item3.setRevenuePerUnit(95L);
-        item3.setItemLastSold("someDate");
+        item3.setItemLastSold(LocalDateTime.now());
         item3.setComment("NoComment");
         shopsCheckoutSoldItemsEntitiesList.add(item3);
 
@@ -95,9 +96,9 @@ public class ShopsCheckoutSoldItemsControllerTest {
         itemDTO1.setPriceSalesPerUnit(100L);
         itemDTO1.setPriceListPerUnit(95L);
         itemDTO1.setDiscountPercent(5);
-        itemDTO1.setDeliverySending("someDate");
+        itemDTO1.setDeliverySending(LocalDateTime.now());
         itemDTO1.setRevenuePerUnit(95L);
-        itemDTO1.setItemLastSold("someDate");
+        itemDTO1.setItemLastSold(LocalDateTime.now());
         itemDTO1.setComment("NoComment");
         shopsCheckoutSoldItemsDTOSList.add(itemDTO1);
 
@@ -109,9 +110,9 @@ public class ShopsCheckoutSoldItemsControllerTest {
         itemDTO2.setPriceSalesPerUnit(100L);
         itemDTO2.setPriceListPerUnit(95L);
         itemDTO2.setDiscountPercent(5);
-        itemDTO2.setDeliverySending("someDate");
+        itemDTO2.setDeliverySending(LocalDateTime.now());
         itemDTO2.setRevenuePerUnit(95L);
-        itemDTO2.setItemLastSold("someDate");
+        itemDTO2.setItemLastSold(LocalDateTime.now());
         itemDTO2.setComment("NoComment");
         shopsCheckoutSoldItemsDTOSList.add(itemDTO2);
 
@@ -123,9 +124,9 @@ public class ShopsCheckoutSoldItemsControllerTest {
         itemDTO3.setPriceSalesPerUnit(100L);
         itemDTO3.setPriceListPerUnit(95L);
         itemDTO3.setDiscountPercent(5);
-        itemDTO3.setDeliverySending("someDate");
+        itemDTO3.setDeliverySending(LocalDateTime.now());
         itemDTO3.setRevenuePerUnit(95L);
-        itemDTO3.setItemLastSold("someDate");
+        itemDTO3.setItemLastSold(LocalDateTime.now());
         itemDTO3.setComment("NoComment");
         shopsCheckoutSoldItemsDTOSList.add(itemDTO3);
     }
@@ -182,9 +183,9 @@ public class ShopsCheckoutSoldItemsControllerTest {
         newItemDTO1.setPriceSalesPerUnit(100L);
         newItemDTO1.setPriceListPerUnit(95L);
         newItemDTO1.setDiscountPercent(5);
-        newItemDTO1.setDeliverySending("someDate");
+        newItemDTO1.setDeliverySending(LocalDateTime.now());
         newItemDTO1.setRevenuePerUnit(95L);
-        newItemDTO1.setItemLastSold("someDate");
+        newItemDTO1.setItemLastSold(LocalDateTime.now());
         newItemDTO1.setComment("NoComment");
 
         List<ShopsStockItem> shopsStockItemList =  new ArrayList<>();
@@ -209,8 +210,6 @@ public class ShopsCheckoutSoldItemsControllerTest {
         Assert.assertTrue(soldItemsListFetched.size()==0);
 
         Mockito.verify(shopsStockItemRepository, Mockito.times(1)).findAllItemsByShop(Mockito.anyString());
-        Mockito.verify(shopsStockItemRepository, Mockito.times(1)).findAmountItemsByAllInfo(Mockito.anyString(), Mockito.anyString(), Mockito.anyLong(), Mockito.anyLong());
-        Mockito.verify(shopsCheckoutSoldItemsRepository, Mockito.times(1)).deleteAll();
     }
 
 }
