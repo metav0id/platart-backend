@@ -101,6 +101,27 @@ public class MapMarkersController {
         }
     }
 
+    @PostMapping("/deleteCoords")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    //resquesbody asks for the whole entity
+    public void deleteCoords(@RequestBody MarkerDTO markerDTO){
+
+        MapMarker mapMarker = mapMarkerRapository.findByName(markerDTO.getName());
+        if (mapMarker == null){
+            System.out.println("merker has not assigned comerce");
+
+        }else {
+            Comerce comerce = comerceRepository.findByName(markerDTO.getName());
+            System.out.println(mapMarker.getName());
+            mapMarker.setLng(null);
+            System.out.println(mapMarker.lng);
+            mapMarker.setLat(null);
+            System.out.println(mapMarker.lat);
+            mapMarkerRapository.save(mapMarker);
+
+        }
+    }
+
     /**
      * You can update the info of a marker
      *
