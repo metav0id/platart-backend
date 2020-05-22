@@ -64,11 +64,12 @@ public class ComerceController {
      * http://localhost:8081/comerce/delete/1  in postman. the 1 is an example.
      * @return is void.
      */
-//methods to delete a marker
+
+/**methods to delete a marker**/
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
 
-    //resquesbody asks for the whole entity
+    /**resquesbody asks for the whole entity**/
     public void delete(@PathVariable Long id){
 
         comerceService.deleteComerce(id);

@@ -181,18 +181,6 @@ public class MapMarkersService {
             marker.setLng(markerToGetCoords.getLng());
             mapMarkerRapository.save(marker);
 
-//        MarkerDTO markerDTO1 = findById2(markerDTO);
-//        markerDTO1.setLat(markerToGetCoords.getLat());
-//        markerDTO1.setLng(markerToGetCoords.getLng());
-//        System.out.println(markerDTO1.getCategory());
-//
-//        MapMarker marker = covertUnitDTOToEntity(markerDTO1);
-//        System.out.println(marker.getLat());
-
-
-//        mapMarkerRapository.save(marker);
-
-//        return markerDTO1;
         }
     }
 
@@ -211,22 +199,6 @@ public class MapMarkersService {
         return comerceRepository.findById(id).orElse(null);
     }
 
-//@Transactional
-//    public MapMarker update (MarkerDTO markerDTO, String lat, String lng){
-//    System.out.println(markerDTO.getName());
-//    Long id = markerDTO.getId();
-//    MapMarker marketToEdit = mapMarkerRapository.findById(id);
-//
-//    marketToEdit.setLng(lng);
-//    markerDTO.setLat(lat);
-//    System.out.println(markerDTO.getLat());
-//
-//    MapMarker marker = covertUnitDTOToEntity(markerDTO);
-//    System.out.println(marker.getLat());
-//
-//    mapMarkerRapository.save(marker);
-//
-//        return marker;
-//    }
+
 
 }

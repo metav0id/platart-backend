@@ -72,18 +72,11 @@ public class MapMarkersController {
      * @return is void.
      */
 
-//methods to delete a marker
-//    @DeleteMapping("/delete/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    //resquesbody asks for the whole entity
-//    public void delete(@PathVariable Long id){
-//
-//        mapMarkersService.deleteMarker(id);
-//    }
+
 
     @PostMapping("/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    //resquesbody asks for the whole entity
+    /**resquesbody asks for the whole entity**/
     public void delete(@RequestBody MarkerDTO markerDTO){
 
         MapMarker mapMarker = mapMarkerRapository.findByName(markerDTO.getName());
@@ -131,32 +124,18 @@ public class MapMarkersController {
     public void update (@RequestBody MarkerDTO[] markerDTO){
         System.out.println("in controller");
         mapMarkersService.update(markerDTO[0],markerDTO[1]);
-//        return updatedmarker;
+
     }
 
     @PostMapping("/find")
     public void findMarker (@RequestBody MarkerDTO markerDTO) {
-//        Long id = markerDTO.getId();
-//        MapMarker mapMarker = mapMarkersService.findById(id);
-//        System.out.println(mapMarker);
+
         MarkerDTO markerDTOFounf= mapMarkersService.findById2(markerDTO);
 
         System.out.println(markerDTOFounf);
 
     }
 
-//    @PostMapping("/update/{lng}")
-//    @ResponseStatus (HttpStatus.CREATED)
-//    public MapMarker update (@RequestBody MarkerDTO markerDTO, @PathVariable String lng, @PathVariable String lat){
-//        Long id = markerDTO.getId();
-//
-//        MapMarker marketToEdit =mapMarkersService.findById(id);
-//        marketToEdit.setLng(lng);
-//        marketToEdit.setLat(lat);
-//
-//        return mapMarkersService.save(marketToEdit);
-//
-//    }
 
 
 }
