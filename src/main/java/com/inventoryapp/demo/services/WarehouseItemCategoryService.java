@@ -38,7 +38,7 @@ public class WarehouseItemCategoryService {
 
         int itemInCategoryList = this.warehouseItemCategoryRepository.existsCategoryByName(newCategory.getCategory());
 
-        if ( itemInCategoryList>0 ) {
+        if ( itemInCategoryList == 0 ) {
             WarehouseItemCategory newCategoryItem = new WarehouseItemCategory();
             newCategoryItem.setCategory(newCategory.getCategory());
             newCategoryItem.setActivated(true);

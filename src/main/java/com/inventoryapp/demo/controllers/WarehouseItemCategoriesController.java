@@ -22,7 +22,6 @@ public class WarehouseItemCategoriesController {
     // returns all active categories
     @PostMapping("/getAllCategories")
     public List<WarehouseItemCategoryDTO> getAllCategories(){
-
         System.out.println("Test this RESTful API");
         List<WarehouseItemCategoryDTO> allCategories = this.warehouseItemCategoryService.getAllCategories();
 
@@ -40,21 +39,14 @@ public class WarehouseItemCategoriesController {
 
     @PostMapping("/saveNewCategory")
     public void saveNewCategory(@RequestBody WarehouseItemCategoryDTO newWarehouseItemCategory){
+        System.out.println("Create new Category");
         this.warehouseItemCategoryService.saveNewCategory(newWarehouseItemCategory);
     }
 
-    /*@PostMapping("/deleteCategory'")
-    public void deactivateCategory(@RequestBody WarehouseItemCategoryDTO categoryToBeDeletedDTO){
-        // System.out.println("Test delete category Contoller"+ categoryToBeDeletedDTO.getCategory());
-        System.out.println("deleteCategory");
-        this.warehouseItemCategoryService.deactivateCategory(categoryToBeDeletedDTO);
-    }*/
-
     @PostMapping("/deleteCategory")
     public void deleteCategory(@RequestBody WarehouseItemCategoryDTO categoryToBeDeletedDTO){
+        System.out.println("Test Delete Category");
+
         this.warehouseItemCategoryService.deactivateCategory(categoryToBeDeletedDTO);
     }
-
-
-
 }
