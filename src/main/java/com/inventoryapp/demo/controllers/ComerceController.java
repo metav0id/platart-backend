@@ -74,6 +74,12 @@ public class ComerceController {
 
         comerceService.deleteComerce(id);
     }
-
+//    @PostMapping("/edit")
+//    public void editComerce (@RequestBody Comerce comerce) {
+//        comerceService.update(comerce);
+//
+//
+//
+//    }
 
 }

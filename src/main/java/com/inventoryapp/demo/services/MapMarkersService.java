@@ -14,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.MatchResult;
 
 @Service
 public class MapMarkersService {
+    String name;
 
     @Autowired
     MapMarkerRapository mapMarkerRapository;
@@ -185,6 +187,34 @@ public class MapMarkersService {
     }
 
 
+    @Transactional
+    public void edit (MarkerDTO markerDTO){
+        System.out.println(markerDTO.getName());
+        MapMarker marker = findById3(markerDTO);
+        this.name =marker.getName();
+        System.out.println(marker.getName());
+        marker.setName(markerDTO.getName());
+        marker.setAddress(markerDTO.getAddress());
+        marker.setLat(markerDTO.getLat());
+        marker.setLng(markerDTO.getLng());
+        marker.setCategory(markerDTO.getCategory());
+        System.out.println(marker.getName());
+        mapMarkerRapository.save(marker);
+        findComerce(markerDTO);
+
+    }
+    @Transactional
+
+    public Comerce findComerce(MarkerDTO mapMarker) {
+        System.out.println(this.name);
+        Comerce comerce = comerceRepository.findByName(this.name);
+        System.out.println(comerce.getName());
+        comerce.setName(mapMarker.getName());
+        comerce.setCategory(mapMarker.getCategory());
+        comerce.setAddress(mapMarker.getAddress());
+      comerceRepository.save(comerce);
+      return comerce;
+    }
 
 
     /**
@@ -192,13 +222,18 @@ public class MapMarkersService {
      *
      * @return a List of markerdto
      */
+
+
     @Transactional(readOnly = true)
+    public MapMarker findById3(MarkerDTO markerDTO) {
+        String name = markerDTO.getName();
+        String lng = markerDTO.getLng();
+//        Long id = markerDTO.getId();
+        MapMarker mapMarker= mapMarkerRapository.findByLng(lng);
+//        MapMarker mapMarker= mapMarkerRapository.findByName(name);
 
-    public Comerce findById2(ComerceDTO comerceDTO) {
-        Long id = comerceDTO.getId();
-        return comerceRepository.findById(id).orElse(null);
+        return mapMarker;
+
     }
-
-
 
 }

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface MapMarkerRapository extends JpaRepository<MapMarker, Long> {
+    MapMarker findByLng (String lng);
     MapMarker findByName (String name);
     @Query(value = "SELECT entry FROM MapMarker entry WHERE entry.lat = null ")
     List<MapMarker> findByCategory();

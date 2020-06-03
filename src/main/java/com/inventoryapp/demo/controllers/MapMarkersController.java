@@ -136,6 +136,13 @@ public class MapMarkersController {
 
     }
 
+    @PostMapping("/edit")
+    public void editMarker (@RequestBody MarkerDTO markerDTO) {
+        System.out.println(markerDTO.getName());
+        System.out.println(markerDTO.getLat());
+        mapMarkersService.edit(markerDTO);
 
+
+    }
 
 }
