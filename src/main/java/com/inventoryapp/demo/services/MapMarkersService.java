@@ -34,7 +34,6 @@ public class MapMarkersService {
      *
      * @return a List of markerdto
      */
-
     public List<MarkerDTO> getAllMarkers() {
 
         List<MapMarker> findAllMarkers = mapMarkerRapository.findAll();
@@ -48,6 +47,12 @@ public class MapMarkersService {
         }
         return findAllMarkersDTO;
     }
+
+    /**
+     * Finds all the markers with no coords in the database
+     *
+     * @return a List of markerdto
+     */
     public List<MarkerDTO> getAllMarkersWithNoCoords() {
 
         List<MapMarker> findAllMarkers = mapMarkerRapository.findByCategory();
@@ -62,6 +67,11 @@ public class MapMarkersService {
         return findAllMarkersDTO;
     }
 
+    /**
+     * Convert List of entity markers to list of DTO markers
+     *
+     * @return a List of markeDTO
+     */
     public List <MarkerDTO> covertListEntityToDTO (List<MapMarker> listMarkers){
         List <MarkerDTO> listMarkerDTO = new ArrayList<>();
         for (MapMarker marker : listMarkers) {
@@ -72,10 +82,6 @@ public class MapMarkersService {
             markerDTO.setAddress(marker.getAddress());
             markerDTO.setCategory(marker.getCategory());
             markerDTO.setId(marker.getId());
-//            markerDTO.setLink(marker.getLink());
-
-
-
             listMarkerDTO.add(markerDTO);
         }
         return listMarkerDTO;
@@ -83,6 +89,11 @@ public class MapMarkersService {
 
     }
 
+    /**
+     * Convert entity marker to  DTO marker
+     *
+     * @return a MarkerDTO
+     */
     public MarkerDTO covertUnitEntityToDTO(MapMarker marker){
 
         MarkerDTO markerDTO = new MarkerDTO();
@@ -91,17 +102,15 @@ public class MapMarkersService {
         markerDTO.setName(marker.getName());
         markerDTO.setAddress(marker.getAddress());
         markerDTO.setId(marker.getId());
-//            markerDTO.setLink(marker.getLink());
-
         return markerDTO;
 
     }
+
     /**
      * Creates a new marker
      *
      * @return void
      */
-
     //create new marker methods
     public void createNewMarker(MarkerDTO markerDTO){
         MapMarker mapMarker = covertUnitDTOToEntity(markerDTO);
@@ -113,6 +122,11 @@ public class MapMarkersService {
         return mapMarkerRapository.save(mapMarker);
     }
 
+    /**
+     * Convert DTO marker TO entity marker
+     *
+     * @return a entity Marker
+     */
     public MapMarker covertUnitDTOToEntity(MarkerDTO marker){
         MapMarker mapMarker = new MapMarker();
         mapMarker.setLat(marker.getLat());
@@ -123,7 +137,11 @@ public class MapMarkersService {
         return mapMarker;
     }
 
-
+    /**
+     * Convert List of  DTO markers to list of entity markers
+     *
+     * @return a List of entity Markers
+     */
     public List <MapMarker> covertListDTOToEntity(List<MarkerDTO> listMarkers){
         List <MapMarker> listMarker = new ArrayList<>();
         for (MarkerDTO marker : listMarkers) {
@@ -138,12 +156,12 @@ public class MapMarkersService {
         }
         return listMarker;
     }
+
     /**
      * Deletes a merker from database
      *
      * @return void
      */
-
     @Transactional
     public void deleteMarker(Long id) {
 
@@ -155,12 +173,21 @@ public class MapMarkersService {
         }
     }
 
-
+    /**
+     * Finds marker by an id
+     *
+     * @return entity Marker
+     */
     @Transactional(readOnly = true)
     public MapMarker findById(Long id) {
         return mapMarkerRapository.findById(id).orElse(null);
     }
 
+    /**
+     * Finds marker by name of a DTO marker
+     *
+     * @return Marker DTO
+     */
     @Transactional(readOnly = true)
     public MarkerDTO findById2(MarkerDTO markerDTO) {
         String name = markerDTO.getName();
@@ -172,6 +199,11 @@ public class MapMarkersService {
 
     }
 
+    /**
+     * Updates a merker giving it coords
+     *
+     * @return void
+     */
     @Transactional
     public void update (MarkerDTO markerDTO, MarkerDTO markerToGetCoords){
 
@@ -186,7 +218,11 @@ public class MapMarkersService {
         }
     }
 
-
+    /**
+     * Edits a marker with new info from form
+     *
+     * @return void
+     */
     @Transactional
     public void edit (MarkerDTO markerDTO){
         System.out.println(markerDTO.getName());
@@ -203,8 +239,13 @@ public class MapMarkersService {
         findComerce(markerDTO);
 
     }
-    @Transactional
 
+    /**
+     * Edits a the comerce correspondant to the edited marker from method above
+     *
+     * @return Comerce entity
+     */
+    @Transactional
     public Comerce findComerce(MarkerDTO mapMarker) {
         System.out.println(this.name);
         Comerce comerce = comerceRepository.findByName(this.name);
@@ -218,22 +259,15 @@ public class MapMarkersService {
 
 
     /**
-     * Updates a marker with the info of a comerce
+     * Finds a marker by its coords
      *
-     * @return a List of markerdto
+     * @return a entity Marker
      */
-
-
     @Transactional(readOnly = true)
     public MapMarker findById3(MarkerDTO markerDTO) {
         String name = markerDTO.getName();
         String lng = markerDTO.getLng();
-//        Long id = markerDTO.getId();
         MapMarker mapMarker= mapMarkerRapository.findByLng(lng);
-//        MapMarker mapMarker= mapMarkerRapository.findByName(name);
-
         return mapMarker;
-
     }
-
 }

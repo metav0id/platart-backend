@@ -33,6 +33,11 @@ public class ComerceController {
         System.out.println("List of stock loaded.");
         return comerceDTOS;
     }
+    /**
+     * You get all shops which are currently available in database.
+     *
+     * @return List of ComerceDTO with ** ,"category":string, "name": String, "address": String,
+     */
 
     @GetMapping("/getallshops")
     public List<ComerceDTO> getAllShops() {
@@ -56,7 +61,6 @@ public class ComerceController {
     public void findComerce (@RequestBody ComerceDTO comerceDTO) {
         ComerceDTO comerce= comerceService.findById2(comerceDTO);
         System.out.println(comerce);
-
     }
 
     /**
@@ -74,12 +78,6 @@ public class ComerceController {
 
         comerceService.deleteComerce(id);
     }
-//    @PostMapping("/edit")
-//    public void editComerce (@RequestBody Comerce comerce) {
-//        comerceService.update(comerce);
-//
-//
-//
-//    }
+
 
 }

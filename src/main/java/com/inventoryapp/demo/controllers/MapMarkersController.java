@@ -47,6 +47,12 @@ public class MapMarkersController {
         System.out.println("List of markers loaded.");
         return markerDTOS;
     }
+    /**
+     * You get all markers with no coords which are currently available in database.
+     *
+     * @return List of MarkerDTO with ** "category":string, "name": String, "address": String,"lat": String, "lng": String, "link": String,
+     *
+     */
     @GetMapping("/getallmarkersNoCoords")
     public List<MarkerDTO> getAllMarkersNoCoords() {
 
@@ -72,8 +78,6 @@ public class MapMarkersController {
      * @return is void.
      */
 
-
-
     @PostMapping("/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     /**resquesbody asks for the whole entity**/
@@ -92,6 +96,11 @@ public class MapMarkersController {
             mapMarkersService.deleteMarker(idMarker);
         }
     }
+    /**
+     * Delete the coords from a amrker making asignable to a marker in the map again.
+     *
+     * @return void.
+     */
 
     @PostMapping("/deleteCoords")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -124,17 +133,12 @@ public class MapMarkersController {
     public void update (@RequestBody MarkerDTO[] markerDTO){
         System.out.println("in controller");
         mapMarkersService.update(markerDTO[0],markerDTO[1]);
-
     }
-
-    @PostMapping("/find")
-    public void findMarker (@RequestBody MarkerDTO markerDTO) {
-
-        MarkerDTO markerDTOFounf= mapMarkersService.findById2(markerDTO);
-
-        System.out.println(markerDTOFounf);
-
-    }
+    /**
+     * Edits a marker from the data base keeping its coords and also edits correspondant comerce.
+     *
+     * @return void.
+     */
 
     @PostMapping("/edit")
     public void editMarker (@RequestBody MarkerDTO markerDTO) {
