@@ -2,7 +2,8 @@ package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.DateRangeDTO;
 import com.inventoryapp.demo.dtos.ShopsAllSoldItemsDTO;
-import com.inventoryapp.demo.services.ManagerSalesListingService;
+import com.inventoryapp.demo.dtos.WarehouseSupplierItemDTO;
+import com.inventoryapp.demo.services.ManagerWarehouseCheckinListingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,18 +15,19 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController("")
 @RequestMapping("/manager")
-public class ManagerSalesListingController {
+public class ManagerWarehouseCheckinListingController {
 
-    private final ManagerSalesListingService managerSalesListingService;
+    private ManagerWarehouseCheckinListingService managerWarehouseCheckinListingService;
 
     @Autowired
-    public ManagerSalesListingController(ManagerSalesListingService managerSalesListingService) {
-        this.managerSalesListingService = managerSalesListingService;
+    public ManagerWarehouseCheckinListingController(ManagerWarehouseCheckinListingService managerWarehouseCheckinListingService) {
+        this.managerWarehouseCheckinListingService = managerWarehouseCheckinListingService;
     }
 
-    @PostMapping("/getSoldItemsListByDateRange")
-    public List<ShopsAllSoldItemsDTO> getSoldItemsListByDateRange(@RequestBody DateRangeDTO dateRangeDTO){
-        List<ShopsAllSoldItemsDTO> soldItemsList = new ArrayList<>();
+    @PostMapping("/getCheckinItemsListByDateRange")
+    public List<WarehouseSupplierItemDTO> getCheckinItemsListByDateRange(@RequestBody DateRangeDTO dateRangeDTO){
+
+        List<WarehouseSupplierItemDTO> soldItemsList = new ArrayList<>();
 
         LocalDateTime startDate = LocalDateTime.now();
         LocalDateTime endDate = LocalDateTime.now().minusDays(1);
@@ -41,10 +43,10 @@ public class ManagerSalesListingController {
 
 
         try {
-            return this.managerSalesListingService.getSoldItemsListByDateRange(startDate, endDate);
+            return this.managerWarehouseCheckinListingService.getSoldItemsListByDateRange(startDate, endDate);
         } catch (Error e) {
             System.err.println(e);
-            ShopsAllSoldItemsDTO item = new ShopsAllSoldItemsDTO();
+            WarehouseSupplierItemDTO item = new WarehouseSupplierItemDTO("category", 400, 400, 400, "supplierName");
             soldItemsList.add(item);
             return soldItemsList;
         }
