@@ -2,9 +2,10 @@ package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.DateRangeDTO;
 import com.inventoryapp.demo.dtos.ManagerWarehouseCheckinListingDTO;
-import com.inventoryapp.demo.entities.WarehouseSupplierItem;
-import com.inventoryapp.demo.repositories.WarehouseSupplierItemRepository;
-import com.inventoryapp.demo.services.ManagerWarehouseCheckinListingService;
+import com.inventoryapp.demo.dtos.ShopsAllSoldItemsDTO;
+import com.inventoryapp.demo.entities.ShopsAllSoldItems;
+import com.inventoryapp.demo.repositories.ShopsAllSoldItemsRepository;
+import com.inventoryapp.demo.services.ManagerSalesListingService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,33 +23,34 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ManagerWarehouseCheckinListingControllerTest {
+public class ManagerSalesListingControllerTest {
 
     @Autowired
-    private ManagerWarehouseCheckinListingService managerWarehouseCheckinListingService;
+    private ManagerSalesListingService managerSalesListingService;
 
     @MockBean
-    private WarehouseSupplierItemRepository warehouseSupplierItemRepository;
+    private ShopsAllSoldItemsRepository shopsAllSoldItemsRepository;
 
-    public List<WarehouseSupplierItem> allItems = new ArrayList<>();
+
+    public List<ShopsAllSoldItems> allItems = new ArrayList<>();
     @Before
-    public void setUp(){
-        WarehouseSupplierItem item1 = new WarehouseSupplierItem("Test category 1", 111, 333, 888, "Test Supplier");
+    public void setUp() {
+        ShopsAllSoldItems item1 = new ShopsAllSoldItems( 1L, "category", 88L, 888L, 666L , 888L, 50, "shop", LocalDateTime.now(), LocalDateTime.now(), "comment 1");
         allItems.add(item1);
-        WarehouseSupplierItem item2 = new WarehouseSupplierItem("Test category 2", 111, 333, 888, "Test Supplier");
+        ShopsAllSoldItems item2 = new ShopsAllSoldItems( 2L, "category", 88L, 888L, 666L , 888L, 50, "shop", LocalDateTime.now(), LocalDateTime.now(), "comment 2");
         allItems.add(item2);
-        WarehouseSupplierItem item3 = new WarehouseSupplierItem("Test category 3", 111, 333, 888, "Test Supplier");
+        ShopsAllSoldItems item3 = new ShopsAllSoldItems( 3L, "category", 88L, 888L, 666L , 888L, 50, "shop", LocalDateTime.now(), LocalDateTime.now(), "comment 3");
         allItems.add(item3);
-        WarehouseSupplierItem item4 = new WarehouseSupplierItem("Test category 4", 111, 333, 888, "Test Supplier");
+        ShopsAllSoldItems item4 = new ShopsAllSoldItems( 4L, "category", 88L, 888L, 666L , 888L, 50, "shop", LocalDateTime.now(), LocalDateTime.now(), "comment 4");
         allItems.add(item4);
-        WarehouseSupplierItem item5 = new WarehouseSupplierItem("Test category 5", 111, 333, 888, "Test Supplier");
+        ShopsAllSoldItems item5 = new ShopsAllSoldItems( 5L, "category", 88L, 888L, 666L , 888L, 50, "shop", LocalDateTime.now(), LocalDateTime.now(), "comment 5");
         allItems.add(item5);
-        WarehouseSupplierItem item6 = new WarehouseSupplierItem("Test category 6", 111, 333, 888, "Test Supplier");
+        ShopsAllSoldItems item6 = new ShopsAllSoldItems( 6L, "category", 88L, 888L, 666L , 888L, 50, "shop", LocalDateTime.now(), LocalDateTime.now(), "comment 6");
         allItems.add(item6);
     }
 
     @Test
-    public void getCheckinItemsListByDateRangePositiveTest(){
+    public void getSoldItemsListByDateRangePositiveTest() {
 
         // 0. Input Data
 
@@ -70,10 +72,10 @@ public class ManagerWarehouseCheckinListingControllerTest {
         }
 
         // 1. Define Repository-Mocks
-        Mockito.when(warehouseSupplierItemRepository.getItemsByDate(Mockito.any(), Mockito.any())).thenReturn(allItems);
+        Mockito.when(shopsAllSoldItemsRepository.getItemsByDate(Mockito.any(), Mockito.any())).thenReturn(allItems);
 
         // 2. Execute Method
-        List<ManagerWarehouseCheckinListingDTO> fetchedDTOList = this.managerWarehouseCheckinListingService.getSoldItemsListByDateRange(startDate, endDate);
+        List<ShopsAllSoldItemsDTO> fetchedDTOList = this.managerSalesListingService.getSoldItemsListByDateRange(startDate, endDate);
 
         // 3. Assert/ Verify correctnes
         for(int i = 0 ; i<fetchedDTOList.size(); i++){
@@ -83,7 +85,8 @@ public class ManagerWarehouseCheckinListingControllerTest {
             Assert.assertEquals(expected, current);
         }
 
-        Mockito.verify(warehouseSupplierItemRepository, Mockito.times(1)).getItemsByDate(Mockito.any(), Mockito.any());
+        Mockito.verify(shopsAllSoldItemsRepository, Mockito.times(1)).getItemsByDate(Mockito.any(), Mockito.any());
+
 
     }
 

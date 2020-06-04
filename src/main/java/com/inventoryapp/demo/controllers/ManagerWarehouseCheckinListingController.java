@@ -31,8 +31,9 @@ public class ManagerWarehouseCheckinListingController {
         List<ManagerWarehouseCheckinListingDTO> soldItemsList = new ArrayList<>();
 
         LocalDateTime startDate = LocalDateTime.now();
-        LocalDateTime endDate = LocalDateTime.now().minusDays(1);
+        LocalDateTime endDate = LocalDateTime.now().minusYears(1);
 
+        // 1. get Date
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             startDate = LocalDateTime.parse(dateRangeDTO.getStartDate(), formatter);
@@ -42,7 +43,7 @@ public class ManagerWarehouseCheckinListingController {
             System.err.println(e);
         }
 
-
+        // 2. Fetch and return Data
         try {
             System.out.println("error in try");
             return this.managerWarehouseCheckinListingService.getSoldItemsListByDateRange(startDate, endDate);
