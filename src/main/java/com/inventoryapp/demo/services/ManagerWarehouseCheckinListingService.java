@@ -1,10 +1,7 @@
 package com.inventoryapp.demo.services;
 
-import com.inventoryapp.demo.dtos.ShopsAllSoldItemsDTO;
-import com.inventoryapp.demo.dtos.WarehouseSupplierItemDTO;
-import com.inventoryapp.demo.entities.ShopsAllSoldItems;
+import com.inventoryapp.demo.dtos.ManagerWarehouseCheckinListingDTO;
 import com.inventoryapp.demo.entities.WarehouseSupplierItem;
-import com.inventoryapp.demo.repositories.ShopsAllSoldItemsRepository;
 import com.inventoryapp.demo.repositories.WarehouseSupplierItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,33 +19,44 @@ public class ManagerWarehouseCheckinListingService {
     public ManagerWarehouseCheckinListingService() {
     }
 
-    public List<WarehouseSupplierItemDTO> getSoldItemsListByDateRange(LocalDateTime startDate, LocalDateTime endDate){
+    public List<ManagerWarehouseCheckinListingDTO> getSoldItemsListByDateRange(LocalDateTime startDate, LocalDateTime endDate){
         System.out.println("start: "+ startDate + " = end: "+endDate);
 
-        List<WarehouseSupplierItem> allItems = new ArrayList<>();
-        List<WarehouseSupplierItemDTO> allDTOItems = new ArrayList<>();
+        List<ManagerWarehouseCheckinListingDTO> allDTOItems = new ArrayList<>();
 
         try {
-            allItems = this.warehouseSupplierItemRepository.getItemsByDate(startDate, endDate);
+            List<WarehouseSupplierItem> allItems = this.warehouseSupplierItemRepository.getItemsByDate(startDate, endDate);
             allDTOItems = mapEntitiesToDTOs(allItems);
+            System.out.println("Map convert works! ");
+            return allDTOItems;
         } catch (Exception e) {
-            System.err.println(e);
+            System.err.println("Error in catch: " + e);
+            ManagerWarehouseCheckinListingDTO emptyDTO =
+                    new ManagerWarehouseCheckinListingDTO(
+                            "category",
+                            500L,
+                            500L,
+                            500L,
+                            "SupplierName",
+                            LocalDateTime.now()
+                    );
+            allDTOItems.add(emptyDTO);
+            return allDTOItems;
         }
-
-        return allDTOItems;
     }
 
-    private List<WarehouseSupplierItemDTO> mapEntitiesToDTOs(List<WarehouseSupplierItem> shopsAllSoldItems){
-        List<WarehouseSupplierItemDTO> shopsAllSoldItemsDTOList = new ArrayList<>();
+    private List<ManagerWarehouseCheckinListingDTO> mapEntitiesToDTOs(List<WarehouseSupplierItem> shopsAllSoldItems){
+        List<ManagerWarehouseCheckinListingDTO> shopsAllSoldItemsDTOList = new ArrayList<>();
 
         for(WarehouseSupplierItem item: shopsAllSoldItems){
-            WarehouseSupplierItemDTO itemDTO =
-                    new WarehouseSupplierItemDTO(
+            ManagerWarehouseCheckinListingDTO itemDTO =
+                    new ManagerWarehouseCheckinListingDTO(
                             item.getCategory(),
                             item.getQuantity(),
                             item.getPriceListPerUnit(),
                             item.getPriceSupplierPerUnit(),
-                            item.getSupplierName()
+                            item.getSupplierName(),
+                            item.getCreateDateTime()
                     );
 
             shopsAllSoldItemsDTOList.add(itemDTO);

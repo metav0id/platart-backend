@@ -1,6 +1,7 @@
 package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.DateRangeDTO;
+import com.inventoryapp.demo.dtos.ManagerWarehouseCheckinListingDTO;
 import com.inventoryapp.demo.dtos.ShopsAllSoldItemsDTO;
 import com.inventoryapp.demo.dtos.WarehouseSupplierItemDTO;
 import com.inventoryapp.demo.services.ManagerWarehouseCheckinListingService;
@@ -25,9 +26,9 @@ public class ManagerWarehouseCheckinListingController {
     }
 
     @PostMapping("/getCheckinItemsListByDateRange")
-    public List<WarehouseSupplierItemDTO> getCheckinItemsListByDateRange(@RequestBody DateRangeDTO dateRangeDTO){
+    public List<ManagerWarehouseCheckinListingDTO> getCheckinItemsListByDateRange(@RequestBody DateRangeDTO dateRangeDTO){
 
-        List<WarehouseSupplierItemDTO> soldItemsList = new ArrayList<>();
+        List<ManagerWarehouseCheckinListingDTO> soldItemsList = new ArrayList<>();
 
         LocalDateTime startDate = LocalDateTime.now();
         LocalDateTime endDate = LocalDateTime.now().minusDays(1);
@@ -43,10 +44,12 @@ public class ManagerWarehouseCheckinListingController {
 
 
         try {
+            System.out.println("error in try");
             return this.managerWarehouseCheckinListingService.getSoldItemsListByDateRange(startDate, endDate);
         } catch (Error e) {
+            System.out.println("error in catch");
             System.err.println(e);
-            WarehouseSupplierItemDTO item = new WarehouseSupplierItemDTO("category", 400, 400, 400, "supplierName");
+            ManagerWarehouseCheckinListingDTO item = new ManagerWarehouseCheckinListingDTO("category", 400, 400, 400, "supplierName", LocalDateTime.now() );
             soldItemsList.add(item);
             return soldItemsList;
         }
