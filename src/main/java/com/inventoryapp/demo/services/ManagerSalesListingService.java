@@ -32,7 +32,6 @@ public class ManagerSalesListingService {
             System.err.println(e);
         }
 
-
         return allDTOItems;
     }
 
