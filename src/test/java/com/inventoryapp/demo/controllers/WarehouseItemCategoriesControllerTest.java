@@ -101,12 +101,15 @@ public class WarehouseItemCategoriesControllerTest {
         warehouseItemDto1.setCategory("Category1");
         warehouseItemList.add(warehouseItemDto1);
 
+        // 1. define mock
+        Mockito.doNothing().when(service).deactivateCategory(Mockito.any()) ;
+
         // 2. Use the method
         controller.deleteCategory(warehouseItemDto1);
 
         // 3. Verify with Mockito
         Mockito.verify(service, Mockito.times(1)).
-                deleteCategory(Mockito.any(WarehouseItemCategoryDTO.class));
+                deactivateCategory(Mockito.any());
     }
 
 }
