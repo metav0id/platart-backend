@@ -18,8 +18,7 @@ public interface ShopsNewDeliveryFromWarehouseRepository extends JpaRepository<S
     @Query("SELECT item FROM ShopsStockItem item " +
             "WHERE item.shop = :shop AND item.category = :category " +
             "AND item.priceListPerUnit = :priceListPerUnit AND item.priceSalesPerUnit = :priceSalesPerUnit")
-    public ShopsStockItem getShopsStockItemsBySelectors(@Param("shop") String shop,
-                                                        @Param("category") String category,
+    public ShopsStockItem getShopsStockItemsBySelectors(@Param("shop") String shop, @Param("category") String category,
                                                         @Param("priceListPerUnit") long priceListPerUnit,
                                                         @Param("priceSalesPerUnit") long priceSalesPerUnit);
 }

@@ -13,7 +13,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController("")
-@RequestMapping("/warehouse")
+@RequestMapping("/manager")
 public class ManagerSalesListingController {
 
     private final ManagerSalesListingService managerSalesListingService;
