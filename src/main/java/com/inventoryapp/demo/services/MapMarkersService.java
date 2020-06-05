@@ -18,15 +18,22 @@ import java.util.regex.MatchResult;
 
 @Service
 public class MapMarkersService {
-    String name;
 
     @Autowired
     MapMarkerRapository mapMarkerRapository;
     @Autowired
     ComerceRepository comerceRepository;
 
+    public MapMarkersService() {
+    }
+
     public MapMarkersService(MapMarkerRapository mapMarkerRapository) {
         this.mapMarkerRapository = mapMarkerRapository;
+    }
+
+    public MapMarkersService(MapMarkerRapository mapMarkerRapository, ComerceRepository comerceRepository) {
+        this.mapMarkerRapository = mapMarkerRapository;
+        this.comerceRepository = comerceRepository;
     }
 
     /**
@@ -223,20 +230,36 @@ public class MapMarkersService {
      *
      * @return void
      */
-    @Transactional
-    public void edit (MarkerDTO markerDTO){
-        System.out.println(markerDTO.getName());
+//    @Transactional
+//    public void edit (MarkerDTO markerDTO){
+//        System.out.println(markerDTO.getName());
+//        MapMarker marker = findById3(markerDTO);
+//        this.name =marker.getName();
+//        System.out.println(marker.getName());
+//        marker.setName(markerDTO.getName());
+//        marker.setAddress(markerDTO.getAddress());
+//        marker.setLat(markerDTO.getLat());
+//        marker.setLng(markerDTO.getLng());
+//        marker.setCategory(markerDTO.getCategory());
+//        System.out.println(marker.getName());
+//        mapMarkerRapository.save(marker);
+//        findComerce(markerDTO);
+//
+//    }
+@Transactional
+    public void edit(MarkerDTO markerDTO){
+        System.out.println("1" + markerDTO.getName());
         MapMarker marker = findById3(markerDTO);
-        this.name =marker.getName();
-        System.out.println(marker.getName());
+        String name =marker.getName();
+        System.out.println("2" + marker.getName());
         marker.setName(markerDTO.getName());
         marker.setAddress(markerDTO.getAddress());
         marker.setLat(markerDTO.getLat());
         marker.setLng(markerDTO.getLng());
         marker.setCategory(markerDTO.getCategory());
-        System.out.println(marker.getName());
+        System.out.println("3" + marker.getName());
         mapMarkerRapository.save(marker);
-        findComerce(markerDTO);
+        findComerce(markerDTO, name);
 
     }
 
@@ -245,16 +268,28 @@ public class MapMarkersService {
      *
      * @return Comerce entity
      */
-    @Transactional
-    public Comerce findComerce(MarkerDTO mapMarker) {
-        System.out.println(this.name);
-        Comerce comerce = comerceRepository.findByName(this.name);
+//    @Transactional
+//    public Comerce findComerce(MarkerDTO mapMarker) {
+//        System.out.println(this.name);
+//        Comerce comerce = comerceRepository.findByName(this.name);
+//        System.out.println(comerce.getName());
+//        comerce.setName(mapMarker.getName());
+//        comerce.setCategory(mapMarker.getCategory());
+//        comerce.setAddress(mapMarker.getAddress());
+//      comerceRepository.save(comerce);
+//      return comerce;
+//    }
+
+    @Transactional(readOnly = true)
+    public Comerce findComerce(MarkerDTO mapMarker, String name) {
+        System.out.println("4" + name);
+        Comerce comerce = comerceRepository.findByName(name);
         System.out.println(comerce.getName());
         comerce.setName(mapMarker.getName());
         comerce.setCategory(mapMarker.getCategory());
         comerce.setAddress(mapMarker.getAddress());
-      comerceRepository.save(comerce);
-      return comerce;
+        comerceRepository.save(comerce);
+        return comerce;
     }
 
 

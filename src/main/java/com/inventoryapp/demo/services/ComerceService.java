@@ -21,6 +21,10 @@ public class ComerceService {
     @Autowired
     MapMarkersService mapMarkersService;
 
+    public ComerceService(ComerceRepository comerceRepository) {
+        this.comerceRepository = comerceRepository;
+    }
+
     /**
      * Gets you all the comerces saved in DataBase
      *
@@ -68,6 +72,12 @@ public class ComerceService {
         Comerce comerce = covertUnitDTOToEntity(comerceDTO);
         comerceRepository.save(comerce);
         mapMarkersService.createNewMarker(covertComerceToMarker(comerceDTO));
+
+    }
+
+    public void createNewComerceTest(ComerceDTO comerceDTO){
+        Comerce comerce = covertUnitDTOToEntity(comerceDTO);
+        comerceRepository.save(comerce);
 
     }
 
