@@ -23,8 +23,8 @@ public class ShopsCurrentInventoryController {
     }
 
     @PostMapping("/getAllItemsAllShops")
-    private List<ShopsStockItemDto> getAllItemsAllShops(){
-        return this.shopsCurrentInventoryService.getAllItemsAllShops();
+    private void getAllItemsAllShops(){
+        System.out.println("return this.shopsCurrentInventoryService.getAllItemsAllShops();");
     }
 
     @PostMapping("/getShopInventoryItems")
@@ -35,6 +35,8 @@ public class ShopsCurrentInventoryController {
 
     @PostMapping("/getShopInventoryAvailability")
     private ShopsCheckoutSoldItemsDTO getShopInventoryAvailability(@RequestBody ShopsCheckoutSoldItemsDTO shopsCheckoutSoldItemsDTO){
+
         return this.shopsCurrentInventoryService.getShopInventoryAvailability(shopsCheckoutSoldItemsDTO);
+        //return shopsCheckoutSoldItemsDTO;
     }
 }
