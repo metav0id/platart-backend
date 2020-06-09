@@ -17,14 +17,17 @@ import java.util.List;
 @RequestMapping("/warehouse")
 public class WarehouseNewDeliveryOrderController {
 
+    @Autowired
     private WarehouseNewDeliveryOrderService warehouseNewDeliveryOrderService;
-    private WarehouseVerifyAmountItemsOnStockService warehouseVerifyAmountItemsOnStockService;
 
     @Autowired
-    public WarehouseNewDeliveryOrderController(WarehouseNewDeliveryOrderService warehouseNewDeliveryOrderService, WarehouseVerifyAmountItemsOnStockService warehouseVerifyAmountItemsOnStockService) {
-        this.warehouseNewDeliveryOrderService = warehouseNewDeliveryOrderService;
-        this.warehouseVerifyAmountItemsOnStockService = warehouseVerifyAmountItemsOnStockService;
-    }
+    private WarehouseVerifyAmountItemsOnStockService warehouseVerifyAmountItemsOnStockService;
+
+//    @Autowired
+//    public WarehouseNewDeliveryOrderController(WarehouseNewDeliveryOrderService warehouseNewDeliveryOrderService, WarehouseVerifyAmountItemsOnStockService warehouseVerifyAmountItemsOnStockService) {
+//        this.warehouseNewDeliveryOrderService = warehouseNewDeliveryOrderService;
+//        this.warehouseVerifyAmountItemsOnStockService = warehouseVerifyAmountItemsOnStockService;
+//    }
 
 
     /**
@@ -33,15 +36,7 @@ public class WarehouseNewDeliveryOrderController {
      */
     @PostMapping("/getAllNewOrderItems")
     public List<WarehouseNewDeliveryOrderItemDTO> getAllNewOrderItems(){
-        List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList = new ArrayList<>();
-        System.out.println("Controller1:");
-        System.out.println(newDeliveryOrderItemDTOList);
-        newDeliveryOrderItemDTOList = warehouseNewDeliveryOrderService.getAllDeliveryOrderItems();
-
-        System.out.println("Controller2:");
-        System.out.println(newDeliveryOrderItemDTOList);
-
-        return newDeliveryOrderItemDTOList;
+        return warehouseNewDeliveryOrderService.getAllDeliveryOrderItems();
     }
 
     /**
