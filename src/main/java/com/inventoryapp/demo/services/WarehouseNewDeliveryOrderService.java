@@ -206,7 +206,7 @@ public class WarehouseNewDeliveryOrderService {
             newDeliveryOrderItem.setDiscountPercent(item.getDiscountPercent());
             newDeliveryOrderItem.setPriceListPerUnit(item.getPriceListPerUnit());
             newDeliveryOrderItem.setDeliveryShop(item.getDeliveryShop());
-
+            newDeliveryOrderItem.setComment(item.getComment());
             deliveryOrderItemEntityLists.add(newDeliveryOrderItem);
         }
         return deliveryOrderItemEntityLists;
