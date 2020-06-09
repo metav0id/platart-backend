@@ -2,8 +2,6 @@ package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.DateRangeDTO;
 import com.inventoryapp.demo.dtos.ManagerWarehouseCheckinListingDTO;
-import com.inventoryapp.demo.dtos.ShopsAllSoldItemsDTO;
-import com.inventoryapp.demo.dtos.WarehouseSupplierItemDTO;
 import com.inventoryapp.demo.services.ManagerWarehouseCheckinListingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

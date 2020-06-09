@@ -1,11 +1,10 @@
 package com.inventoryapp.demo.services;
 
 import com.inventoryapp.demo.dtos.MarkerDTO;
-import com.inventoryapp.demo.dtos.WarehouseGetAllItemsDTO;
+import com.inventoryapp.demo.entities.Comerce;
 import com.inventoryapp.demo.entities.MapMarker;
-import com.inventoryapp.demo.entities.WarehouseStockItem;
+import com.inventoryapp.demo.repositories.ComerceRepository;
 import com.inventoryapp.demo.repositories.MapMarkerRapository;
-import com.inventoryapp.demo.repositories.WarehouseRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +20,8 @@ public class MapMarkerServiceTest {
 
     @Autowired
     private MapMarkerRapository mapMarkerRapository;
+    @Autowired
+    private ComerceRepository comerceRepository;
 
     @Test
     public void getAllMarkersTest(){
@@ -33,15 +34,31 @@ public class MapMarkerServiceTest {
 
         MapMarkersService mapMarkersService = new MapMarkersService(mapMarkerRapository);
 
-
         List<MarkerDTO> listItems = mapMarkersService.getAllMarkers();
         System.out.println(listItems.size());
 
         Assert.assertEquals(listItems.size(), 2);
-
-
-
     }
+
+    @Test
+    public void getAllMarkersWithNoCoordsTest(){
+        MapMarker mapMarker = new MapMarker();
+        mapMarker.setLng("26");
+        mapMarker.setLat("96");
+        MapMarker mapMarker1 = new MapMarker();
+        mapMarkerRapository.save(mapMarker);
+        mapMarkerRapository.save(mapMarker1);
+        List<MapMarker> listItems3 =  mapMarkerRapository.findAll();
+        System.out.println(listItems3);
+
+        MapMarkersService mapMarkersService = new MapMarkersService(mapMarkerRapository);
+
+        List<MarkerDTO> listItems = mapMarkersService.getAllMarkersWithNoCoords();
+        System.out.println(listItems.size());
+
+        Assert.assertEquals(listItems.size(), 1);
+    }
+
     @Test
     public void createNewMarkerTest () {
         MarkerDTO markerDTO = new MarkerDTO();
@@ -68,7 +85,6 @@ public class MapMarkerServiceTest {
 
         List<MapMarker> listAfter = mapMarkerRapository.findAll();
         Assert.assertEquals(listAfter.size(), listBefore.size() - 1);
-
     }
 
     @Test
@@ -89,6 +105,47 @@ public class MapMarkerServiceTest {
 
         MapMarker mapMarker3 = mapMarkerRapository.findByName("test");
         Assert.assertEquals(mapMarker.getLat(),"3");
+    }
+
+    @Test
+    public void editTest (){
+        MapMarker marker = new MapMarker();
+        marker.setLng("23");
+        marker.setName("TestName");
+        mapMarkerRapository.save(marker);
+        Comerce comerce = new Comerce();
+        comerce.setName("TestName");
+        comerceRepository.save(comerce);
+        Comerce comerce1 = comerceRepository.findByName("TestName");
+        System.out.println("5" + comerce1.getName());
+
+        MarkerDTO markerDTO = new MarkerDTO();
+        markerDTO.setName("ChangedName");
+        markerDTO.setLng("23");
+
+        MapMarkersService mapMarkersService = new MapMarkersService(mapMarkerRapository, comerceRepository);
+        mapMarkersService.edit(markerDTO);
+
+        Assert.assertEquals(markerDTO.getName(),marker.getName());
+
+    }
+    @Test
+    public void findComerceTest (){
+        Comerce comerce = new Comerce();
+        comerce.setName("TestName");
+        comerceRepository.save(comerce);
+        Comerce comerce1 = comerceRepository.findByName("TestName");
+        System.out.println(comerce1.getName());
+        comerce1.getName();
+        System.out.println(comerce.getName());
+        String name = "TestName";
+        MarkerDTO markerDTO = new MarkerDTO();
+        markerDTO.setName("NewName");
+
+        MapMarkersService mapMarkersService = new MapMarkersService(mapMarkerRapository,comerceRepository);
+        mapMarkersService.findComerce(markerDTO, name);
+
+        Assert.assertEquals(comerce.getName(),markerDTO.getName());
 
 
     }
