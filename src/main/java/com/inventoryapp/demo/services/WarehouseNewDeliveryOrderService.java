@@ -76,7 +76,7 @@ public class WarehouseNewDeliveryOrderService {
 
     public WarehouseNewDeliveryPersistanceResponseDTO sendDeliveryOrder(List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList) {
         // 0. Define return Dto - if this point was reached, set persistance initalized true
-        WarehouseNewDeliveryPersistanceResponseDTO responseDTO =  new WarehouseNewDeliveryPersistanceResponseDTO();
+        WarehouseNewDeliveryPersistanceResponseDTO responseDTO = new WarehouseNewDeliveryPersistanceResponseDTO();
         responseDTO.setPersistanceInitialized(true);
         List<WarehouseItemPersistanceErrorDTO> itemPersistanceErrorDtoList = new ArrayList<>();
 
@@ -85,7 +85,7 @@ public class WarehouseNewDeliveryOrderService {
 
         // 2. Data Management
         List<WarehouseNewDeliveryOrderItem> currentDeliveryOrderItemEntitiesList = this.warehouseNewDeliveryOrderRepository.findAll();
-        currentDeliveryOrderItemEntitiesList.stream().forEach(o-> System.out.println("Delivery Quantity" + o.getQuantity() + " Category "+ o.getCategory() + " price " + o.getPriceListPerUnit()));
+        currentDeliveryOrderItemEntitiesList.stream().forEach(o -> System.out.println("Delivery Quantity" + o.getQuantity() + " Category " + o.getCategory() + " price " + o.getPriceListPerUnit()));
 
         // 3. cumulate for each category and PricePerUnit new quantity on list.
         List<WarehouseNewDeliveryOrderItem> currentDeliveriesAggregated = new ArrayList<>();
@@ -140,7 +140,7 @@ public class WarehouseNewDeliveryOrderService {
 
         // 5. update the item amount on the warehouse table and add them to the OrderSendTable
         //List<Long> modifiedItems = new ArrayList<>();
-        if(isTransactionFeasible){
+        if (isTransactionFeasible) {
 
             LocalDateTime newDeliveryDateTime = LocalDateTime.now();
             for (WarehouseNewDeliveryOrderItem itemOnList : currentDeliveryOrderItemEntitiesList) {
@@ -180,13 +180,14 @@ public class WarehouseNewDeliveryOrderService {
 
     /**
      * Mapper function: NewDeliveryOrderItem entities-list to NewDeliveryOrderItem DTO-List
+     *
      * @param deliveryOrderItemsEntities
      * @return
      */
-    public List<WarehouseNewDeliveryOrderItemDTO> convertEntitiesToDtos(List<WarehouseNewDeliveryOrderItem> deliveryOrderItemsEntities){
+    public List<WarehouseNewDeliveryOrderItemDTO> convertEntitiesToDtos(List<WarehouseNewDeliveryOrderItem> deliveryOrderItemsEntities) {
         List<WarehouseNewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
 
-        for(WarehouseNewDeliveryOrderItem item: deliveryOrderItemsEntities){
+        for (WarehouseNewDeliveryOrderItem item : deliveryOrderItemsEntities) {
             WarehouseNewDeliveryOrderItemDTO newDeliveryOrderItemDTO = new WarehouseNewDeliveryOrderItemDTO();
             newDeliveryOrderItemDTO.setId(item.getId());
             newDeliveryOrderItemDTO.setCategory(item.getCategory());
@@ -202,13 +203,14 @@ public class WarehouseNewDeliveryOrderService {
 
     /**
      * Mapper function: NewDeliveryOrderItem DTO-list to NewDeliveryOrderItem entitiy-List
+     *
      * @param deliveryOrderItemDtoList
      * @return
      */
-    public List<WarehouseNewDeliveryOrderItem> convertDtosToEntities(List<WarehouseNewDeliveryOrderItemDTO> deliveryOrderItemDtoList){
+    public List<WarehouseNewDeliveryOrderItem> convertDtosToEntities(List<WarehouseNewDeliveryOrderItemDTO> deliveryOrderItemDtoList) {
 
         List<WarehouseNewDeliveryOrderItem> deliveryOrderItemEntityLists = new ArrayList<>();
-        for(WarehouseNewDeliveryOrderItemDTO item: deliveryOrderItemDtoList){
+        for (WarehouseNewDeliveryOrderItemDTO item : deliveryOrderItemDtoList) {
             WarehouseNewDeliveryOrderItem newDeliveryOrderItem = new WarehouseNewDeliveryOrderItem();
             newDeliveryOrderItem.setId(item.getId());
             newDeliveryOrderItem.setCategory(item.getCategory());
