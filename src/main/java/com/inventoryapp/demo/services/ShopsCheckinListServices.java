@@ -34,6 +34,9 @@ public class ShopsCheckinListServices {
 
         List<WarehouseSendDeliveryOrderItem> listRepo = this.shopsCheckinListRepository.findAllItemsNotAddedToShopInventory(shopName);
 
+
+        // listRepo.get(0).getShopsCheckedInProductsFromWarehouse().getComment();
+
         List<WarehouseSendDeliveryOrderItemDTO> listDTOs = this.mapEntityToDto(listRepo);
 
         return listDTOs;

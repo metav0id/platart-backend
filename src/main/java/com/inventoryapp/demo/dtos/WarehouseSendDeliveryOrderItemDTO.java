@@ -7,8 +7,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
+// public class ShopCheckedInItemDTO {
 public class WarehouseSendDeliveryOrderItemDTO {
 
+    // Delete this field
     private Long id;
 
     private String shop;
@@ -18,6 +20,10 @@ public class WarehouseSendDeliveryOrderItemDTO {
     private long priceListPerUnit;
     private int discountPercent;
     private LocalDateTime deliverySending;
+
+    // Extra fields
+    // private String warehouseInstruction;
+    // private String shopComment;
 
         public WarehouseSendDeliveryOrderItemDTO(Long id, String shop, String category, int quantity, long priceSalesPerUnit, long priceListPerUnit, int discountPercent, LocalDateTime deliverySending) {
         this.id = id;
