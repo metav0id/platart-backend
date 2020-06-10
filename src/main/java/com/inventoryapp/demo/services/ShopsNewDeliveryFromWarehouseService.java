@@ -37,7 +37,7 @@ public class ShopsNewDeliveryFromWarehouseService {
             ShopDeliveryItemFromWarehouseDTO itemDTO = new ShopDeliveryItemFromWarehouseDTO(
                     item.getId(), item.getCategory(), item.getPriceListPerUnit(),
                     item.getPriceSalesPerUnit(), item.getQuantity(),
-                    item.getDeliverySending(), "");
+                    item.getDeliverySending(), item.getComment());
             listDTO.add(itemDTO);
         });
         return listDTO;
@@ -45,8 +45,8 @@ public class ShopsNewDeliveryFromWarehouseService {
 
     /**
      * Updates delivery table from warehouse to shop and persists stock in shop inventory table.
-     * @param listDTO
-     * @return
+     * @param listDTO list
+     * @return true
      */
 
     public boolean saveList(List<ShopSaveToStockDTO> listDTO){
@@ -61,7 +61,7 @@ public class ShopsNewDeliveryFromWarehouseService {
 
     /**
      * Updates all entries in delivery table in database by id.
-     * @param listDTO
+     * @param listDTO list
      * @return boolean. True when it worked.
      */
     private boolean updateWarehouseSendDeliveryTable(List<ShopSaveToStockDTO> listDTO){

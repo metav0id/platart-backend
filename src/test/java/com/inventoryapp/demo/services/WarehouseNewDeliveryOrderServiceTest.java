@@ -42,6 +42,7 @@ public class WarehouseNewDeliveryOrderServiceTest {
         newDeliveryItem1.setPriceSalesPerUnit(20L);
         newDeliveryItem1.setDiscountPercent(25);
         newDeliveryItem1.setPriceListPerUnit(15L);
+        newDeliveryItem1.setComment("Ich bin ein wundervoller Kommentar");
         deliveryOrderItemsEntities.add(newDeliveryItem1);
 
         WarehouseNewDeliveryOrderItem newDeliveryItem2 = new WarehouseNewDeliveryOrderItem();
@@ -51,6 +52,7 @@ public class WarehouseNewDeliveryOrderServiceTest {
         newDeliveryItem2.setPriceSalesPerUnit(20L);
         newDeliveryItem2.setDiscountPercent(25);
         newDeliveryItem2.setPriceListPerUnit(15L);
+        newDeliveryItem2.setComment("Bitte verkaufen, verkaufen, verkaufen!");
         deliveryOrderItemsEntities.add(newDeliveryItem2);
 
         WarehouseNewDeliveryOrderItemDTO newDeliveryItemDTO1 = new WarehouseNewDeliveryOrderItemDTO();
@@ -60,6 +62,7 @@ public class WarehouseNewDeliveryOrderServiceTest {
         newDeliveryItemDTO1.setPriceSalesPerUnit(20L);
         newDeliveryItemDTO1.setDiscountPercent(25);
         newDeliveryItemDTO1.setPriceListPerUnit(15L);
+        newDeliveryItemDTO1.setComment("Alan ist genial!");
         deliveryOrderItemDTOS.add(newDeliveryItemDTO1);
 
         WarehouseNewDeliveryOrderItemDTO newDeliveryItemDTO2 = new WarehouseNewDeliveryOrderItemDTO();
@@ -69,9 +72,13 @@ public class WarehouseNewDeliveryOrderServiceTest {
         newDeliveryItemDTO2.setPriceSalesPerUnit(20L);
         newDeliveryItemDTO2.setDiscountPercent(25);
         newDeliveryItemDTO2.setPriceListPerUnit(15L);
+        newDeliveryItemDTO2.setComment("Hier herrscht Professoren-Aura");
         deliveryOrderItemDTOS.add(newDeliveryItemDTO2);
     }
 
+    /**
+     * Persisting temporary list of WarehouseNewDeliveryOrderItem
+     */
     @Test
     public void persistanceListTest(){
 
@@ -99,6 +106,7 @@ public class WarehouseNewDeliveryOrderServiceTest {
             newDeliveryOrderItemDTO.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
             newDeliveryOrderItemDTO.setDiscountPercent(item.getDiscountPercent());
             newDeliveryOrderItemDTO.setPriceListPerUnit(item.getPriceListPerUnit());
+            newDeliveryOrderItemDTO.setComment("Coole Halskette");
 
             deliveryOrderItemDTOSTest.add(newDeliveryOrderItemDTO);
         }
@@ -119,6 +127,7 @@ public class WarehouseNewDeliveryOrderServiceTest {
             newDeliveryOrderItem.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
             newDeliveryOrderItem.setDiscountPercent(item.getDiscountPercent());
             newDeliveryOrderItem.setPriceListPerUnit(item.getPriceListPerUnit());
+            newDeliveryOrderItem.setComment(item.getComment());
 
             deliveryOrderItemEntityListsTest.add(newDeliveryOrderItem);
         }
@@ -153,12 +162,10 @@ public class WarehouseNewDeliveryOrderServiceTest {
 
 
         // 1.
-        this.warehouseNewDeliveryOrderRepository.deleteAll();
         this.warehouseNewDeliveryOrderRepository.saveAll(deliveryOrderItemsEntities);
 
         // 2. Data Management
         List<WarehouseNewDeliveryOrderItem> currentDeliveryOrderItemEntitiesList = this.warehouseNewDeliveryOrderRepository.findAll();
-        currentDeliveryOrderItemEntitiesList.stream().forEach(o-> System.out.println("Delivery Quantity" + o.getQuantity() + " Category "+ o.getCategory() + " price " + o.getPriceListPerUnit()));
 
         // 3. cumulate for each category and PricePerUnit new quantity on list.
         List<WarehouseNewDeliveryOrderItem> currentDeliveriesAggregated = new ArrayList<>();
@@ -185,7 +192,7 @@ public class WarehouseNewDeliveryOrderServiceTest {
                 newItem.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
                 newItem.setPriceListPerUnit(item.getPriceListPerUnit());
                 newItem.setDeliveryShop(item.getDeliveryShop());
-
+                newItem.setComment(item.getComment());
                 currentDeliveriesAggregated.add(newItem);
             }
         }
@@ -197,19 +204,17 @@ public class WarehouseNewDeliveryOrderServiceTest {
 
             // verify if amount of item in stock
             WarehouseStockItem itemWarehouse = this.warehouseRepository.findItemByCategoryAndPricePerUnit(item.getCategory(), item.getPriceListPerUnit());
-            try {
-                Long differenceQuantity = itemWarehouse.getQuantity() - item.getQuantity();
-                if (differenceQuantity < 0) {
+            if (itemWarehouse != null){
+                boolean differenceQuantity = (itemWarehouse.getQuantity() - item.getQuantity()) <0;
+                if (differenceQuantity) {
                     isTransactionFeasible = false;
 
                     WarehouseItemPersistanceErrorDTO error = new WarehouseItemPersistanceErrorDTO();
                     error.setCategory(item.getCategory());
                     error.setPriceListPricePerUnit(item.getPriceListPerUnit());
-                    error.setErrorQuantity(differenceQuantity);
+                    error.setErrorQuantity(itemWarehouse.getQuantity() - item.getQuantity());
                     itemPersistanceErrorDtoList.add(error);
                 }
-            } catch (NullPointerException exception){
-                System.err.println("We have a Nulllpointer Exception");
             }
         }
         responseDTO.setItemPersistanceErrorDtoList(itemPersistanceErrorDtoList);
@@ -224,12 +229,9 @@ public class WarehouseNewDeliveryOrderServiceTest {
                 try {
                     long newWarehouseQuantity = itemWarehouse.getQuantity() - itemOnList.getQuantity();
                     itemWarehouse.setQuantity(newWarehouseQuantity);
-
-                    // modifiedItems.add(itemOnList.getId());
                     this.warehouseRepository.save(itemWarehouse);
 
                     WarehouseSendDeliveryOrderItem deliveryItemSend = new WarehouseSendDeliveryOrderItem();
-                    //deliveryItemSend.setId(itemOnList.getId());
                     deliveryItemSend.setCategory(itemOnList.getCategory());
                     deliveryItemSend.setPriceSalesPerUnit(itemOnList.getPriceSalesPerUnit());
                     deliveryItemSend.setDiscountPercent(itemOnList.getDiscountPercent());
@@ -237,6 +239,7 @@ public class WarehouseNewDeliveryOrderServiceTest {
                     deliveryItemSend.setDeliverySending(newDeliveryDateTime);
                     deliveryItemSend.setQuantity(itemOnList.getQuantity());
                     deliveryItemSend.setShop(itemOnList.getDeliveryShop());
+                    deliveryItemSend.setComment(itemOnList.getComment());
                     System.out.println(itemOnList.getDeliveryShop());
                     this.warehouseShopDeliveryOrdersSendRepository.save(deliveryItemSend);
                 } catch (NullPointerException exception){

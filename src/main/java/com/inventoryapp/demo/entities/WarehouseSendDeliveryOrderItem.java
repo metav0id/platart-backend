@@ -19,6 +19,7 @@ public class WarehouseSendDeliveryOrderItem {
     private long priceListPerUnit;
     private int discountPercent;
     private LocalDateTime deliverySending;
+    private String comment;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="checkin_id", referencedColumnName = "id")

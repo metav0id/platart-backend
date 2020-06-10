@@ -42,6 +42,7 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
         item1.setPriceSalesPerUnit(90);
         item1.setQuantity(80);
         item1.setShop("Shop1");
+        item1.setComment("Wichtig beachten bei Verkaufsaktion");
         item1.setShopsCheckedInProductsFromWarehouse(new ShopsCheckedInProductsFromWarehouse());
         this.listSendItems.add(item1);
 
@@ -54,6 +55,7 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
         item2.setPriceSalesPerUnit(80);
         item2.setQuantity(120);
         item2.setShop("Shop1");
+        item2.setComment("Beachten bei Verkauf!");
         item2.setShopsCheckedInProductsFromWarehouse(new ShopsCheckedInProductsFromWarehouse());
         this.listSendItems.add(item2);
 
@@ -66,6 +68,7 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
         item3.setPriceSalesPerUnit(190);
         item3.setQuantity(200);
         item3.setShop("Shop2");
+        item3.setComment("Das ist total wichtig");
         item3.setShopsCheckedInProductsFromWarehouse(new ShopsCheckedInProductsFromWarehouse());
         this.listSendItems.add(item3);
 
@@ -105,10 +108,12 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
 
         // 3. step: test
         Assert.assertEquals(2, listItemsNotInShopStock1.size());
+        Assert.assertEquals("Wichtig beachten bei Verkaufsaktion", listItemsNotInShopStock1.get(0).getComment());
         Assert.assertEquals(1, listItemsNotInShopStock2.size());
         Assert.assertEquals(0, listItemsNotInShopStock3.size());
         Assert.assertEquals(2, listDTO1.size());
         Assert.assertEquals("Arete", listDTO1.get(1).getCategory());
+        Assert.assertEquals("Beachten bei Verkauf!", listDTO1.get(1).getComment());
         Assert.assertEquals(0, listDTO3.size());
     }
 
@@ -118,7 +123,7 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
             ShopDeliveryItemFromWarehouseDTO itemDTO = new ShopDeliveryItemFromWarehouseDTO(
                     item.getId(), item.getCategory(), item.getPriceListPerUnit(),
                     item.getPriceSalesPerUnit(), item.getQuantity(),
-                    item.getDeliverySending(), "");
+                    item.getDeliverySending(), item.getComment());
             listDTO.add(itemDTO);
         });
         return listDTO;
@@ -231,10 +236,10 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
         Assert.assertEquals(130, quantityAreteExisting);
 
         ShopsStockItem itemPulseraNew = newDeliveryFromWarehouseRepository.getShopsStockItemsBySelectors("Shop1", "Pulsera", 120, 80);
-        Assert.assertTrue(itemPulseraNew != null);
+        Assert.assertNotNull(itemPulseraNew);
 
         ShopsStockItem itemAreteNew = newDeliveryFromWarehouseRepository.getShopsStockItemsBySelectors("Shop1", "Arete", 100, 70);
-        Assert.assertTrue(itemAreteNew != null);
+        Assert.assertNotNull(itemAreteNew);
     }
 
     private ShopsStockItem convertDTOtoEntity(ShopSaveToStockDTO itemDto) {

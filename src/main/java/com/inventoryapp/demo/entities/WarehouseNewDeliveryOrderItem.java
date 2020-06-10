@@ -20,4 +20,5 @@ public class WarehouseNewDeliveryOrderItem {
     private int discountPercent;
     private long priceListPerUnit;
     private String deliveryShop;
+    private String comment;
 }
