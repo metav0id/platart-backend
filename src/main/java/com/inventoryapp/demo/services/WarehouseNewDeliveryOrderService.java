@@ -101,6 +101,7 @@ public class WarehouseNewDeliveryOrderService {
                 newItem.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
                 newItem.setPriceListPerUnit(item.getPriceListPerUnit());
                 newItem.setDeliveryShop(item.getDeliveryShop());
+                newItem.setComment(item.getComment());
 
                 currentDeliveriesAggregated.add(newItem);
             }
@@ -183,6 +184,7 @@ public class WarehouseNewDeliveryOrderService {
             newDeliveryOrderItemDTO.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
             newDeliveryOrderItemDTO.setDiscountPercent(item.getDiscountPercent());
             newDeliveryOrderItemDTO.setPriceListPerUnit(item.getPriceListPerUnit());
+            newDeliveryOrderItemDTO.setComment(item.getComment());
 
             deliveryOrderItemDTOS.add(newDeliveryOrderItemDTO);
         }
@@ -206,6 +208,7 @@ public class WarehouseNewDeliveryOrderService {
             newDeliveryOrderItem.setDiscountPercent(item.getDiscountPercent());
             newDeliveryOrderItem.setPriceListPerUnit(item.getPriceListPerUnit());
             newDeliveryOrderItem.setDeliveryShop(item.getDeliveryShop());
+            newDeliveryOrderItem.setComment(item.getComment());
 
             deliveryOrderItemEntityLists.add(newDeliveryOrderItem);
         }
