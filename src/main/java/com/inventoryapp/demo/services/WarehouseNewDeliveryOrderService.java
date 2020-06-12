@@ -41,18 +41,14 @@ public class WarehouseNewDeliveryOrderService {
     public List<WarehouseNewDeliveryOrderItemDTO> getAllDeliveryOrderItems() {
         List<WarehouseNewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
         List<WarehouseNewDeliveryOrderItem> deliveryOrderItemsEntities = this.warehouseNewDeliveryOrderRepository.findAll();
-        System.out.println("Service1:");
-        System.out.println(deliveryOrderItemsEntities);
 
 
         if (deliveryOrderItemsEntities.size() > 0) {
             deliveryOrderItemDTOS = convertEntitiesToDtos(deliveryOrderItemsEntities);
-            System.out.println("Service if");
         } else {
             System.out.println("----> No items found in Data Base for new order <----");
         }
-        System.out.println("Service:");
-        System.out.println(deliveryOrderItemDTOS);
+
         return deliveryOrderItemDTOS;
     }
 
@@ -63,15 +59,8 @@ public class WarehouseNewDeliveryOrderService {
      */
     public void setAllDeliveryOrderItems(List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList) {
         List<WarehouseNewDeliveryOrderItem> newDeliveryOrderItemEntitiesList = convertDtosToEntities(newDeliveryOrderItemDTOList);
-
-        System.out.println("Entity Send Delivery List:");
-        System.out.println(newDeliveryOrderItemEntitiesList.toString());
-
-        System.out.println("New Delivery Order Service:");
         this.warehouseNewDeliveryOrderRepository.deleteAll();
-        System.out.println("Saving to temp table");
         this.warehouseNewDeliveryOrderRepository.saveAll(newDeliveryOrderItemEntitiesList);
-        System.out.println("Saved temp table");
     }
 
     public WarehouseNewDeliveryPersistanceResponseDTO sendDeliveryOrder(List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList) {
@@ -112,6 +101,7 @@ public class WarehouseNewDeliveryOrderService {
                 newItem.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
                 newItem.setPriceListPerUnit(item.getPriceListPerUnit());
                 newItem.setDeliveryShop(item.getDeliveryShop());
+                newItem.setComment(item.getComment());
 
                 currentDeliveriesAggregated.add(newItem);
             }
@@ -139,8 +129,7 @@ public class WarehouseNewDeliveryOrderService {
         responseDTO.setItemPersistanceErrorDtoList(itemPersistanceErrorDtoList);
 
         // 5. update the item amount on the warehouse table and add them to the OrderSendTable
-        //List<Long> modifiedItems = new ArrayList<>();
-        if (isTransactionFeasible) {
+        if(isTransactionFeasible){
 
             LocalDateTime newDeliveryDateTime = LocalDateTime.now();
             for (WarehouseNewDeliveryOrderItem itemOnList : currentDeliveryOrderItemEntitiesList) {
@@ -160,6 +149,7 @@ public class WarehouseNewDeliveryOrderService {
                 deliveryItemSend.setDeliverySending(newDeliveryDateTime);
                 deliveryItemSend.setQuantity(itemOnList.getQuantity());
                 deliveryItemSend.setShop(itemOnList.getDeliveryShop());
+                deliveryItemSend.setComment(itemOnList.getComment());
 
                 //Test one-one-relationship
                 deliveryItemSend.setShopsCheckedInProductsFromWarehouse(new ShopsCheckedInProductsFromWarehouse());
@@ -180,7 +170,6 @@ public class WarehouseNewDeliveryOrderService {
 
     /**
      * Mapper function: NewDeliveryOrderItem entities-list to NewDeliveryOrderItem DTO-List
-     *
      * @param deliveryOrderItemsEntities
      * @return
      */
@@ -195,6 +184,7 @@ public class WarehouseNewDeliveryOrderService {
             newDeliveryOrderItemDTO.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
             newDeliveryOrderItemDTO.setDiscountPercent(item.getDiscountPercent());
             newDeliveryOrderItemDTO.setPriceListPerUnit(item.getPriceListPerUnit());
+            newDeliveryOrderItemDTO.setComment(item.getComment());
 
             deliveryOrderItemDTOS.add(newDeliveryOrderItemDTO);
         }
@@ -203,7 +193,6 @@ public class WarehouseNewDeliveryOrderService {
 
     /**
      * Mapper function: NewDeliveryOrderItem DTO-list to NewDeliveryOrderItem entitiy-List
-     *
      * @param deliveryOrderItemDtoList
      * @return
      */
@@ -219,6 +208,7 @@ public class WarehouseNewDeliveryOrderService {
             newDeliveryOrderItem.setDiscountPercent(item.getDiscountPercent());
             newDeliveryOrderItem.setPriceListPerUnit(item.getPriceListPerUnit());
             newDeliveryOrderItem.setDeliveryShop(item.getDeliveryShop());
+            newDeliveryOrderItem.setComment(item.getComment());
 
             deliveryOrderItemEntityLists.add(newDeliveryOrderItem);
         }
