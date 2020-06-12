@@ -190,7 +190,6 @@ public class MapMarkersService {
             mapMarker.setLat(null);
             System.out.println(mapMarker.lat);
             mapMarkerRapository.save(mapMarker);
-
         }
     }
 
