@@ -7,11 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
-// public class ShopCheckedInItemDTO {
-public class WarehouseSendDeliveryOrderItemDTO {
-
-    // Delete this field
-    private Long id;
+public class ShopCheckedInItemDTO {
 
     private String shop;
     private String category;
@@ -22,11 +18,10 @@ public class WarehouseSendDeliveryOrderItemDTO {
     private LocalDateTime deliverySending;
 
     // Extra fields
-    // private String warehouseInstruction;
-    // private String shopComment;
+    private String warehouseInstruction;
+    private String shopComment;
 
-        public WarehouseSendDeliveryOrderItemDTO(Long id, String shop, String category, int quantity, long priceSalesPerUnit, long priceListPerUnit, int discountPercent, LocalDateTime deliverySending) {
-        this.id = id;
+        public ShopCheckedInItemDTO(String shop, String category, int quantity, long priceSalesPerUnit, long priceListPerUnit, int discountPercent, LocalDateTime deliverySending, String warehouseInstruction, String shopComment) {
         this.shop = shop;
         this.category = category;
         this.quantity = quantity;
@@ -34,5 +29,7 @@ public class WarehouseSendDeliveryOrderItemDTO {
         this.priceListPerUnit = priceListPerUnit;
         this.discountPercent = discountPercent;
         this.deliverySending = deliverySending;
+        this.warehouseInstruction = warehouseInstruction;
+        this.shopComment = shopComment;
     }
 }
