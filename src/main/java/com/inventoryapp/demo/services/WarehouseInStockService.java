@@ -19,6 +19,7 @@ public class WarehouseInStockService {
         this.warehouseRepository = warehouseRepository;
     }
 
+
     /**
      * This service gets all items in table Item from data base and turns them into a DTO list.
      */
