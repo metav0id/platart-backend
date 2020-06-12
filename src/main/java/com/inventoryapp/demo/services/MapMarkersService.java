@@ -124,10 +124,7 @@ public class MapMarkersService {
 
         mapMarkerRapository.save(mapMarker);
     }
-    public MapMarker save (MapMarker mapMarker){
 
-        return mapMarkerRapository.save(mapMarker);
-    }
 
     /**
      * Convert DTO marker TO entity marker
@@ -177,6 +174,23 @@ public class MapMarkersService {
             mapMarkerRapository.deleteById(id);
         }else {
             System.out.println("The marker doesnt exists");
+        }
+    }
+
+    @Transactional
+    public void deleteCoords(MarkerDTO markerDTO){
+        MapMarker mapMarker = mapMarkerRapository.findByName(markerDTO.getName());
+        if (mapMarker == null){
+            System.out.println("merker has not assigned comerce");
+
+        }else {
+            System.out.println(mapMarker.getName());
+            mapMarker.setLng(null);
+            System.out.println(mapMarker.lng);
+            mapMarker.setLat(null);
+            System.out.println(mapMarker.lat);
+            mapMarkerRapository.save(mapMarker);
+
         }
     }
 
