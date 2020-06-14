@@ -48,8 +48,7 @@ public class ShopsCheckinListServices {
                                     item.getDiscountPercent(),
                                     item.getDeliverySending(),
                                     item.getShopsCheckedInProductsFromWarehouse().getComment(),
-                                    // update to comment
-                                    item.getShopsCheckedInProductsFromWarehouse().getComment()
+                                    item.getComment()
                                     );
             listDto.add(itemDTO);
 
