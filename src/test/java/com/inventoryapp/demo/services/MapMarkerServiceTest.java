@@ -8,6 +8,7 @@ import com.inventoryapp.demo.repositories.MapMarkerRapository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -85,6 +86,25 @@ public class MapMarkerServiceTest {
 
         List<MapMarker> listAfter = mapMarkerRapository.findAll();
         Assert.assertEquals(listAfter.size(), listBefore.size() - 1);
+    }
+    @Test
+    public void deleteCoordsTest(){
+        MapMarker mapMarker = new MapMarker();
+        mapMarker.setName("Test");
+        mapMarker.setLng("45");
+        mapMarker.setLat("54615");
+        mapMarkerRapository.save(mapMarker);
+
+        MapMarkersService mapMarkersService = new MapMarkersService(mapMarkerRapository);
+        MarkerDTO markerDTO = mapMarkersService.covertUnitEntityToDTO(mapMarker);
+
+        mapMarkersService.deleteCoords(markerDTO);
+
+        List<MapMarker> listAfter = mapMarkerRapository.findAll();
+
+        Assert.assertEquals(null, mapMarker.getLng());
+
+
     }
 
     @Test

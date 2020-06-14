@@ -106,21 +106,8 @@ public class MapMarkersController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     //resquesbody asks for the whole entity
     public void deleteCoords(@RequestBody MarkerDTO markerDTO){
+        mapMarkersService.deleteCoords(markerDTO);
 
-        MapMarker mapMarker = mapMarkerRapository.findByName(markerDTO.getName());
-        if (mapMarker == null){
-            System.out.println("merker has not assigned comerce");
-
-        }else {
-            Comerce comerce = comerceRepository.findByName(markerDTO.getName());
-            System.out.println(mapMarker.getName());
-            mapMarker.setLng(null);
-            System.out.println(mapMarker.lng);
-            mapMarker.setLat(null);
-            System.out.println(mapMarker.lat);
-            mapMarkerRapository.save(mapMarker);
-
-        }
     }
 
     /**
@@ -145,7 +132,6 @@ public class MapMarkersController {
         System.out.println(markerDTO.getName());
         System.out.println(markerDTO.getLat());
         mapMarkersService.edit(markerDTO);
-
 
     }
 

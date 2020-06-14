@@ -27,7 +27,7 @@ public class ComerceController {
      * @return List of ComerceDTO with ** ,"category":string, "name": String, "address": String,
      */
     @GetMapping("/getallcomerces")
-    public List<ComerceDTO> getAllMarkers() {
+    public List<ComerceDTO> getAllComerces() {
 
         List<ComerceDTO> comerceDTOS = comerceService.getAllComerces();
         System.out.println("List of stock loaded.");
@@ -63,21 +63,6 @@ public class ComerceController {
         System.out.println(comerce);
     }
 
-    /**
-     * You will delete a comerce
-     * http://localhost:8081/comerce/delete/1  in postman. the 1 is an example.
-     * @return is void.
-     */
-
-/**methods to delete a marker**/
-    @DeleteMapping("/delete/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-
-    /**resquesbody asks for the whole entity**/
-    public void delete(@PathVariable Long id){
-
-        comerceService.deleteComerce(id);
-    }
 
 
 }

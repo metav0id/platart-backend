@@ -162,7 +162,7 @@ public class ComerceService {
     /**
      * Gets you a comerce by id
      *
-     * @return a Comerde
+     * @return a Comerce
      */
     @Transactional(readOnly = true)
     public Comerce findById(Long id) {
