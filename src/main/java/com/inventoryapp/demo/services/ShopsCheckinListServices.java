@@ -6,6 +6,7 @@ import com.inventoryapp.demo.repositories.ShopsCheckinListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,25 +17,16 @@ public class ShopsCheckinListServices {
     @Autowired
     private ShopsCheckinListRepository shopsCheckinListRepository;
 
-    public List<ShopCheckedInItemDTO> getAllCheckedInItems() {
-
-        List<WarehouseSendDeliveryOrderItem> listRepo = this.shopsCheckinListRepository.findAll();
-        List<ShopCheckedInItemDTO> listDTOs = this.mapEntityToDto(listRepo);
-
-        return listDTOs;
+    public List<ShopCheckedInItemDTO> getSpecificCheckedInItemsDate(String shopName, LocalDateTime startDate, LocalDateTime endDate) {
+        //TODO: Set timezone to UIO
+        /*System.out.println("startDate: "+startDate);
+        System.out.println("endDate: "+endDate);*/
+        List<WarehouseSendDeliveryOrderItem> listRepoDate = this.shopsCheckinListRepository.findAllItemsNotAddedToShopInventoryDate(shopName, startDate, endDate);
+        List<ShopCheckedInItemDTO> listDateDTOs = this.mapEntityToDto(listRepoDate);
+        return listDateDTOs;
     }
 
-    public List<ShopCheckedInItemDTO> getSpecificCheckedInItems(String shopName) {
-
-        List<WarehouseSendDeliveryOrderItem> listRepo = this.shopsCheckinListRepository.findAllItemsNotAddedToShopInventory(shopName);
-        List<ShopCheckedInItemDTO> listDTOs = this.mapEntityToDto(listRepo);
-
-        return listDTOs;
-    }
-
-
-
-    public List<ShopCheckedInItemDTO> mapEntityToDto(List<WarehouseSendDeliveryOrderItem> entityList){
+    private List<ShopCheckedInItemDTO> mapEntityToDto(List<WarehouseSendDeliveryOrderItem> entityList){
         List<ShopCheckedInItemDTO> listDto = new ArrayList<>();
 
         for(WarehouseSendDeliveryOrderItem item: entityList){
@@ -47,9 +39,9 @@ public class ShopsCheckinListServices {
                                     item.getPriceListPerUnit(),
                                     item.getDiscountPercent(),
                                     item.getDeliverySending(),
-                                    item.getShopsCheckedInProductsFromWarehouse().getComment(),
-                                    item.getComment()
-                                    );
+                                    item.getComment(),
+                                    item.getShopsCheckedInProductsFromWarehouse().getComment()
+                            );
             listDto.add(itemDTO);
 
         }

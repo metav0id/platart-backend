@@ -1,11 +1,14 @@
 package com.inventoryapp.demo.controllers;
 
+import com.inventoryapp.demo.dtos.ShopDateSimpleDTO;
 import com.inventoryapp.demo.dtos.ShopSimpleDTO;
 import com.inventoryapp.demo.dtos.ShopCheckedInItemDTO;
 import com.inventoryapp.demo.services.ShopsCheckinListServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -16,15 +19,13 @@ public class ShopsCheckinListController {
     @Autowired
     private ShopsCheckinListServices shopsCheckinListServices;
 
-    @PostMapping("/getAllCheckedInItems")
-    private List<ShopCheckedInItemDTO> getAllCheckedInItems(){
-        return this.shopsCheckinListServices.getAllCheckedInItems();
-    }
+    // getSpecificCheckedInItems, getAllCheckedInItems
 
-    @PostMapping("/getSpecificCheckedInItems")
-    private List<ShopCheckedInItemDTO> getSpecificCheckedInItems(@RequestBody ShopSimpleDTO shopDTO){
-        System.out.println("Input Shop: " + shopDTO.getShop());
-
-        return this.shopsCheckinListServices.getSpecificCheckedInItems(shopDTO.getShop());
+    @PostMapping("/getSpecificCheckedInItemsDate")
+    private List<ShopCheckedInItemDTO> getSpecificCheckedInItemsDate(@RequestBody ShopDateSimpleDTO shopDTO){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        LocalDateTime startDate = LocalDateTime.parse(shopDTO.getStartDate(), formatter);
+        LocalDateTime endDate = LocalDateTime.parse(shopDTO.getEndDate() , formatter);
+        return this.shopsCheckinListServices.getSpecificCheckedInItemsDate(shopDTO.getShop(), startDate, endDate);
     }
 }
