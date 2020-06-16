@@ -1,6 +1,6 @@
 package com.inventoryapp.demo.controllers;
 
-import com.inventoryapp.demo.dtos.DateRangeDTO;
+import com.inventoryapp.demo.dtos.ShopAndDateRangeDTO;
 import com.inventoryapp.demo.dtos.ManagerWarehouseCheckinListingDTO;
 import com.inventoryapp.demo.services.ManagerWarehouseCheckinListingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class ManagerWarehouseCheckinListingController {
     }
 
     @PostMapping("/getCheckinItemsListByDateRange")
-    public List<ManagerWarehouseCheckinListingDTO> getCheckinItemsListByDateRange(@RequestBody DateRangeDTO dateRangeDTO){
+    public List<ManagerWarehouseCheckinListingDTO> getCheckinItemsListByDateRange(@RequestBody ShopAndDateRangeDTO shopAndDateRangeDTO){
 
         List<ManagerWarehouseCheckinListingDTO> soldItemsList = new ArrayList<>();
 
@@ -34,8 +34,8 @@ public class ManagerWarehouseCheckinListingController {
         // 1. get Date
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            startDate = LocalDateTime.parse(dateRangeDTO.getStartDate(), formatter);
-            endDate = LocalDateTime.parse(dateRangeDTO.getEndDate() , formatter);
+            startDate = LocalDateTime.parse(shopAndDateRangeDTO.getStartDate(), formatter);
+            endDate = LocalDateTime.parse(shopAndDateRangeDTO.getEndDate() , formatter);
             System.out.println("start: "+ startDate + " = end: "+endDate);
         } catch (Error e){
             System.err.println(e);

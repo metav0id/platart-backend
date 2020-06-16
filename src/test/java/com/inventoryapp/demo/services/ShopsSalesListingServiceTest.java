@@ -17,7 +17,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class ManagerSalesListingServiceTest {
+public class ShopsSalesListingServiceTest {
 
     @Autowired
     private ShopsAllSoldItemsRepository shopsAllSoldItemsRepository;
@@ -47,6 +47,7 @@ public class ManagerSalesListingServiceTest {
 
         LocalDateTime startDate = LocalDateTime.now().minusYears(10);
         LocalDateTime endDate = LocalDateTime.now();
+        String shop = "shop";
 
         // 2. Execute Test
         System.out.println("start: "+ startDate + " = end: "+endDate);
@@ -55,7 +56,7 @@ public class ManagerSalesListingServiceTest {
         List<ShopsAllSoldItemsDTO> allDTOItems = new ArrayList<>();
 
         try {
-            allItems = this.shopsAllSoldItemsRepository.getItemsByDate(startDate, endDate);
+            allItems = this.shopsAllSoldItemsRepository.getItemsByShopAndByDate(shop, startDate, endDate);
             allDTOItems = mapEntitiesToDTOs(allItems);
         } catch (Exception e) {
             System.err.println(e);

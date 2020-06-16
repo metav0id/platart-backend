@@ -14,7 +14,8 @@ public interface ShopsAllSoldItemsRepository extends JpaRepository<ShopsAllSoldI
 
     @Query( "SELECT item FROM ShopsAllSoldItems item " +
             "WHERE item.itemLastSold <= :endDate " +
-            "AND item.itemLastSold >= :startDate")
-    List<ShopsAllSoldItems> getItemsByDate(@Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
+            "AND item.itemLastSold >= :startDate " +
+            "AND item.shop = :shop")
+    List<ShopsAllSoldItems> getItemsByShopAndByDate(@Param("shop") String shop ,@Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
 
 }

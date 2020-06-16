@@ -11,28 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ManagerSalesListingService {
+public class ShopsSalesListingService {
 
     @Autowired
     private ShopsAllSoldItemsRepository shopsAllSoldItemsRepository;
 
-    public ManagerSalesListingService() {
-    }
+    public List<ShopsAllSoldItemsDTO> getSoldItemsListByShopAndDateRange(String selectedShop, LocalDateTime startDate, LocalDateTime endDate){
 
-    public List<ShopsAllSoldItemsDTO> getSoldItemsListByDateRange(LocalDateTime startDate, LocalDateTime endDate){
-        System.out.println("start: "+ startDate + " = end: "+endDate);
-
-        List<ShopsAllSoldItems> allItems = new ArrayList<>();
-        List<ShopsAllSoldItemsDTO> allDTOItems = new ArrayList<>();
-
-        try {
-            allItems = this.shopsAllSoldItemsRepository.getItemsByDate(startDate, endDate);
-            allDTOItems = mapEntitiesToDTOs(allItems);
-        } catch (Exception e) {
-            System.err.println(e);
-        }
-
+        List<ShopsAllSoldItems> allItems = this.shopsAllSoldItemsRepository.getItemsByShopAndByDate(selectedShop, startDate, endDate);
+        List<ShopsAllSoldItemsDTO> allDTOItems = mapEntitiesToDTOs(allItems);
         return allDTOItems;
+
     }
 
     private List<ShopsAllSoldItemsDTO> mapEntitiesToDTOs(List<ShopsAllSoldItems> shopsAllSoldItems){
