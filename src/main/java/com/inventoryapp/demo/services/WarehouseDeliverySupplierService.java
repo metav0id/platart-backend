@@ -27,6 +27,7 @@ public class WarehouseDeliverySupplierService {
      */
     public void saveListDeliverySuppliers(List<WarehouseSupplierItemDTO> listDTO){
         System.out.println("Saving new item list from supplier to database...");
+        System.out.println(listDTO);
         List<WarehouseSupplierItem> listEntity = new ArrayList<>();
         for(WarehouseSupplierItemDTO entry : listDTO){
             WarehouseSupplierItem itemEntity = new WarehouseSupplierItem(entry.getCategory(),
@@ -36,6 +37,7 @@ public class WarehouseDeliverySupplierService {
                     entry.getSupplierName());
             listEntity.add(itemEntity);
         }
+        System.out.println(listEntity);
         warehouseDeliverySupplierRepository.saveAll(listEntity);
         System.out.println("Successfully saved!");
         this.transferListToStock(listDTO);
