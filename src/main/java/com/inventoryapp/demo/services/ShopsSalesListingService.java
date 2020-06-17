@@ -19,23 +19,17 @@ public class ShopsSalesListingService {
     @Autowired
     private ConvertingValues convertingValues;
 
-    public ManagerSalesListingService() {
-    }
-
-    public List<ShopsAllSoldItemsDTO> getSoldItemsListByDateRange(LocalDateTime startDate, LocalDateTime endDate){
-        System.out.println("start: "+ startDate + " = end: "+endDate);
-    public List<ShopsAllSoldItemsDTO> getSoldItemsListByShopAndDateRange(String selectedShop, LocalDateTime startDate, LocalDateTime endDate){
+    public List<ShopsAllSoldItemsDTO> getSoldItemsListByShopAndDateRange(String selectedShop, LocalDateTime startDate, LocalDateTime endDate) {
 
         List<ShopsAllSoldItems> allItems = this.shopsAllSoldItemsRepository.getItemsByShopAndByDate(selectedShop, startDate, endDate);
         List<ShopsAllSoldItemsDTO> allDTOItems = mapEntitiesToDTOs(allItems);
         return allDTOItems;
-
     }
 
-    private List<ShopsAllSoldItemsDTO> mapEntitiesToDTOs(List<ShopsAllSoldItems> shopsAllSoldItems){
+    private List<ShopsAllSoldItemsDTO> mapEntitiesToDTOs(List<ShopsAllSoldItems> shopsAllSoldItems) {
         List<ShopsAllSoldItemsDTO> shopsAllSoldItemsDTOList = new ArrayList<>();
 
-        for(ShopsAllSoldItems item: shopsAllSoldItems){
+        for (ShopsAllSoldItems item : shopsAllSoldItems) {
             ShopsAllSoldItemsDTO itemDTO = new ShopsAllSoldItemsDTO();
             itemDTO.setId(item.getId());
             itemDTO.setCategory(item.getCategory());
