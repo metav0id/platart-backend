@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RestController("")
+@RestController
 @RequestMapping("/shops")
 public class ShopsCheckoutSoldItemsController {
 

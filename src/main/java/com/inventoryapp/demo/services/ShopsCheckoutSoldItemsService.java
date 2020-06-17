@@ -19,16 +19,19 @@ public class ShopsCheckoutSoldItemsService {
     private ShopsCheckoutSoldItemsRepository shopsCheckoutSoldItemsRepository;
     private ShopsAllSoldItemsRepository shopsAllSoldItemsRepository;
     private ShopsStockItemRepository shopsStockItemRepository;
+    private ConvertingValues convertingValues;
 
     @Autowired
     public ShopsCheckoutSoldItemsService(
             ShopsCheckoutSoldItemsRepository shopsCheckoutSoldItemsRepository,
             ShopsAllSoldItemsRepository shopsAllSoldItemsRepository,
-            ShopsStockItemRepository shopsStockItemRepository
+            ShopsStockItemRepository shopsStockItemRepository,
+            ConvertingValues convertingValues
             ) {
         this.shopsCheckoutSoldItemsRepository = shopsCheckoutSoldItemsRepository;
         this.shopsAllSoldItemsRepository = shopsAllSoldItemsRepository;
         this.shopsStockItemRepository = shopsStockItemRepository;
+        this.convertingValues = convertingValues;
     }
 
     public void saveAllSoldItemsList(List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
@@ -98,7 +101,10 @@ public class ShopsCheckoutSoldItemsService {
         List<ShopsStockItem> shopsStockItemList = this.shopsStockItemRepository.findAllItemsByShop(shopRelevant);
 
         for(ShopsCheckoutSoldItemsDTO itemSold: soldItemsAggregatedDTOList){
-            Long amountItemsShopWarehouse = shopsStockItemRepository.findAmountItemsByAllInfo(itemSold.getShop(), itemSold.getCategory(), itemSold.getPriceListPerUnit(), itemSold.getPriceSalesPerUnit());
+            Long amountItemsShopWarehouse =
+                    shopsStockItemRepository.findAmountItemsByAllInfo(itemSold.getShop(), itemSold.getCategory(),
+                            convertingValues.convertDoubleToLongForDTOtoEntity(itemSold.getPriceListPerUnit()),
+                            convertingValues.convertDoubleToLongForDTOtoEntity(itemSold.getPriceSalesPerUnit()));
 
             System.out.println("amount wanted: "+ itemSold.getQuantity() + " amount on warehouse: " + amountItemsShopWarehouse);
             if(amountItemsShopWarehouse != null && (amountItemsShopWarehouse -itemSold.getQuantity() >= 0 )){
@@ -155,6 +161,8 @@ public class ShopsCheckoutSoldItemsService {
         return shopsCheckoutSoldItemsDTOList;
     }
 
+
+
     public List<ShopsCheckoutSoldItemsDTO> getAllSoldItemsList(){
         List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsList = this.shopsCheckoutSoldItemsRepository.findAll();
 
@@ -177,10 +185,10 @@ public class ShopsCheckoutSoldItemsService {
             newSoldItem.setId(itemDTO.getPosition());
             newSoldItem.setCategory(itemDTO.getCategory());
             newSoldItem.setQuantity(itemDTO.getQuantity());
-            newSoldItem.setPriceListPerUnit(itemDTO.getPriceListPerUnit());
-            newSoldItem.setPriceSalesPerUnit(itemDTO.getPriceSalesPerUnit());
-            newSoldItem.setRevenuePerUnit(itemDTO.getRevenuePerUnit());
-            newSoldItem.setDiscountPercent(itemDTO.getDiscountPercent());
+            newSoldItem.setPriceListPerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(itemDTO.getPriceListPerUnit()));
+            newSoldItem.setPriceSalesPerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(itemDTO.getPriceSalesPerUnit()));
+            newSoldItem.setRevenuePerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(itemDTO.getRevenuePerUnit()));
+            newSoldItem.setDiscountPercent(convertingValues.convertDoubleToIntForDTOtoEntity(itemDTO.getDiscountPercent()));
             newSoldItem.setShop(itemDTO.getShop());
             newSoldItem.setDeliverySending(itemDTO.getDeliverySending());
             newSoldItem.setItemLastSold(itemDTO.getItemLastSold());
@@ -200,10 +208,10 @@ public class ShopsCheckoutSoldItemsService {
             newEntitity.setId(itemDTO.getPosition());
             newEntitity.setCategory(itemDTO.getCategory());
             newEntitity.setQuantity(itemDTO.getQuantity());
-            newEntitity.setPriceListPerUnit(itemDTO.getPriceListPerUnit());
-            newEntitity.setPriceSalesPerUnit(itemDTO.getPriceSalesPerUnit());
-            newEntitity.setRevenuePerUnit(itemDTO.getRevenuePerUnit());
-            newEntitity.setDiscountPercent(itemDTO.getDiscountPercent());
+            newEntitity.setPriceListPerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(itemDTO.getPriceListPerUnit()));
+            newEntitity.setPriceSalesPerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(itemDTO.getPriceSalesPerUnit()));
+            newEntitity.setRevenuePerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(itemDTO.getRevenuePerUnit()));
+            newEntitity.setDiscountPercent(convertingValues.convertDoubleToIntForDTOtoEntity(itemDTO.getDiscountPercent()));
             newEntitity.setShop(itemDTO.getShop());
             newEntitity.setDeliverySending(itemDTO.getDeliverySending());
             newEntitity.setItemLastSold(itemDTO.getItemLastSold());
@@ -223,10 +231,10 @@ public class ShopsCheckoutSoldItemsService {
             newDTO.setPosition(itemDTO.getId());
             newDTO.setCategory(itemDTO.getCategory());
             newDTO.setQuantity(itemDTO.getQuantity());
-            newDTO.setPriceListPerUnit(itemDTO.getPriceListPerUnit());
-            newDTO.setPriceSalesPerUnit(itemDTO.getPriceSalesPerUnit());
-            newDTO.setRevenuePerUnit(itemDTO.getRevenuePerUnit());
-            newDTO.setDiscountPercent(itemDTO.getDiscountPercent());
+            newDTO.setPriceListPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(itemDTO.getPriceListPerUnit()));
+            newDTO.setPriceSalesPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(itemDTO.getPriceSalesPerUnit()));
+            newDTO.setRevenuePerUnit(convertingValues.convertLongToDoubleForEntityToDTO(itemDTO.getRevenuePerUnit()));
+            newDTO.setDiscountPercent(convertingValues.convertLongToDoubleForEntityToDTO(itemDTO.getDiscountPercent()));
             newDTO.setShop(itemDTO.getShop());
             newDTO.setDeliverySending(itemDTO.getDeliverySending());
             newDTO.setItemLastSold(itemDTO.getItemLastSold());

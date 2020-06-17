@@ -23,11 +23,13 @@ public class WarehouseNewDeliveryOrderService {
     private WarehouseShopDeliveryOrdersSendRepository warehouseShopDeliveryOrdersSendRepository;
     private WarehouseNewDeliveryOrderRepository warehouseNewDeliveryOrderRepository;
     private WarehouseRepository warehouseRepository;
+    private ConvertingValues convertingValues;
 
     @Autowired
     public WarehouseNewDeliveryOrderService(WarehouseShopDeliveryOrdersSendRepository warehouseShopDeliveryOrdersSendRepository,
                                             WarehouseNewDeliveryOrderRepository newDeliveryOrderRepository,
-                                            WarehouseRepository warehouseRepository) {
+                                            WarehouseRepository warehouseRepository,
+                                            ConvertingValues convertingValues) {
         this.warehouseShopDeliveryOrdersSendRepository = warehouseShopDeliveryOrdersSendRepository;
         this.warehouseNewDeliveryOrderRepository = newDeliveryOrderRepository;
         this.warehouseRepository = warehouseRepository;
@@ -181,9 +183,9 @@ public class WarehouseNewDeliveryOrderService {
             newDeliveryOrderItemDTO.setId(item.getId());
             newDeliveryOrderItemDTO.setCategory(item.getCategory());
             newDeliveryOrderItemDTO.setQuantity(item.getQuantity());
-            newDeliveryOrderItemDTO.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
-            newDeliveryOrderItemDTO.setDiscountPercent(item.getDiscountPercent());
-            newDeliveryOrderItemDTO.setPriceListPerUnit(item.getPriceListPerUnit());
+            newDeliveryOrderItemDTO.setPriceSalesPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceSalesPerUnit()));
+            newDeliveryOrderItemDTO.setDiscountPercent(convertingValues.convertLongToDoubleForEntityToDTO(item.getDiscountPercent()));
+            newDeliveryOrderItemDTO.setPriceListPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceListPerUnit()));
             newDeliveryOrderItemDTO.setComment(item.getComment());
 
             deliveryOrderItemDTOS.add(newDeliveryOrderItemDTO);
@@ -204,9 +206,9 @@ public class WarehouseNewDeliveryOrderService {
             newDeliveryOrderItem.setId(item.getId());
             newDeliveryOrderItem.setCategory(item.getCategory());
             newDeliveryOrderItem.setQuantity(item.getQuantity());
-            newDeliveryOrderItem.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
-            newDeliveryOrderItem.setDiscountPercent(item.getDiscountPercent());
-            newDeliveryOrderItem.setPriceListPerUnit(item.getPriceListPerUnit());
+            newDeliveryOrderItem.setPriceSalesPerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(item.getPriceSalesPerUnit()));
+            newDeliveryOrderItem.setDiscountPercent(convertingValues.convertDoubleToIntForDTOtoEntity(item.getDiscountPercent()));
+            newDeliveryOrderItem.setPriceListPerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(item.getPriceListPerUnit()));
             newDeliveryOrderItem.setDeliveryShop(item.getDeliveryShop());
             newDeliveryOrderItem.setComment(item.getComment());
 

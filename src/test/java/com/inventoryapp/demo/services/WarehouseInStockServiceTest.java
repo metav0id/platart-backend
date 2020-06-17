@@ -23,6 +23,12 @@ public class WarehouseInStockServiceTest {
     @Autowired
     private WarehouseRepository warehouseRepository;
 
+    @Autowired
+    private WarehouseInStockService warehouseInStockService;
+
+    @Autowired
+    private ConvertingValues convertingValues;
+
     @Test
     public void getAllStockItemsTest() {
         WarehouseStockItem itemEntity = new WarehouseStockItem();
@@ -31,7 +37,7 @@ public class WarehouseInStockServiceTest {
         warehouseRepository.save(itemEntity);
         warehouseRepository.save(itemEntity1);
 
-        WarehouseInStockService warehouseInStockService = new WarehouseInStockService(warehouseRepository);
+//        WarehouseInStockService warehouseInStockService = new WarehouseInStockService(warehouseRepository);
 
         List<WarehouseGetAllItemsDTO> listItems = warehouseInStockService.getAllStockItems();
         System.out.println(listItems.size());
@@ -43,13 +49,13 @@ public class WarehouseInStockServiceTest {
     public void removeDuplicatesFromListDtoTest() {
         //Setup
         List<WarehouseSupplierItemDTO> itemListDTO = new ArrayList<>();
-        WarehouseSupplierItemDTO item1 = new WarehouseSupplierItemDTO("Earring", 50, 30, 15, "Enrico");
-        WarehouseSupplierItemDTO item2 = new WarehouseSupplierItemDTO("Necklace", 10, 200, 20, "Alonzo");
-        WarehouseSupplierItemDTO item3 = new WarehouseSupplierItemDTO("Necklace", 11, 200, 20, "Steffi");
-        WarehouseSupplierItemDTO item4 = new WarehouseSupplierItemDTO("Necklace", 20, 201, 20, "Alonzo");
-        WarehouseSupplierItemDTO item5 = new WarehouseSupplierItemDTO("Earring", 40, 30, 20, "Michael");
-        WarehouseSupplierItemDTO item6 = new WarehouseSupplierItemDTO("Shoes", 50, 200, 2, "Michael");
-        WarehouseSupplierItemDTO item7 = new WarehouseSupplierItemDTO("Shoes", -50, 200, 2, "Negativo");
+        WarehouseSupplierItemDTO item1 = new WarehouseSupplierItemDTO("Earring", 50, 30.0, 15.0, "Enrico");
+        WarehouseSupplierItemDTO item2 = new WarehouseSupplierItemDTO("Necklace", 10, 200.0, 20.0, "Alonzo");
+        WarehouseSupplierItemDTO item3 = new WarehouseSupplierItemDTO("Necklace", 11, 200.0, 20.0, "Steffi");
+        WarehouseSupplierItemDTO item4 = new WarehouseSupplierItemDTO("Necklace", 20, 201.0, 20.0, "Alonzo");
+        WarehouseSupplierItemDTO item5 = new WarehouseSupplierItemDTO("Earring", 40, 30.0, 20.0, "Michael");
+        WarehouseSupplierItemDTO item6 = new WarehouseSupplierItemDTO("Shoes", 50, 200.0, 2.0, "Michael");
+        WarehouseSupplierItemDTO item7 = new WarehouseSupplierItemDTO("Shoes", -50, 200.0, 2.0, "Negativo");
 
         itemListDTO.add(item1);
         itemListDTO.add(item2);
@@ -101,7 +107,7 @@ public class WarehouseInStockServiceTest {
     private WarehouseStockItem convertToEntity(WarehouseSupplierItemDTO itemDto) {
         WarehouseStockItem item = new WarehouseStockItem();
         item.setCategory(itemDto.getCategory());
-        item.setPriceListPerUnit(itemDto.getPriceListPerUnit());
+        item.setPriceListPerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(itemDto.getPriceListPerUnit()));
         boolean isNegativeQuantity = itemDto.getQuantity() < 0;
         if (isNegativeQuantity) {
             item.setQuantity(0);

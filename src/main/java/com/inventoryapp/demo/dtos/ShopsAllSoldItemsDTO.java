@@ -14,10 +14,10 @@ public class ShopsAllSoldItemsDTO {
 
     private String category;
     private Long quantity;
-    private Long priceListPerUnit;
-    private Long priceSalesPerUnit;
-    private Long revenuePerUnit;
-    private int discountPercent;
+    private Double priceListPerUnit;
+    private Double priceSalesPerUnit;
+    private Double revenuePerUnit;
+    private Double discountPercent;
     private String shop;
     private LocalDateTime deliverySending;
     private LocalDateTime itemLastSold;
@@ -30,10 +30,10 @@ public class ShopsAllSoldItemsDTO {
             Long id,
             String category,
             Long quantity,
-            Long priceListPerUnit,
-            Long priceSalesPerUnit,
-            Long revenuePerUnit,
-            int discountPercent,
+            Double priceListPerUnit,
+            Double priceSalesPerUnit,
+            Double revenuePerUnit,
+            Double discountPercent,
             String shop,
             LocalDateTime deliverySending,
             LocalDateTime itemLastSold,

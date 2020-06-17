@@ -15,10 +15,8 @@ public class WarehouseInStockService {
     @Autowired
     private WarehouseRepository warehouseRepository;
 
-    public WarehouseInStockService(WarehouseRepository warehouseRepository) {
-        this.warehouseRepository = warehouseRepository;
-    }
-
+    @Autowired
+    private ConvertingValues convertingValues;
 
     /**
      * This service gets all items in table Item from data base and turns them into a DTO list.
@@ -43,7 +41,7 @@ public class WarehouseInStockService {
         for (WarehouseStockItem item : findAllWarehouseStockItems) {
             WarehouseGetAllItemsDTO getAllItemsDTO = new WarehouseGetAllItemsDTO();
             getAllItemsDTO.setCategory(item.getCategory());
-            getAllItemsDTO.setPriceListPerUnit(item.getPriceListPerUnit());
+            getAllItemsDTO.setPriceListPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceListPerUnit()));
             getAllItemsDTO.setQuantity(item.getQuantity());
             listWarehouseItemsDTO.add(getAllItemsDTO);
         }
@@ -139,7 +137,7 @@ public class WarehouseInStockService {
     private WarehouseStockItem covertToEntity(WarehouseSupplierItemDTO itemDto) {
         WarehouseStockItem item = new WarehouseStockItem();
         item.setCategory(itemDto.getCategory());
-        item.setPriceListPerUnit(itemDto.getPriceListPerUnit());
+        item.setPriceListPerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(itemDto.getPriceListPerUnit()));
         boolean isNegativeQuantity = itemDto.getQuantity() < 0;
         if (isNegativeQuantity) {
             item.setQuantity(0);

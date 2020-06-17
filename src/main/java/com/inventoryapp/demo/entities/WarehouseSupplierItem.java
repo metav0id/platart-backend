@@ -18,8 +18,8 @@ public class WarehouseSupplierItem {
     private String category;
     private long quantity;
     private String supplierName;
-    private long priceListPerUnit;
-    private long priceSupplierPerUnit;
+    private Long priceListPerUnit;
+    private Long priceSupplierPerUnit;
     @CreationTimestamp
     private LocalDateTime createDateTime;
 

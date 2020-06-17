@@ -16,6 +16,9 @@ public class ManagerSalesListingService {
     @Autowired
     private ShopsAllSoldItemsRepository shopsAllSoldItemsRepository;
 
+    @Autowired
+    private ConvertingValues convertingValues;
+
     public ManagerSalesListingService() {
     }
 
@@ -43,10 +46,10 @@ public class ManagerSalesListingService {
             itemDTO.setId(item.getId());
             itemDTO.setCategory(item.getCategory());
             itemDTO.setQuantity(item.getQuantity());
-            itemDTO.setPriceListPerUnit(item.getPriceListPerUnit());
-            itemDTO.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
-            itemDTO.setRevenuePerUnit(item.getRevenuePerUnit());
-            itemDTO.setDiscountPercent(item.getDiscountPercent());
+            itemDTO.setPriceListPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceListPerUnit()));
+            itemDTO.setPriceSalesPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceSalesPerUnit()));
+            itemDTO.setRevenuePerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getRevenuePerUnit()));
+            itemDTO.setDiscountPercent(convertingValues.convertLongToDoubleForEntityToDTO(item.getDiscountPercent()));
             itemDTO.setShop(item.getShop());
             itemDTO.setDeliverySending(item.getDeliverySending());
             itemDTO.setItemLastSold(item.getItemLastSold());
@@ -57,5 +60,4 @@ public class ManagerSalesListingService {
 
         return shopsAllSoldItemsDTOList;
     }
-
 }

@@ -42,9 +42,9 @@ public class WarehouseNewDeliveryOrderControllerTest {
         warehouseDeliveryOrderDTO1positiveTest.setCategory("Category1");
         warehouseDeliveryOrderDTO1positiveTest.setDeliveryShop("Shop1");
         warehouseDeliveryOrderDTO1positiveTest.setQuantity(10);
-        warehouseDeliveryOrderDTO1positiveTest.setPriceSalesPerUnit(100);
-        warehouseDeliveryOrderDTO1positiveTest.setDiscountPercent(50);
-        warehouseDeliveryOrderDTO1positiveTest.setPriceListPerUnit(50);
+        warehouseDeliveryOrderDTO1positiveTest.setPriceSalesPerUnit(100.0);
+        warehouseDeliveryOrderDTO1positiveTest.setDiscountPercent(50.0);
+        warehouseDeliveryOrderDTO1positiveTest.setPriceListPerUnit(50.0);
         warehouseDeliveryOrderDTOList.add(warehouseDeliveryOrderDTO1positiveTest);
 
         WarehouseNewDeliveryOrderItemDTO warehouseDeliveryOrderDTO2 =  new WarehouseNewDeliveryOrderItemDTO();
@@ -52,9 +52,9 @@ public class WarehouseNewDeliveryOrderControllerTest {
         warehouseDeliveryOrderDTO2.setCategory("Category2");
         warehouseDeliveryOrderDTO2.setDeliveryShop("Shop2");
         warehouseDeliveryOrderDTO2.setQuantity(20);
-        warehouseDeliveryOrderDTO2.setPriceSalesPerUnit(200);
-        warehouseDeliveryOrderDTO2.setDiscountPercent(50);
-        warehouseDeliveryOrderDTO2.setPriceListPerUnit(100);
+        warehouseDeliveryOrderDTO2.setPriceSalesPerUnit(200.0);
+        warehouseDeliveryOrderDTO2.setDiscountPercent(50.0);
+        warehouseDeliveryOrderDTO2.setPriceListPerUnit(100.0);
         warehouseDeliveryOrderDTOList.add(warehouseDeliveryOrderDTO2);
 
         WarehouseNewDeliveryOrderItemDTO warehouseDeliveryOrderDTO3 =  new WarehouseNewDeliveryOrderItemDTO();
@@ -62,9 +62,9 @@ public class WarehouseNewDeliveryOrderControllerTest {
         warehouseDeliveryOrderDTO3.setCategory("Category3");
         warehouseDeliveryOrderDTO3.setDeliveryShop("Shop3");
         warehouseDeliveryOrderDTO3.setQuantity(30);
-        warehouseDeliveryOrderDTO3.setPriceSalesPerUnit(300);
-        warehouseDeliveryOrderDTO3.setDiscountPercent(50);
-        warehouseDeliveryOrderDTO3.setPriceListPerUnit(150);
+        warehouseDeliveryOrderDTO3.setPriceSalesPerUnit(300.0);
+        warehouseDeliveryOrderDTO3.setDiscountPercent(50.0);
+        warehouseDeliveryOrderDTO3.setPriceListPerUnit(150.0);
         warehouseDeliveryOrderDTOList.add(warehouseDeliveryOrderDTO3);
     }
 
@@ -105,9 +105,9 @@ public class WarehouseNewDeliveryOrderControllerTest {
         negativeTestDto.setCategory("CategoryNegativeTest");
         negativeTestDto.setDeliveryShop("ShopNegativeTest");
         negativeTestDto.setQuantity(2020);
-        negativeTestDto.setPriceSalesPerUnit(2020);
-        negativeTestDto.setDiscountPercent(20);
-        negativeTestDto.setPriceListPerUnit(1616);
+        negativeTestDto.setPriceSalesPerUnit(2020.0);
+        negativeTestDto.setDiscountPercent(20.0);
+        negativeTestDto.setPriceListPerUnit(1616.0);
 
         // 1. Define Service-Mock
         Mockito.when(warehouseNewDeliveryOrderService.getAllDeliveryOrderItems()).thenReturn(warehouseDeliveryOrderDTOList);

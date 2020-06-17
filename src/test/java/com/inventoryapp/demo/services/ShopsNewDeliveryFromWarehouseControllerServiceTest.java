@@ -31,6 +31,10 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
 
     private List<WarehouseSendDeliveryOrderItem> listSendItems = new ArrayList<>();
 
+    @Autowired
+    private ConvertingValues convertingValues;
+
+
     @Before
     public void setUp() {
         WarehouseSendDeliveryOrderItem item1 = new WarehouseSendDeliveryOrderItem();
@@ -121,9 +125,13 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
         List<ShopDeliveryItemFromWarehouseDTO> listDTO = new ArrayList<>();
         listEntity.stream().forEach(item -> {
             ShopDeliveryItemFromWarehouseDTO itemDTO = new ShopDeliveryItemFromWarehouseDTO(
-                    item.getId(), item.getCategory(), item.getPriceListPerUnit(),
-                    item.getPriceSalesPerUnit(), item.getQuantity(),
-                    item.getDeliverySending(), item.getComment());
+                    item.getId(),
+                    item.getCategory(),
+                    convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceListPerUnit()),
+                    convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceSalesPerUnit()),
+                    item.getQuantity(),
+                    item.getDeliverySending(),
+                    item.getComment());
             listDTO.add(itemDTO);
         });
         return listDTO;
@@ -141,14 +149,14 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
         //DTO List
         List<ShopSaveToStockDTO> listDTO = new ArrayList<>();
         listDTO.add(new ShopSaveToStockDTO(listDatabase.get(0).getId(), "Shop1", "Pulsera",
-                70, 100, 90, 80,
+                70, 100.0, 90.0, 80,
                 "6.5.2020", "Da fehlt was"));
         listDTO.add(new ShopSaveToStockDTO(listDatabase.get(1).getId(), "Shop1", "Arete",
-                120, 100, 80, 120,
+                120, 100.0, 80.0, 120,
                 "8.5.2020", "Alles gut"));
         //Item which was added manually as delivery
         listDTO.add(new ShopSaveToStockDTO(-1, "shop1", "Pulsera",
-                50, 120, 80, 90,
+                50, 120.0, 80.0, 90,
                 "7.5.2020", "Kam ausversehen am Shop an"));
 
 
@@ -160,7 +168,6 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
             if (item.isPresent()) {
                 WarehouseSendDeliveryOrderItem itemEntity = item.get();
                 itemEntity.getShopsCheckedInProductsFromWarehouse().setIsArrivedAtShop(true);
-                //TODO implement UTC localdatetime persistence of arriving at shop
                 itemEntity.getShopsCheckedInProductsFromWarehouse().setIsAddedToStockOfShop(true);
                 itemEntity.getShopsCheckedInProductsFromWarehouse().setTimestampIsAddedToStockOfShop(LocalDateTime.now());
                 itemEntity.getShopsCheckedInProductsFromWarehouse().setQuantityCheckedIn(itemDTO.getQuantity());
@@ -194,19 +201,19 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
         List<ShopSaveToStockDTO> listDTO = new ArrayList<>();
         //Existing entry --> update with new quantity
         listDTO.add(new ShopSaveToStockDTO(1, "Shop1", "Pulsera",
-                70, 100, 90, 80,
+                70, 100.0, 90.0, 80,
                 "6.5.2020", "Da fehlt was"));
         //Existing entry --> update with new quantity
         listDTO.add(new ShopSaveToStockDTO(2, "Shop1", "Arete",
-                120, 100, 80, 120,
+                120, 100.0, 80.0, 120,
                 "8.5.2020", "Alles gut"));
         //Item which was added manually as delivery --> new entry in database
         listDTO.add(new ShopSaveToStockDTO(-1, "Shop1", "Pulsera",
-                50, 120, 80, 90,
+                50, 120.0, 80.0, 90,
                 "7.5.2020", "Kam ausversehen am Shop an"));
         //Not in database --> new entry in database
         listDTO.add(new ShopSaveToStockDTO(4, "Shop1", "Arete",
-                35, 100, 70, 35,
+                35, 100.0, 70.0, 35,
                 "8.5.2020", "Top"));
 
         // Build logic
@@ -244,6 +251,7 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
 
     private ShopsStockItem convertDTOtoEntity(ShopSaveToStockDTO itemDto) {
         return new ShopsStockItem(itemDto.getShop(), itemDto.getCategory(),
-                itemDto.getQuantity(), itemDto.getPriceListPerUnit(), itemDto.getPriceSalesPerUnit());
+                itemDto.getQuantity(), convertingValues.convertDoubleToLongForDTOtoEntity(itemDto.getPriceListPerUnit()),
+                convertingValues.convertDoubleToLongForDTOtoEntity(itemDto.getPriceSalesPerUnit()));
     }
 }

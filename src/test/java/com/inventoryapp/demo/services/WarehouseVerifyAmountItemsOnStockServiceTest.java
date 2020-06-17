@@ -22,9 +22,13 @@ public class WarehouseVerifyAmountItemsOnStockServiceTest {
     @Autowired
     private WarehouseRepository warehouseRepository;
 
+    @Autowired
+    private ConvertingValues convertingValues;
+
     List<WarehouseStockItem> warehouseStockItemsEntities = new ArrayList<>();
+
     @Before
-    public void onInit(){
+    public void onInit() {
         WarehouseStockItem warehouseStockItem1 = new WarehouseStockItem();
         warehouseStockItem1.setId(1L);
         warehouseStockItem1.setCategory("Category1");
@@ -62,7 +66,7 @@ public class WarehouseVerifyAmountItemsOnStockServiceTest {
     }
 
     @Test
-    public void verifyAmountItemsOnStockPositiveTest(){
+    public void verifyAmountItemsOnStockPositiveTest() {
         // 0. Persist data to repository
         warehouseRepository.saveAll(warehouseStockItemsEntities);
 
@@ -80,7 +84,7 @@ public class WarehouseVerifyAmountItemsOnStockServiceTest {
         WarehouseStockItem amountVerificationItem
                 = this.warehouseRepository.findItemByCategoryAndPricePerUnit(
                 verifyAmountItemsOnStockDTO.getCategory(),
-                verifyAmountItemsOnStockDTO.getPriceListPerUnit()
+                convertingValues.convertDoubleToLongForDTOtoEntity(verifyAmountItemsOnStockDTO.getPriceListPerUnit())
         );
 
         // 2. Check if the quantity is correct
@@ -91,7 +95,7 @@ public class WarehouseVerifyAmountItemsOnStockServiceTest {
             verifyAmountItemsOnStockDTO.setQuantity(0);
         }
 
-        Assert.assertEquals(verifyAmountItemsOnStockDTO.getCategory(), warehouseStockItemRandom.getCategory() );
-        Assert.assertEquals(verifyAmountItemsOnStockDTO.getQuantity(), warehouseStockItemRandom.getQuantity() );
+        Assert.assertEquals(verifyAmountItemsOnStockDTO.getCategory(), warehouseStockItemRandom.getCategory());
+        Assert.assertEquals(verifyAmountItemsOnStockDTO.getQuantity(), warehouseStockItemRandom.getQuantity());
     }
 }

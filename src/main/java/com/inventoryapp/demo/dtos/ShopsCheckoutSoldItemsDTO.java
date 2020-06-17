@@ -9,10 +9,10 @@ public class ShopsCheckoutSoldItemsDTO {
     private Long position;
     private String category;
     private Long quantity;
-    private Long priceListPerUnit;
-    private Long priceSalesPerUnit;
-    private Long revenuePerUnit;
-    private int discountPercent;
+    private Double priceListPerUnit;
+    private Double priceSalesPerUnit;
+    private Double revenuePerUnit;
+    private Double discountPercent;
     private String shop;
     private LocalDateTime deliverySending;
     private LocalDateTime itemLastSold;
