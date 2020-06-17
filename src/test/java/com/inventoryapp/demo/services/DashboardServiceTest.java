@@ -115,7 +115,7 @@ public class DashboardServiceTest {
         DateRangeDTO dateRangeDTO = this.getDateRangeDTO(start, end);
         Mockito.when(dashboardRepositoryShop.findByItemLastSoldDateMin(start, end)).thenReturn(shopsAllSoldItemsListTest);
          List<BarDataDTO> barDataDTOList1 = dashboardService.getTurnoverByDate(dateRangeDTO);
-         System.out.println(barDataDTOList1.size());
+
          Assert.assertEquals(barDataDTOList1.size(), 1, 0);
     }
 
@@ -133,7 +133,7 @@ public class DashboardServiceTest {
         // execute
 
          List<BarDataDTO> barDataDTOList1 = dashboardService.getTurnoverByShop(dateRangeDTO);
-         System.out.println(barDataDTOList1.size());
+
          Assert.assertEquals(barDataDTOList1.size(), 5, 0);
     }
 
@@ -150,8 +150,6 @@ public class DashboardServiceTest {
 
         // execute
 
-        System.out.println(dateRangeDTO.getStartDate());
-        System.out.println(dateRangeDTO.getEndDate());
         MonthToDateReportingDTO monthToDateReportingDTO = dashboardService.getAggregatedData(dateRangeDTO);
         Assert.assertEquals(monthToDateReportingDTO.getSalesTo(), 226.5, 0);
     }

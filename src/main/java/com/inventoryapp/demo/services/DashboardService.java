@@ -228,7 +228,6 @@ public class DashboardService {
     public List<BasicReportingDTO> extractDataByDate(LocalDateTime start, LocalDateTime end) {
 
         List <ShopsAllSoldItems> soldItemsList = this.dashboardRepositoryShop.findByItemLastSoldDateMin(start, end);
-        System.out.println("ping");
         return soldItemsList.stream().map(x -> this.mapShopsAllSoldToBasicReporting(x))
                 .collect(Collectors.toList());
 
@@ -242,8 +241,7 @@ public class DashboardService {
      */
 
     public Long getPurchasingPrice(BasicReportingDTO basicReportingDTO){
-        // System.out.println(basicReportingDTO.getCategory() + " " + basicReportingDTO.getListPrice()); // Debugging
-        List<WarehouseSupplierItem> warehouseSupplierItems = dashboardRepositoryWarehouse
+       List<WarehouseSupplierItem> warehouseSupplierItems = dashboardRepositoryWarehouse
          .findByCategoryAndAndPriceListPerUnit(basicReportingDTO.getCategory(),
                  basicReportingDTO.getListPrice());
         OptionalDouble purchPrOptional = warehouseSupplierItems.stream().mapToLong(x -> x.getPriceSupplierPerUnit()).average();
