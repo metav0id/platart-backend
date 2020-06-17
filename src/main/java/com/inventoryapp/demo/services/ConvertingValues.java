@@ -15,6 +15,7 @@ public class ConvertingValues {
     }
 
     public double convertLongToDoubleForEntityToDTO(long input){
-        return input/100;
+        double result = ((double)input) / 100;
+        return result;
     }
 }

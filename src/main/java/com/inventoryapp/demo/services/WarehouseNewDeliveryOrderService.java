@@ -33,6 +33,7 @@ public class WarehouseNewDeliveryOrderService {
         this.warehouseShopDeliveryOrdersSendRepository = warehouseShopDeliveryOrdersSendRepository;
         this.warehouseNewDeliveryOrderRepository = newDeliveryOrderRepository;
         this.warehouseRepository = warehouseRepository;
+        this.convertingValues = convertingValues;
     }
 
     /**
