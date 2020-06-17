@@ -8,8 +8,8 @@ public class ShopSaveToStockDTO {
     private String shop;
     private String category;
     private long quantity;
-    private long priceSalesPerUnit;
-    private long priceListPerUnit;
+    private Double priceSalesPerUnit;
+    private Double priceListPerUnit;
     private long originalQuantity;
     private String timestamp;
     private String comment;
@@ -18,8 +18,8 @@ public class ShopSaveToStockDTO {
                               String shop,
                               String category,
                               long quantity,
-                              long priceListPerUnit,
-                              long priceSalesPerUnit,
+                              Double priceListPerUnit,
+                              Double priceSalesPerUnit,
                               long originalQuantity,
                               String timestamp,
                               String comment) {

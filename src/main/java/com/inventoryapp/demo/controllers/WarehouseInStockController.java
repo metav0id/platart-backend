@@ -28,7 +28,6 @@ public class WarehouseInStockController {
      */
     @PostMapping("/getallitems")
     public List<WarehouseGetAllItemsDTO> getAllItems() {
-
         List<WarehouseGetAllItemsDTO> warehouseItemList = warehouseInStockService.getAllStockItems();
         System.out.println("List of stock loaded.");
         return warehouseItemList;

@@ -22,6 +22,9 @@ public class ManagerWarehouseCheckinListingServiceTest {
     @Autowired
     private WarehouseSupplierItemRepository warehouseSupplierItemRepository;
 
+    @Autowired
+    private ConvertingValues convertingValues;
+
     List<WarehouseSupplierItem> allItemsInput = new ArrayList<>();
     @Before
     public void setUp(){
@@ -63,8 +66,8 @@ public class ManagerWarehouseCheckinListingServiceTest {
                     new ManagerWarehouseCheckinListingDTO(
                             "category",
                             500L,
-                            500L,
-                            500L,
+                            convertingValues.convertLongToDoubleForEntityToDTO(500),
+                            convertingValues.convertLongToDoubleForEntityToDTO(500),
                             "SupplierName",
                             LocalDateTime.now()
                     );
@@ -89,8 +92,8 @@ public class ManagerWarehouseCheckinListingServiceTest {
                     new ManagerWarehouseCheckinListingDTO(
                             item.getCategory(),
                             item.getQuantity(),
-                            item.getPriceListPerUnit(),
-                            item.getPriceSupplierPerUnit(),
+                            convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceListPerUnit()),
+                            convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceSupplierPerUnit()),
                             item.getSupplierName(),
                             item.getCreateDateTime()
                     );

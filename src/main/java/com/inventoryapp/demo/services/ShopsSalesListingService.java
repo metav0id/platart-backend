@@ -16,6 +16,14 @@ public class ShopsSalesListingService {
     @Autowired
     private ShopsAllSoldItemsRepository shopsAllSoldItemsRepository;
 
+    @Autowired
+    private ConvertingValues convertingValues;
+
+    public ManagerSalesListingService() {
+    }
+
+    public List<ShopsAllSoldItemsDTO> getSoldItemsListByDateRange(LocalDateTime startDate, LocalDateTime endDate){
+        System.out.println("start: "+ startDate + " = end: "+endDate);
     public List<ShopsAllSoldItemsDTO> getSoldItemsListByShopAndDateRange(String selectedShop, LocalDateTime startDate, LocalDateTime endDate){
 
         List<ShopsAllSoldItems> allItems = this.shopsAllSoldItemsRepository.getItemsByShopAndByDate(selectedShop, startDate, endDate);
@@ -32,10 +40,10 @@ public class ShopsSalesListingService {
             itemDTO.setId(item.getId());
             itemDTO.setCategory(item.getCategory());
             itemDTO.setQuantity(item.getQuantity());
-            itemDTO.setPriceListPerUnit(item.getPriceListPerUnit());
-            itemDTO.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
-            itemDTO.setRevenuePerUnit(item.getRevenuePerUnit());
-            itemDTO.setDiscountPercent(item.getDiscountPercent());
+            itemDTO.setPriceListPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceListPerUnit()));
+            itemDTO.setPriceSalesPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceSalesPerUnit()));
+            itemDTO.setRevenuePerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getRevenuePerUnit()));
+            itemDTO.setDiscountPercent(convertingValues.convertLongToDoubleForEntityToDTO(item.getDiscountPercent()));
             itemDTO.setShop(item.getShop());
             itemDTO.setDeliverySending(item.getDeliverySending());
             itemDTO.setItemLastSold(item.getItemLastSold());
@@ -46,5 +54,4 @@ public class ShopsSalesListingService {
 
         return shopsAllSoldItemsDTOList;
     }
-
 }

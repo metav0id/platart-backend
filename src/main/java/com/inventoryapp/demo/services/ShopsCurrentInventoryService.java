@@ -6,7 +6,6 @@ import com.inventoryapp.demo.entities.ShopsStockItem;
 import com.inventoryapp.demo.repositories.ShopsStockItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +15,9 @@ public class ShopsCurrentInventoryService {
 
     @Autowired
     private ShopsStockItemRepository shopsStockItemRepository;
+
+    @Autowired
+    private ConvertingValues convertingValues;
 
     public List<ShopsStockItemDto> getAllItemsSpecificShop(String specificShop){
 
@@ -38,8 +40,8 @@ public class ShopsCurrentInventoryService {
             newInventoryDTO.setShop(item.getShop());
             newInventoryDTO.setCategory(item.getCategory());
             newInventoryDTO.setQuantity(item.getQuantity());
-            newInventoryDTO.setPriceListPerUnit(item.getPriceListPerUnit());
-            newInventoryDTO.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
+            newInventoryDTO.setPriceListPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceListPerUnit()));
+            newInventoryDTO.setPriceSalesPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceSalesPerUnit()));
             shopsCurrentInventoryDTOList.add(newInventoryDTO);
         }
 
@@ -51,8 +53,8 @@ public class ShopsCurrentInventoryService {
         Long amountItems = this.shopsStockItemRepository.findAmountItemsByAllInfo(
                 shopsCheckoutSoldItemsDTO.getShop(),
                 shopsCheckoutSoldItemsDTO.getCategory(),
-                shopsCheckoutSoldItemsDTO.getPriceListPerUnit(),
-                shopsCheckoutSoldItemsDTO.getPriceSalesPerUnit()
+                convertingValues.convertDoubleToLongForDTOtoEntity(shopsCheckoutSoldItemsDTO.getPriceListPerUnit()),
+                convertingValues.convertDoubleToLongForDTOtoEntity(shopsCheckoutSoldItemsDTO.getPriceSalesPerUnit())
                 );
 
         shopsCheckoutSoldItemsDTO.setQuantity(amountItems);

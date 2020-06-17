@@ -93,11 +93,11 @@ public class ShopsCheckoutSoldItemsControllerTest {
         itemDTO1.setShop("shop1");
         itemDTO1.setCategory("anillo");
         itemDTO1.setQuantity(100L);
-        itemDTO1.setPriceSalesPerUnit(100L);
-        itemDTO1.setPriceListPerUnit(95L);
-        itemDTO1.setDiscountPercent(5);
+        itemDTO1.setPriceSalesPerUnit((double)100);
+        itemDTO1.setPriceListPerUnit((double)95);
+        itemDTO1.setDiscountPercent((double)5);
         itemDTO1.setDeliverySending(LocalDateTime.now());
-        itemDTO1.setRevenuePerUnit(95L);
+        itemDTO1.setRevenuePerUnit((double)95);
         itemDTO1.setItemLastSold(LocalDateTime.now());
         itemDTO1.setComment("NoComment");
         shopsCheckoutSoldItemsDTOSList.add(itemDTO1);
@@ -107,11 +107,11 @@ public class ShopsCheckoutSoldItemsControllerTest {
         itemDTO2.setShop("shop1");
         itemDTO2.setCategory("anillo");
         itemDTO2.setQuantity(100L);
-        itemDTO2.setPriceSalesPerUnit(100L);
-        itemDTO2.setPriceListPerUnit(95L);
-        itemDTO2.setDiscountPercent(5);
+        itemDTO2.setPriceSalesPerUnit((double)100);
+        itemDTO2.setPriceListPerUnit((double)95);
+        itemDTO2.setDiscountPercent((double)5);
         itemDTO2.setDeliverySending(LocalDateTime.now());
-        itemDTO2.setRevenuePerUnit(95L);
+        itemDTO2.setRevenuePerUnit((double)95);
         itemDTO2.setItemLastSold(LocalDateTime.now());
         itemDTO2.setComment("NoComment");
         shopsCheckoutSoldItemsDTOSList.add(itemDTO2);
@@ -121,11 +121,11 @@ public class ShopsCheckoutSoldItemsControllerTest {
         itemDTO3.setShop("shop1");
         itemDTO3.setCategory("anillo");
         itemDTO3.setQuantity(100L);
-        itemDTO3.setPriceSalesPerUnit(100L);
-        itemDTO3.setPriceListPerUnit(95L);
-        itemDTO3.setDiscountPercent(5);
+        itemDTO3.setPriceSalesPerUnit((double)100);
+        itemDTO3.setPriceListPerUnit((double)95);
+        itemDTO3.setDiscountPercent((double)5);
         itemDTO3.setDeliverySending(LocalDateTime.now());
-        itemDTO3.setRevenuePerUnit(95L);
+        itemDTO3.setRevenuePerUnit((double)95);
         itemDTO3.setItemLastSold(LocalDateTime.now());
         itemDTO3.setComment("NoComment");
         shopsCheckoutSoldItemsDTOSList.add(itemDTO3);
@@ -148,8 +148,8 @@ public class ShopsCheckoutSoldItemsControllerTest {
             String savedItemCategory = shopsCheckoutSoldItemsEntitiesList.get(i).getCategory();
             Assert.assertEquals(savedItemCategory, fetchedItemCategory);
 
-            Long fetchedItemPriceList = shopsCheckoutSoldItemsDTOList.get(i).getPriceListPerUnit();
-            Long savedItemPriceList = shopsCheckoutSoldItemsEntitiesList.get(i).getPriceListPerUnit();
+            Double fetchedItemPriceList = shopsCheckoutSoldItemsDTOList.get(i).getPriceListPerUnit();
+            Double savedItemPriceList = (double)shopsCheckoutSoldItemsEntitiesList.get(i).getPriceListPerUnit();
             Assert.assertEquals(savedItemPriceList, fetchedItemPriceList);
         }
     }
@@ -180,11 +180,11 @@ public class ShopsCheckoutSoldItemsControllerTest {
         newItemDTO1.setShop("shop1");
         newItemDTO1.setCategory("anillo");
         newItemDTO1.setQuantity(100L);
-        newItemDTO1.setPriceSalesPerUnit(100L);
-        newItemDTO1.setPriceListPerUnit(95L);
-        newItemDTO1.setDiscountPercent(5);
+        newItemDTO1.setPriceSalesPerUnit((double)100);
+        newItemDTO1.setPriceListPerUnit((double)95);
+        newItemDTO1.setDiscountPercent((double)5);
         newItemDTO1.setDeliverySending(LocalDateTime.now());
-        newItemDTO1.setRevenuePerUnit(95L);
+        newItemDTO1.setRevenuePerUnit((double)95);
         newItemDTO1.setItemLastSold(LocalDateTime.now());
         newItemDTO1.setComment("NoComment");
 

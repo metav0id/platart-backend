@@ -32,15 +32,19 @@ public class ShopsCheckoutSoldItemsServiceTest {
     @Autowired
     private ShopsStockItemRepository shopsStockItemRepository;
 
+    @Autowired
+    private ConvertingValues convertingValues;
+
     public ShopsCheckoutSoldItemsServiceTest() {
     }
 
     // define necessary data
-    List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsList =  new ArrayList<>();
-    List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList =  new ArrayList<>();
+    List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsList = new ArrayList<>();
+    List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList = new ArrayList<>();
     List<ShopsStockItem> shopsStockItemList = new ArrayList<>();
+
     @Before
-    public void setUp(){
+    public void setUp() {
         // 1. Add Items to shopsCheckoutSoldItemsList
         ShopsCheckoutSoldItems item1 = new ShopsCheckoutSoldItems();
         item1.setId(1L);
@@ -69,7 +73,7 @@ public class ShopsCheckoutSoldItemsServiceTest {
         shopsCheckoutSoldItemsList.add(item2);
 
         // 2. Add Items to shopsStockItemList
-        ShopsStockItem itemStock1 =  new ShopsStockItem();
+        ShopsStockItem itemStock1 = new ShopsStockItem();
         itemStock1.setId(1L);
         itemStock1.setShop("shop1");
         itemStock1.setCategory("anillo");
@@ -78,7 +82,7 @@ public class ShopsCheckoutSoldItemsServiceTest {
         itemStock1.setPriceSalesPerUnit(95L);
         shopsStockItemList.add(itemStock1);
 
-        ShopsStockItem itemStock2 =  new ShopsStockItem();
+        ShopsStockItem itemStock2 = new ShopsStockItem();
         itemStock2.setId(2L);
         itemStock2.setShop("shop1");
         itemStock2.setCategory("pulsera");
@@ -92,10 +96,10 @@ public class ShopsCheckoutSoldItemsServiceTest {
         itemDTO1.setPosition(1L);
         itemDTO1.setCategory("anillo");
         itemDTO1.setQuantity(10L);
-        itemDTO1.setPriceListPerUnit(100L);
-        itemDTO1.setPriceSalesPerUnit(95L);
-        itemDTO1.setRevenuePerUnit(95L);
-        itemDTO1.setDiscountPercent(5);
+        itemDTO1.setPriceListPerUnit(100.0);
+        itemDTO1.setPriceSalesPerUnit(95.0);
+        itemDTO1.setRevenuePerUnit(95.0);
+        itemDTO1.setDiscountPercent(5.0);
         itemDTO1.setShop("shop1");
         itemDTO1.setComment("Comment1");
         shopsCheckoutSoldItemsDTOList.add(itemDTO1);
@@ -104,10 +108,10 @@ public class ShopsCheckoutSoldItemsServiceTest {
         itemDTO2.setPosition(2L);
         itemDTO2.setCategory("pulsera");
         itemDTO2.setQuantity(10L);
-        itemDTO2.setPriceListPerUnit(100L);
-        itemDTO2.setPriceSalesPerUnit(95L);
-        itemDTO2.setRevenuePerUnit(95L);
-        itemDTO2.setDiscountPercent(5);
+        itemDTO2.setPriceListPerUnit(100.0);
+        itemDTO2.setPriceSalesPerUnit(95.0);
+        itemDTO2.setRevenuePerUnit(95.0);
+        itemDTO2.setDiscountPercent(5.0);
         itemDTO2.setShop("shop1");
         itemDTO2.setComment("Comment1");
         shopsCheckoutSoldItemsDTOList.add(itemDTO2);
@@ -115,7 +119,7 @@ public class ShopsCheckoutSoldItemsServiceTest {
     }
 
     @Test
-    public void getAllSoldItemsListPositiveTest(){
+    public void getAllSoldItemsListPositiveTest() {
         // 1. Step: prepare data
         shopsCheckoutSoldItemsRepository.saveAll(shopsCheckoutSoldItemsList);
         Assert.assertEquals(2, shopsCheckoutSoldItemsRepository.findAll().size());
@@ -124,7 +128,7 @@ public class ShopsCheckoutSoldItemsServiceTest {
         List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsListFetched = shopsCheckoutSoldItemsRepository.findAll();
 
         // 3. Step: Assert Test works correctly
-        for(int i=0; i<shopsCheckoutSoldItemsListFetched.size(); i++){
+        for (int i = 0; i < shopsCheckoutSoldItemsListFetched.size(); i++) {
             String savedItemCategory = shopsCheckoutSoldItemsList.get(i).getCategory();
             String fetchedItemCategory = shopsCheckoutSoldItemsListFetched.get(i).getCategory();
             Long savedItemQuantity = shopsCheckoutSoldItemsList.get(i).getQuantity();
@@ -142,7 +146,7 @@ public class ShopsCheckoutSoldItemsServiceTest {
     }
 
     @Test
-    public void deleteCurrentSoldItemsListPositiveTest(){
+    public void deleteCurrentSoldItemsListPositiveTest() {
         // 1. Step: prepare data
         shopsCheckoutSoldItemsRepository.saveAll(shopsCheckoutSoldItemsList);
         Assert.assertEquals(2, shopsCheckoutSoldItemsRepository.findAll().size());
@@ -156,7 +160,7 @@ public class ShopsCheckoutSoldItemsServiceTest {
     }
 
     @Test
-    public void sendAllSoldItemsListPositiveTest(){
+    public void sendAllSoldItemsListPositiveTest() {
         // 1. Step: prepare data
 
         shopsCheckoutSoldItemsRepository.saveAll(shopsCheckoutSoldItemsList);
@@ -167,19 +171,19 @@ public class ShopsCheckoutSoldItemsServiceTest {
         // 2. Step: Execute method-logic
 
         // 2.1: Boolean for verification-Logic,
-        boolean allSoldItemsAvailable = true ;
+        boolean allSoldItemsAvailable = true;
 
         // 2.2: aggregate items by category
-        List<ShopsCheckoutSoldItemsDTO> soldItemsAggregatedDTOList =  new ArrayList<>();
-        for(ShopsCheckoutSoldItemsDTO itemDTO: shopsCheckoutSoldItemsDTOList){
+        List<ShopsCheckoutSoldItemsDTO> soldItemsAggregatedDTOList = new ArrayList<>();
+        for (ShopsCheckoutSoldItemsDTO itemDTO : shopsCheckoutSoldItemsDTOList) {
 
             // 2.2.1 aggregate quantity with streams
             soldItemsAggregatedDTOList.stream()
                     .filter(
                             o ->
                                     itemDTO.getCategory().equals(o.getCategory()) &&
-                                            itemDTO.getPriceListPerUnit()==o.getPriceListPerUnit() &&
-                                            itemDTO.getPriceSalesPerUnit()==o.getPriceSalesPerUnit() )
+                                            itemDTO.getPriceListPerUnit() == o.getPriceListPerUnit() &&
+                                            itemDTO.getPriceSalesPerUnit() == o.getPriceSalesPerUnit())
                     .forEach(
                             o -> o.setQuantity(o.getQuantity() + itemDTO.getQuantity())
                     );
@@ -195,7 +199,7 @@ public class ShopsCheckoutSoldItemsServiceTest {
                     );
 
             // 2.2.3 add new item category and list-price, if not already existant
-            if(itemIsNotFound){
+            if (itemIsNotFound) {
                 ShopsCheckoutSoldItemsDTO newItemToAggregatedList = new ShopsCheckoutSoldItemsDTO();
                 newItemToAggregatedList.setPosition(itemDTO.getPosition());
                 newItemToAggregatedList.setCategory(itemDTO.getCategory());
@@ -219,15 +223,18 @@ public class ShopsCheckoutSoldItemsServiceTest {
         String shopRelevant = shopsCheckoutSoldItemsDTOList.get(0).getShop();
         List<ShopsStockItem> shopsStockItemList = this.shopsStockItemRepository.findAllItemsByShop(shopRelevant);
 
-        for(ShopsCheckoutSoldItemsDTO itemSold: soldItemsAggregatedDTOList){
-            Long amountItemsShopWarehouse = shopsStockItemRepository.findAmountItemsByAllInfo(itemSold.getShop(), itemSold.getCategory(), itemSold.getPriceListPerUnit(), itemSold.getPriceSalesPerUnit());
+        for (ShopsCheckoutSoldItemsDTO itemSold : soldItemsAggregatedDTOList) {
+            Long amountItemsShopWarehouse = shopsStockItemRepository.
+                    findAmountItemsByAllInfo(itemSold.getShop(), itemSold.getCategory(),
+                            convertingValues.convertDoubleToLongForDTOtoEntity(itemSold.getPriceListPerUnit()),
+                            (itemSold.getPriceSalesPerUnit()).longValue());
 
-            System.out.println("amount wanted: "+ itemSold.getQuantity() + " amount on warehouse: " + amountItemsShopWarehouse);
-            if(amountItemsShopWarehouse != null && (amountItemsShopWarehouse -itemSold.getQuantity() >= 0 )){
+            System.out.println("amount wanted: " + itemSold.getQuantity() + " amount on warehouse: " + amountItemsShopWarehouse);
+            if (amountItemsShopWarehouse != null && (amountItemsShopWarehouse - itemSold.getQuantity() >= 0)) {
                 System.out.println("transaction possible!");
-                Assert.assertTrue(amountItemsShopWarehouse -itemSold.getQuantity() >= 0 );
+                Assert.assertTrue(amountItemsShopWarehouse - itemSold.getQuantity() >= 0);
 
-            } else if (amountItemsShopWarehouse == null || amountItemsShopWarehouse <= 0 ) {
+            } else if (amountItemsShopWarehouse == null || amountItemsShopWarehouse <= 0) {
                 System.out.println("transaction NOT possible!");
                 allSoldItemsAvailable = false;
             } else {
@@ -239,37 +246,37 @@ public class ShopsCheckoutSoldItemsServiceTest {
 
         // 3.2 Persist data, if List available on database
         try {
-            if(allSoldItemsAvailable){
+            if (allSoldItemsAvailable) {
                 List<ShopsAllSoldItems> shopsAllSoldItemsList = mapCheckoutDTOListToSoldItemsList(shopsCheckoutSoldItemsDTOList);
                 this.shopsAllSoldItemsRepository.saveAll(shopsAllSoldItemsList);
                 this.shopsCheckoutSoldItemsRepository.deleteAll();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             System.err.println("ShopsCheckoutSoldItemsService -> sendAllSoldItemsList -> persistance error.");
         }
 
 
-        if(allSoldItemsAvailable){
+        if (allSoldItemsAvailable) {
             List<ShopsAllSoldItems> shopsAllSoldItemsListFetched = shopsAllSoldItemsRepository.findAll();
-            Assert.assertTrue(shopsAllSoldItemsListFetched.size()>0);
+            Assert.assertTrue(shopsAllSoldItemsListFetched.size() > 0);
         }
 
     }
 
     // Mapping functions
-    public List<ShopsAllSoldItems> mapCheckoutDTOListToSoldItemsList(List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList ){
+    public List<ShopsAllSoldItems> mapCheckoutDTOListToSoldItemsList(List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
         List<ShopsAllSoldItems> shopsAllSoldItemsList = new ArrayList<>();
 
-        for(ShopsCheckoutSoldItemsDTO itemDTO:shopsCheckoutSoldItemsDTOList){
+        for (ShopsCheckoutSoldItemsDTO itemDTO : shopsCheckoutSoldItemsDTOList) {
             ShopsAllSoldItems newSoldItem = new ShopsAllSoldItems();
 
             newSoldItem.setId(itemDTO.getPosition());
             newSoldItem.setCategory(itemDTO.getCategory());
             newSoldItem.setQuantity(itemDTO.getQuantity());
-            newSoldItem.setPriceListPerUnit(itemDTO.getPriceListPerUnit());
-            newSoldItem.setPriceSalesPerUnit(itemDTO.getPriceSalesPerUnit());
-            newSoldItem.setRevenuePerUnit(itemDTO.getRevenuePerUnit());
-            newSoldItem.setDiscountPercent(itemDTO.getDiscountPercent());
+            newSoldItem.setPriceListPerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(itemDTO.getPriceListPerUnit()));
+            newSoldItem.setPriceSalesPerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(itemDTO.getPriceSalesPerUnit()));
+            newSoldItem.setRevenuePerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(itemDTO.getRevenuePerUnit()));
+            newSoldItem.setDiscountPercent(convertingValues.convertDoubleToIntForDTOtoEntity(itemDTO.getDiscountPercent()));
             newSoldItem.setShop(itemDTO.getShop());
             newSoldItem.setDeliverySending(itemDTO.getDeliverySending());
             newSoldItem.setItemLastSold(itemDTO.getItemLastSold());

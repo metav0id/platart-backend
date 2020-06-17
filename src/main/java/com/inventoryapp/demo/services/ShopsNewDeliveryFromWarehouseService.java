@@ -5,7 +5,6 @@ import com.inventoryapp.demo.dtos.ShopSaveToStockDTO;
 import com.inventoryapp.demo.entities.ShopsStockItem;
 import com.inventoryapp.demo.entities.WarehouseSendDeliveryOrderItem;
 import com.inventoryapp.demo.repositories.ShopsNewDeliveryFromWarehouseRepository;
-import com.inventoryapp.demo.repositories.WarehouseNewDeliveryOrderRepository;
 import com.inventoryapp.demo.repositories.WarehouseShopDeliveryOrdersSendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +22,13 @@ public class ShopsNewDeliveryFromWarehouseService {
     @Autowired
     ShopsNewDeliveryFromWarehouseRepository shopsNewDeliveryFromWarehouseRepository;
 
+    @Autowired
+    ConvertingValues convertingValues;
+
     public List<ShopDeliveryItemFromWarehouseDTO> getAllItemsNotInShopInventory(String shop) {
         List<WarehouseSendDeliveryOrderItem> listEntity = warehouseShopDeliveryOrdersSendRepository.
                 findAllItemsNotAddedToShopInventory(shop);
         List<ShopDeliveryItemFromWarehouseDTO> listDTO = convertEntityToDTO(listEntity);
-        System.out.println("Shop value: + " + shop + " and list items " + listDTO);
         return convertEntityToDTO(listEntity);
     }
 
@@ -35,9 +36,13 @@ public class ShopsNewDeliveryFromWarehouseService {
         List<ShopDeliveryItemFromWarehouseDTO> listDTO = new ArrayList<>();
         listEntity.stream().forEach(item -> {
             ShopDeliveryItemFromWarehouseDTO itemDTO = new ShopDeliveryItemFromWarehouseDTO(
-                    item.getId(), item.getCategory(), item.getPriceListPerUnit(),
-                    item.getPriceSalesPerUnit(), item.getQuantity(),
-                    item.getDeliverySending(), item.getComment());
+                    item.getId(),
+                    item.getCategory(),
+                    convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceListPerUnit()),
+                    convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceSalesPerUnit()),
+                    item.getQuantity(),
+                    item.getDeliverySending(),
+                    item.getComment());
             listDTO.add(itemDTO);
         });
         return listDTO;
@@ -51,11 +56,7 @@ public class ShopsNewDeliveryFromWarehouseService {
 
     public boolean saveList(List<ShopSaveToStockDTO> listDTO){
         Boolean successfullyUpdatedInventory = persistToStock(listDTO);
-        System.out.println("Updated shop inventory: " + successfullyUpdatedInventory);
-
         Boolean successfullyUpdatedDeliveryTable = updateWarehouseSendDeliveryTable(listDTO);
-        System.out.println("Updated delivery table: " + successfullyUpdatedDeliveryTable);
-
         return successfullyUpdatedDeliveryTable && successfullyUpdatedInventory;
     }
 
@@ -67,7 +68,6 @@ public class ShopsNewDeliveryFromWarehouseService {
     private boolean updateWarehouseSendDeliveryTable(List<ShopSaveToStockDTO> listDTO){
         System.out.println("Service: Updating entries status, so that they are arrived in stock...");
         for(ShopSaveToStockDTO itemDTO : listDTO){
-            System.out.println("Print Entry in Database by id");
             Optional<WarehouseSendDeliveryOrderItem> item = warehouseShopDeliveryOrdersSendRepository.
                     findById(itemDTO.getIdentifierOnDeliveryList());
             System.out.println("Checked for item in database...");
@@ -75,7 +75,6 @@ public class ShopsNewDeliveryFromWarehouseService {
                 WarehouseSendDeliveryOrderItem itemEntity = item.get();
 //                System.out.println(itemEntity);
                 itemEntity.getShopsCheckedInProductsFromWarehouse().setIsArrivedAtShop(true);
-                //TODO implement UTC localdatetime persistence of arriving at shop
                 itemEntity.getShopsCheckedInProductsFromWarehouse().setIsAddedToStockOfShop(true);
                 itemEntity.getShopsCheckedInProductsFromWarehouse().setTimestampIsAddedToStockOfShop(LocalDateTime.now());
                 itemEntity.getShopsCheckedInProductsFromWarehouse().setQuantityCheckedIn(itemDTO.getQuantity());
@@ -110,6 +109,7 @@ public class ShopsNewDeliveryFromWarehouseService {
 
     private ShopsStockItem convertDTOtoEntity(ShopSaveToStockDTO itemDto) {
         return new ShopsStockItem(itemDto.getShop(), itemDto.getCategory(),
-                itemDto.getQuantity(), itemDto.getPriceListPerUnit(), itemDto.getPriceSalesPerUnit());
+                itemDto.getQuantity(), convertingValues.convertDoubleToLongForDTOtoEntity(itemDto.getPriceListPerUnit()),
+                convertingValues.convertDoubleToLongForDTOtoEntity(itemDto.getPriceSalesPerUnit()));
     }
 }

@@ -30,12 +30,6 @@ public class ShopsNewDeliveryFromWarehouseControllerControllerTest {
 
     private List<WarehouseSendDeliveryOrderItem> listSendItems = new ArrayList<>();
 
-//    @Autowired
-//    private ShopsNewDeliveryFromWarehouseController controller;
-//
-//    @MockBean
-//    private ShopsNewDeliveryFromWarehouseService service;
-
     @Before
     public void setUp() {
         WarehouseSendDeliveryOrderItem item1 = new WarehouseSendDeliveryOrderItem();
@@ -74,12 +68,4 @@ public class ShopsNewDeliveryFromWarehouseControllerControllerTest {
         Assert.assertEquals(2, shopsNewDeliveryFromWarehouseService.
                 getAllItemsNotInShopInventory("Shop1").size());
     }
-
-//    @Test
-//    public void saveNewDelivery(){
-//        List<ShopSaveToStockDTO> listDTO = new ArrayList<>();
-//
-//        Mockito.when(service.saveList(listDTO)).thenReturn(true);
-//        Assert.assertTrue(controller.saveNewDeliveryFromWarehouseList(listDTO));
-//    }
 }

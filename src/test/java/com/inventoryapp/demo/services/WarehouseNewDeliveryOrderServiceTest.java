@@ -31,6 +31,9 @@ public class WarehouseNewDeliveryOrderServiceTest {
     @Autowired
     private WarehouseShopDeliveryOrdersSendRepository warehouseShopDeliveryOrdersSendRepository;
 
+    @Autowired
+    private ConvertingValues convertingValues;
+
     List<WarehouseNewDeliveryOrderItem> deliveryOrderItemsEntities = new ArrayList<>();
     List<WarehouseNewDeliveryOrderItemDTO> deliveryOrderItemDTOS = new ArrayList<>();
     @Before
@@ -59,9 +62,9 @@ public class WarehouseNewDeliveryOrderServiceTest {
         newDeliveryItemDTO1.setId(1L);
         newDeliveryItemDTO1.setCategory("Category 1");
         newDeliveryItemDTO1.setQuantity(123);
-        newDeliveryItemDTO1.setPriceSalesPerUnit(20L);
-        newDeliveryItemDTO1.setDiscountPercent(25);
-        newDeliveryItemDTO1.setPriceListPerUnit(15L);
+        newDeliveryItemDTO1.setPriceSalesPerUnit(20.0);
+        newDeliveryItemDTO1.setDiscountPercent(25.0);
+        newDeliveryItemDTO1.setPriceListPerUnit(15.0);
         newDeliveryItemDTO1.setComment("Alan ist genial!");
         deliveryOrderItemDTOS.add(newDeliveryItemDTO1);
 
@@ -69,9 +72,9 @@ public class WarehouseNewDeliveryOrderServiceTest {
         newDeliveryItemDTO2.setId(2L);
         newDeliveryItemDTO2.setCategory("Category 2");
         newDeliveryItemDTO2.setQuantity(123);
-        newDeliveryItemDTO2.setPriceSalesPerUnit(20L);
-        newDeliveryItemDTO2.setDiscountPercent(25);
-        newDeliveryItemDTO2.setPriceListPerUnit(15L);
+        newDeliveryItemDTO2.setPriceSalesPerUnit(20.0);
+        newDeliveryItemDTO2.setDiscountPercent(25.0);
+        newDeliveryItemDTO2.setPriceListPerUnit(15.0);
         newDeliveryItemDTO2.setComment("Hier herrscht Professoren-Aura");
         deliveryOrderItemDTOS.add(newDeliveryItemDTO2);
     }
@@ -103,9 +106,9 @@ public class WarehouseNewDeliveryOrderServiceTest {
             newDeliveryOrderItemDTO.setId(item.getId());
             newDeliveryOrderItemDTO.setCategory(item.getCategory());
             newDeliveryOrderItemDTO.setQuantity(item.getQuantity());
-            newDeliveryOrderItemDTO.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
-            newDeliveryOrderItemDTO.setDiscountPercent(item.getDiscountPercent());
-            newDeliveryOrderItemDTO.setPriceListPerUnit(item.getPriceListPerUnit());
+            newDeliveryOrderItemDTO.setPriceSalesPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceSalesPerUnit()));
+            newDeliveryOrderItemDTO.setDiscountPercent(convertingValues.convertLongToDoubleForEntityToDTO(item.getDiscountPercent()));
+            newDeliveryOrderItemDTO.setPriceListPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceListPerUnit()));
             newDeliveryOrderItemDTO.setComment("Coole Halskette");
 
             deliveryOrderItemDTOSTest.add(newDeliveryOrderItemDTO);
@@ -124,9 +127,9 @@ public class WarehouseNewDeliveryOrderServiceTest {
             newDeliveryOrderItem.setId(item.getId());
             newDeliveryOrderItem.setCategory(item.getCategory());
             newDeliveryOrderItem.setQuantity(item.getQuantity());
-            newDeliveryOrderItem.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
-            newDeliveryOrderItem.setDiscountPercent(item.getDiscountPercent());
-            newDeliveryOrderItem.setPriceListPerUnit(item.getPriceListPerUnit());
+            newDeliveryOrderItem.setPriceSalesPerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(item.getPriceSalesPerUnit()));
+            newDeliveryOrderItem.setDiscountPercent(convertingValues.convertDoubleToIntForDTOtoEntity(item.getDiscountPercent()));
+            newDeliveryOrderItem.setPriceListPerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(item.getPriceListPerUnit()));
             newDeliveryOrderItem.setComment(item.getComment());
 
             deliveryOrderItemEntityListsTest.add(newDeliveryOrderItem);
