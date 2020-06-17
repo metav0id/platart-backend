@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,19 +27,24 @@ public class DashboardControllerTest {
     @InjectMocks
     private DashboardController dashboardController;
 
-    private List<BarDataDTO> barDataDTOList = new ArrayList<>();
-    private List<DailyReportingDTO> dailyReportingDTOList = new ArrayList<>();
+    private final List<BarDataDTO> barDataDTOList = new ArrayList<>();
+    private final List<DailyReportingDTO> dailyReportingDTOList = new ArrayList<>();
     private MonthToDateReportingDTO monthToDateReportingDTO;
-
 
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
+        LocalDateTime startTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+        LocalDateTime endTime = LocalDateTime.of(LocalDate.now().minusDays(7), LocalTime.MIDNIGHT);
+        DateRangeDTO dateRangeDTO = new DateRangeDTO();
+        dateRangeDTO.setStartDate(startTime.format(DateTimeFormatter.ISO_DATE_TIME));
+        dateRangeDTO.setEndDate(endTime.format(DateTimeFormatter.ISO_DATE_TIME));
+
         for(int i=0; i<5; i++) {
             BarDataDTO barDataDTO = new BarDataDTO();
             barDataDTO.setName("Name " + i);
             barDataDTO.setValue(10.15 + i * 2);
-            barDataDTO.setDate(LocalDateTime.now().minusDays(i));
+            barDataDTO.setDate(LocalDateTime.of(LocalDate.now().minusDays(i), LocalTime.MIDNIGHT));
             barDataDTOList.add(barDataDTO);
         }
         for(int i=0;i<5;i++) {
@@ -54,56 +60,68 @@ public class DashboardControllerTest {
             dailyReportingDTO.setDate(LocalDateTime.now().minusDays(i));
             dailyReportingDTOList.add(dailyReportingDTO);
         }
+    }
 
-            MonthToDateReportingDTO monthToDateReportingDTO = new MonthToDateReportingDTO();
-            monthToDateReportingDTO.setShop("Ye olde Shoppe" );
-            monthToDateReportingDTO.setSalesNo(123L);
-            monthToDateReportingDTO.setSalesTo(123*5);
-            monthToDateReportingDTO.setSalesMg(15);
-            monthToDateReportingDTO.setSalesMgAvg(5.5);
-            monthToDateReportingDTO.setDiscountRateAvg(11.4);
-            monthToDateReportingDTO.setDate(LocalDateTime.now().minusDays(1));
+    public DateRangeDTO getDateRangeDTO (LocalDateTime start, LocalDateTime end) {
+        DateRangeDTO dateRangeDTO = new DateRangeDTO();
+        dateRangeDTO.setStartDate(start.format(DateTimeFormatter.ISO_DATE_TIME));
+        dateRangeDTO.setEndDate(end.format(DateTimeFormatter.ISO_DATE_TIME));
+        return dateRangeDTO;
     }
 
     @Test
     public void getVBarReporting(){
-        Mockito.when(dashboardService.getVbarData()).thenReturn(barDataDTOList);
+        LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+        LocalDateTime end = LocalDateTime.of(LocalDate.now().minusDays(7), LocalTime.MIDNIGHT);
+        DateRangeDTO dateRangeDTO = this.getDateRangeDTO(start, end);
 
-        List<BarDataDTO> barDataDTOList1 = this.dashboardController.getVbarData();
-        List<BarDataDTO> barDataDTOList2 = this.dashboardController.getVbarData();
+        Mockito.when(dashboardService.getTurnoverByShop(dateRangeDTO)).thenReturn(barDataDTOList);
 
-        Mockito.verify(dashboardService, Mockito.times(2)).getVbarData();
+        List<BarDataDTO> barDataDTOList1 = this.dashboardController.getTurnoverByShop(dateRangeDTO);
+        List<BarDataDTO> barDataDTOList2 = this.dashboardController.getTurnoverByShop(dateRangeDTO);
+
+        Mockito.verify(dashboardService, Mockito.times(2)).getTurnoverByShop(dateRangeDTO);
     }
 
     @Test
     public void getHBarReporting(){
-        Mockito.when(dashboardService.getHbarData()).thenReturn(barDataDTOList);
+        LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+        LocalDateTime end = LocalDateTime.of(LocalDate.now().minusDays(7), LocalTime.MIDNIGHT);
+        DateRangeDTO dateRangeDTO = this.getDateRangeDTO(start, end);
 
-        List<BarDataDTO> barDataDTOList1 = this.dashboardController.getHbarData();
-        List<BarDataDTO> barDataDTOList2 = this.dashboardController.getHbarData();
+        Mockito.when(dashboardService.getTurnoverByDate(dateRangeDTO)).thenReturn(barDataDTOList);
 
-        Mockito.verify(dashboardService, Mockito.times(2)).getHbarData();
+        List<BarDataDTO> barDataDTOList1 = this.dashboardController.getTurnoverByDate(dateRangeDTO);
+        List<BarDataDTO> barDataDTOList2 = this.dashboardController.getTurnoverByDate(dateRangeDTO);
+
+        Mockito.verify(dashboardService, Mockito.times(2)).getTurnoverByDate(dateRangeDTO);
     }
 
     @Test
     public void getActualsDataReporting(){
-        Mockito.when(dashboardService.getActualsData()).thenReturn(dailyReportingDTOList);
 
-        List<DailyReportingDTO> dailyReportingDTODTOList1 = this.dashboardController.getActualsData();
-        List<DailyReportingDTO> dailyReportingDTODTOList2 = this.dashboardController.getActualsData();
+        LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+        LocalDateTime end = LocalDateTime.of(LocalDate.now().minusDays(7), LocalTime.MIDNIGHT);
+        DateRangeDTO dateRangeDTO = this.getDateRangeDTO(start, end);
 
-        Mockito.verify(dashboardService, Mockito.times(2)).getActualsData();
+        Mockito.when(dashboardService.getActualsData(dateRangeDTO)).thenReturn(dailyReportingDTOList);
+
+        List<DailyReportingDTO> dailyReportingDTODTOList1 = this.dashboardController.getActualsData(dateRangeDTO);
+        List<DailyReportingDTO> dailyReportingDTODTOList2 = this.dashboardController.getActualsData(dateRangeDTO);
+
+        Mockito.verify(dashboardService, Mockito.times(2)).getActualsData(dateRangeDTO);
     }
 
     @Test
     public void getAggregatedData(){
-        LocalDateTime start = LocalDateTime.of(LocalDate.now().minusMonths(1).withDayOfMonth(1), LocalTime.MIDNIGHT);
-        LocalDateTime end = LocalDateTime.of(LocalDate.now().withDayOfMonth(1), LocalTime.MIDNIGHT);
-        Mockito.when(dashboardService.getAggregatedData(start, end)).thenReturn(monthToDateReportingDTO);
+       LocalDateTime start = LocalDateTime.of(LocalDate.now().minusMonths(1).withDayOfMonth(1), LocalTime.MIDNIGHT);
+       LocalDateTime end = LocalDateTime.of(LocalDate.now().withDayOfMonth(1), LocalTime.MIDNIGHT);
+        DateRangeDTO dateRangeDTO = this.getDateRangeDTO(start, end);
+        Mockito.when(dashboardService.getAggregatedData(dateRangeDTO)).thenReturn(monthToDateReportingDTO);
 
-        MonthToDateReportingDTO monthToDateReportingDTO1 = this.dashboardController.getLastMonthData();
-        MonthToDateReportingDTO monthToDateReportingDTO2 = this.dashboardController.getLastMonthData();
+        MonthToDateReportingDTO monthToDateReportingDTO1 = this.dashboardController.getLastMonthData(dateRangeDTO);
+        MonthToDateReportingDTO monthToDateReportingDTO2 = this.dashboardController.getLastMonthData(dateRangeDTO);
 
-        Mockito.verify(dashboardService, Mockito.times(2)).getAggregatedData(start, end);
+        Mockito.verify(dashboardService, Mockito.times(2)).getAggregatedData(dateRangeDTO);
     }
 }

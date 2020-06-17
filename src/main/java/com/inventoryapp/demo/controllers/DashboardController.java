@@ -2,13 +2,11 @@ package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.BarDataDTO;
 import com.inventoryapp.demo.dtos.DailyReportingDTO;
+import com.inventoryapp.demo.dtos.DateRangeDTO;
 import com.inventoryapp.demo.dtos.MonthToDateReportingDTO;
 import com.inventoryapp.demo.services.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,9 +29,9 @@ public class DashboardController {
      * @return List<BarDataDTO>
      */
 
-    @PostMapping("/getVbarData")
-    public List<BarDataDTO> getVbarData(){
-        return this.dashboardService.getVbarData();
+    @PostMapping("/getTurnoverByShop")
+    public List<BarDataDTO> getTurnoverByShop(@RequestBody DateRangeDTO dateRangeDTO){
+        return this.dashboardService.getTurnoverByShop(dateRangeDTO);
     }
 
     /**
@@ -41,9 +39,9 @@ public class DashboardController {
      * @return List<BarDataDTO>
      */
 
-    @PostMapping("/getHbarData")
-    public List<BarDataDTO> getHbarData(){
-        return this.dashboardService.getHbarData();
+    @PostMapping("/getTurnoverByDate")
+    public List<BarDataDTO> getTurnoverByDate(@RequestBody DateRangeDTO dateRangeDTO){
+        return this.dashboardService.getTurnoverByDate(dateRangeDTO);
     }
 
     /**
@@ -53,10 +51,8 @@ public class DashboardController {
      */
 
     @PostMapping("/getLastMonthData")
-    public MonthToDateReportingDTO getLastMonthData(){
-        LocalDateTime start = LocalDateTime.of(LocalDate.now().minusMonths(1).withDayOfMonth(1), LocalTime.MIDNIGHT);
-        LocalDateTime end = LocalDateTime.of(LocalDate.now().withDayOfMonth(1), LocalTime.MIDNIGHT);
-        return this.dashboardService.getAggregatedData(start, end);
+    public MonthToDateReportingDTO getLastMonthData(@RequestBody DateRangeDTO dateRangeDTO){
+        return this.dashboardService.getAggregatedData(dateRangeDTO);
     }
 
     /**
@@ -65,10 +61,8 @@ public class DashboardController {
      */
 
     @PostMapping("/getCurrentMonthData")
-    public MonthToDateReportingDTO getCurrentMonthData(){
-        LocalDateTime start = LocalDateTime.of(LocalDate.now().withDayOfMonth(1), LocalTime.MIDNIGHT);
-        LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
-        return this.dashboardService.getAggregatedData(start, end);
+    public MonthToDateReportingDTO getCurrentMonthData(@RequestBody DateRangeDTO dateRangeDTO){
+        return this.dashboardService.getAggregatedData(dateRangeDTO);
     }
 
     /**
@@ -77,10 +71,8 @@ public class DashboardController {
      */
 
     @PostMapping("/getYesterdaysData")
-    public MonthToDateReportingDTO getYesterdaysData(){
-        LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.MIDNIGHT);
-        LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
-        return this.dashboardService.getAggregatedData(start, end);
+    public MonthToDateReportingDTO getYesterdaysData(@RequestBody DateRangeDTO dateRangeDTO){
+         return this.dashboardService.getAggregatedData(dateRangeDTO);
     }
 
     /**
@@ -89,7 +81,22 @@ public class DashboardController {
      */
 
     @PostMapping("/getActualsData")
-    public List <DailyReportingDTO> getActualsData(){
-        return this.dashboardService.getActualsData();
+    public List <DailyReportingDTO> getActualsData(@RequestBody DateRangeDTO dateRangeDTO){
+        return this.dashboardService.getActualsData(dateRangeDTO);
+    }
+
+    @PostMapping("/getDailyDataForPeriod")
+    public List <DailyReportingDTO> getPeriodDetailData(@RequestBody DateRangeDTO dateRangeDTO) {
+        return this.dashboardService.getActualsData(dateRangeDTO);
+    }
+
+    @PostMapping("/getAggregatedDataForPeriod")
+    public MonthToDateReportingDTO getPeriodAggregatedData(@RequestBody DateRangeDTO dateRangeDTO) {
+        return this.dashboardService.getAggregatedData(dateRangeDTO);
+    }
+
+    @PostMapping("/getCategoryData")
+    public List <BarDataDTO> getCategoryData(@RequestBody DateRangeDTO dateRangeDTO){
+        return this.dashboardService.getCategoryData(dateRangeDTO);
     }
 }

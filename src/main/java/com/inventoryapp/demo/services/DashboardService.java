@@ -1,9 +1,6 @@
 package com.inventoryapp.demo.services;
 
-import com.inventoryapp.demo.dtos.BarDataDTO;
-import com.inventoryapp.demo.dtos.BasicReportingDTO;
-import com.inventoryapp.demo.dtos.DailyReportingDTO;
-import com.inventoryapp.demo.dtos.MonthToDateReportingDTO;
+import com.inventoryapp.demo.dtos.*;
 import com.inventoryapp.demo.entities.ShopsAllSoldItems;
 import com.inventoryapp.demo.entities.WarehouseSupplierItem;
 import com.inventoryapp.demo.repositories.DashboardRepositoryShop;
@@ -14,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,11 +27,15 @@ public class DashboardService {
     @Autowired
     DashboardRepositoryWarehouse dashboardRepositoryWarehouse;
 
-    DashboardService dashboardService;
+//    DashboardService dashboardService;
 
     public DashboardService(DashboardRepositoryShop dashboardRepositoryShop, DashboardRepositoryWarehouse dashboardRepositoryWarehouse){
         this.dashboardRepositoryShop = dashboardRepositoryShop;
         this.dashboardRepositoryWarehouse = dashboardRepositoryWarehouse;
+    }
+
+    public DashboardService(){
+
     }
 
     // Corresponding Service Methods for Controller-Methods
@@ -43,9 +45,10 @@ public class DashboardService {
      * @return List<BarDataDTO>
      */
 
-    public List<BarDataDTO> getVbarData(){
-        LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(8), LocalTime.MIDNIGHT);
-        LocalDateTime end = LocalDateTime.of(LocalDate.now(),LocalTime.MIDNIGHT);
+    public List<BarDataDTO> getTurnoverByDate(DateRangeDTO dateRangeDTO){
+        DashboardService db = new DashboardService();
+        LocalDateTime start = db.typescriptDateConversion(dateRangeDTO.getStartDate());
+        LocalDateTime end = db.typescriptDateConversion(dateRangeDTO.getEndDate());
         List <BasicReportingDTO> basicReportingDTOS = this.extractDataByDate(start, end);
         Map <LocalDateTime, Long> turnoverMap = basicReportingDTOS.stream().
                 collect(Collectors.groupingBy(p -> p.getDate(),
@@ -70,9 +73,10 @@ public class DashboardService {
      * @return List <BarDataDTO>
      */
 
-    public List <BarDataDTO> getHbarData() {
-        LocalDateTime start = LocalDateTime.now().minusDays(1);
-        LocalDateTime end = LocalDateTime.now();
+    public List <BarDataDTO> getTurnoverByShop(DateRangeDTO dateRangeDTO) {
+        DashboardService db = new DashboardService();
+        LocalDateTime start = db.typescriptDateConversion(dateRangeDTO.getStartDate());
+        LocalDateTime end = db.typescriptDateConversion(dateRangeDTO.getEndDate());
         List <BasicReportingDTO> basicReportingDTOS = this.extractDataByDate(start, end);
         Map <String, Long> turnoverMap = basicReportingDTOS.stream().
                 collect(Collectors.groupingBy(p -> p.getShop(),
@@ -92,12 +96,14 @@ public class DashboardService {
 
     /**
      * returns numbers for required time-period aggregated to one object for use in various reportings
-     * @param start, start of queried time-period
-     * @param end, end of queried time-period
+     * @param dateRangeDTO queried time-period
      * @return MonthToDateReportingDTO
      */
 
-    public MonthToDateReportingDTO getAggregatedData(LocalDateTime start, LocalDateTime end) {
+    public MonthToDateReportingDTO getAggregatedData(DateRangeDTO dateRangeDTO) {
+        DashboardService db = new DashboardService();
+        LocalDateTime start = db.typescriptDateConversion(dateRangeDTO.getStartDate());
+        LocalDateTime end = db.typescriptDateConversion(dateRangeDTO.getEndDate());
         List <BasicReportingDTO> basicReportingDTOS = this.extractDataByDate(start, end);
         BasicReportingDTO aggregatedData = new BasicReportingDTO();
         aggregatedData.setSalesPrice(basicReportingDTOS.stream().map(x -> x.getSalesPrice()).reduce(0L, (a,b) -> a+b));
@@ -115,12 +121,33 @@ public class DashboardService {
      * @return DailyReportingDTO
      */
 
-    public List<DailyReportingDTO> getActualsData() {
-        LocalDateTime start = LocalDateTime.of(LocalDate.now().withDayOfMonth(1), LocalTime.MIDNIGHT);
-        LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
-        List <BasicReportingDTO> basicReportingDTOS = dashboardService.extractDataByDate(start, end);
+    public List<DailyReportingDTO> getActualsData(DateRangeDTO dateRangeDTO) {
+        DashboardService db = new DashboardService();
+        LocalDateTime start = db.typescriptDateConversion(dateRangeDTO.getStartDate());
+        LocalDateTime end = db.typescriptDateConversion(dateRangeDTO.getEndDate());
+        List <BasicReportingDTO> basicReportingDTOS = db.extractDataByDate(start, end);
         List<DailyReportingDTO> list = new ArrayList<>();
-        list = basicReportingDTOS.stream().map(x -> dashboardService.mapBasicReportingDTOToDailyReportingDTO(x)).collect(Collectors.toList());
+        list = basicReportingDTOS.stream().map(x -> db.mapBasicReportingDTOToDailyReportingDTO(x)).collect(Collectors.toList());
+        return list;
+    }
+
+    public List<BarDataDTO> getCategoryData(DateRangeDTO dateRangeDTO) {
+        DashboardService db = new DashboardService();
+        LocalDateTime start = db.typescriptDateConversion(dateRangeDTO.getStartDate());
+        LocalDateTime end = db.typescriptDateConversion(dateRangeDTO.getEndDate());
+        List <BasicReportingDTO> basicReportingDTOS = db.extractDataByDate(start, end);
+        Map <String, Long> categoryMap = basicReportingDTOS.stream().
+                collect(Collectors.groupingBy(p -> p.getCategory(),
+                        Collectors.summingLong(p -> p.getSalesQuantity())));
+        List <BarDataDTO> list = new ArrayList<>();
+        List<String> categoryKeyList= new ArrayList<>(categoryMap.keySet());
+        for (int i = 0; i<categoryMap.size(); i++) {
+            BarDataDTO newEntry = new BarDataDTO();
+            newEntry.setDate(LocalDateTime.now());
+            newEntry.setName(categoryKeyList.get(i));
+            newEntry.setValue(categoryMap.get(newEntry.getName()));
+            list.add(newEntry);
+        }
         return list;
     }
 
@@ -199,9 +226,8 @@ public class DashboardService {
      */
 
     public List<BasicReportingDTO> extractDataByDate(LocalDateTime start, LocalDateTime end) {
-        java.sql.Date sqlDateStart = java.sql.Date.valueOf(start.toLocalDate());
-        java.sql.Date sqlDateEnd = java.sql.Date.valueOf(end.toLocalDate());
-        List <ShopsAllSoldItems> soldItemsList = this.dashboardRepositoryShop.findByItemLastSoldDateMin(sqlDateStart, sqlDateEnd);
+
+        List <ShopsAllSoldItems> soldItemsList = this.dashboardRepositoryShop.findByItemLastSoldDateMin(start, end);
         return soldItemsList.stream().map(x -> this.mapShopsAllSoldToBasicReporting(x))
                 .collect(Collectors.toList());
 
@@ -215,8 +241,7 @@ public class DashboardService {
      */
 
     public Long getPurchasingPrice(BasicReportingDTO basicReportingDTO){
-        // System.out.println(basicReportingDTO.getCategory() + " " + basicReportingDTO.getListPrice()); // Debugging
-        List<WarehouseSupplierItem> warehouseSupplierItems = dashboardRepositoryWarehouse
+       List<WarehouseSupplierItem> warehouseSupplierItems = dashboardRepositoryWarehouse
          .findByCategoryAndAndPriceListPerUnit(basicReportingDTO.getCategory(),
                  basicReportingDTO.getListPrice());
         OptionalDouble purchPrOptional = warehouseSupplierItems.stream().mapToLong(x -> x.getPriceSupplierPerUnit()).average();
@@ -227,5 +252,16 @@ public class DashboardService {
         return 0L;
     }
 
+    /**
+     * Utility-Method to convert date delivered by Typescript to date to be handled in Java-code
+     *
+     * @param dateToParse
+     * @return LocalDateTime-Object of submitted iso-String-Date
+     */
+
+    public LocalDateTime typescriptDateConversion(String dateToParse) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        return LocalDateTime.parse(dateToParse, formatter);
+    }
 }
 

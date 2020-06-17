@@ -1,9 +1,6 @@
 package com.inventoryapp.demo.services;
 
-import com.inventoryapp.demo.dtos.BarDataDTO;
-import com.inventoryapp.demo.dtos.BasicReportingDTO;
-import com.inventoryapp.demo.dtos.DailyReportingDTO;
-import com.inventoryapp.demo.dtos.MonthToDateReportingDTO;
+import com.inventoryapp.demo.dtos.*;
 import com.inventoryapp.demo.entities.ShopsAllSoldItems;
 import com.inventoryapp.demo.repositories.DashboardRepositoryShop;
 import com.inventoryapp.demo.repositories.DashboardRepositoryWarehouse;
@@ -22,6 +19,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,6 +45,9 @@ public class DashboardServiceTest {
     public List<BarDataDTO> barDataDTOList = new ArrayList<>();
     public List<BasicReportingDTO> basicReportingDTOListTest = new ArrayList<>();
     public List<ShopsAllSoldItems> shopsAllSoldItemsListTest = new ArrayList<>();
+    private final LocalDateTime endTime = LocalDateTime.now();
+    private final LocalDateTime startTime = LocalDateTime.now().minusDays(7);
+    private final DateRangeDTO dateRangeDTO = new DateRangeDTO();
 
     @Before
     public void setupData(){
@@ -58,7 +59,7 @@ public class DashboardServiceTest {
             BarDataDTO barDataDTO = new BarDataDTO();
             barDataDTO.setName("Name " + i);
             barDataDTO.setValue(10.15 + i * 2);
-            barDataDTO.setDate(LocalDateTime.now().minusDays(i));
+            barDataDTO.setDate(LocalDateTime.now().minusDays(3));
             barDataDTOList.add(barDataDTO);
         }
         BarDataDTO barDataDTO = new BarDataDTO(); // outlier added to List
@@ -100,30 +101,40 @@ public class DashboardServiceTest {
 
     // Tests for corresponding Services from Dashboard-Service
 
-    @Test
-    public void getVbarData() {
-        java.sql.Date hBarStart = java.sql.Date.valueOf(LocalDateTime.now().minusDays(8).toLocalDate());
-        java.sql.Date hBarEnd = java.sql.Date.valueOf(LocalDateTime.now().toLocalDate());
-
-        Mockito.when(dashboardRepositoryShop.findByItemLastSoldDateMin(hBarStart, hBarEnd)).thenReturn(shopsAllSoldItemsListTest);
-
-        List<BarDataDTO> barDataDTOList1 = dashboardService.getVbarData();
-        Assert.assertEquals(barDataDTOList1.size(), 1, 0);
+    public DateRangeDTO getDateRangeDTO (LocalDateTime start, LocalDateTime end) {
+        DateRangeDTO dateRangeDTO = new DateRangeDTO();
+        dateRangeDTO.setStartDate(start.format(DateTimeFormatter.ISO_DATE_TIME));
+        dateRangeDTO.setEndDate(end.format(DateTimeFormatter.ISO_DATE_TIME));
+        return dateRangeDTO;
     }
 
     @Test
-    public void getHbarData() {
+    public void getTurnoverByDate() {
+        LocalDateTime start = LocalDateTime.of(LocalDate.now().minusMonths(1).withDayOfMonth(1), LocalTime.MIDNIGHT);
+        LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+        DateRangeDTO dateRangeDTO = this.getDateRangeDTO(start, end);
+        Mockito.when(dashboardRepositoryShop.findByItemLastSoldDateMin(start, end)).thenReturn(shopsAllSoldItemsListTest);
+         List<BarDataDTO> barDataDTOList1 = dashboardService.getTurnoverByDate(dateRangeDTO);
+
+         Assert.assertEquals(barDataDTOList1.size(), 1, 0);
+    }
+
+    @Test
+    public void getTurnoverByShop() {
 
         // prepare
 
-        java.sql.Date hBarStart = java.sql.Date.valueOf(LocalDateTime.now().minusDays(1).toLocalDate());
-        java.sql.Date hBarEnd = java.sql.Date.valueOf(LocalDateTime.now().toLocalDate());
-        Mockito.when(dashboardRepositoryShop.findByItemLastSoldDateMin(hBarStart, hBarEnd)).thenReturn(shopsAllSoldItemsListTest);
+        LocalDateTime start = LocalDateTime.of(LocalDate.now().minusMonths(1).withDayOfMonth(1), LocalTime.MIDNIGHT);
+        LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+        DateRangeDTO dateRangeDTO = this.getDateRangeDTO(start, end);
+
+        Mockito.when(dashboardRepositoryShop.findByItemLastSoldDateMin(start, end)).thenReturn(shopsAllSoldItemsListTest);
 
         // execute
 
-        List<BarDataDTO> barDataDTOList1 = dashboardService.getHbarData();
-        Assert.assertEquals(barDataDTOList1.size(), 5, 0);
+         List<BarDataDTO> barDataDTOList1 = dashboardService.getTurnoverByShop(dateRangeDTO);
+
+         Assert.assertEquals(barDataDTOList1.size(), 5, 0);
     }
 
     @Test
@@ -133,13 +144,13 @@ public class DashboardServiceTest {
 
         LocalDateTime start = LocalDateTime.of(LocalDate.now().minusMonths(1).withDayOfMonth(1), LocalTime.MIDNIGHT);
         LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
-        java.sql.Date startSQL = java.sql.Date.valueOf(LocalDate.now().minusMonths(1).withDayOfMonth(1));
-        java.sql.Date endSQL  = java.sql.Date.valueOf(LocalDate.now());
-        Mockito.when(dashboardRepositoryShop.findByItemLastSoldDateMin(startSQL, endSQL)).thenReturn(shopsAllSoldItemsListTest);
+        DateRangeDTO dateRangeDTO = this.getDateRangeDTO(start, end);
+
+        Mockito.when(dashboardRepositoryShop.findByItemLastSoldDateMin(start, end)).thenReturn(shopsAllSoldItemsListTest);
 
         // execute
 
-        MonthToDateReportingDTO monthToDateReportingDTO = dashboardService.getAggregatedData(start, end);
+        MonthToDateReportingDTO monthToDateReportingDTO = dashboardService.getAggregatedData(dateRangeDTO);
         Assert.assertEquals(monthToDateReportingDTO.getSalesTo(), 226.5, 0);
     }
 
