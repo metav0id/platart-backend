@@ -64,8 +64,6 @@ public class ManagerWarehouseCheckinListingService {
 
             shopsAllSoldItemsDTOList.add(itemDTO);
         }
-
         return shopsAllSoldItemsDTOList;
     }
-
 }
