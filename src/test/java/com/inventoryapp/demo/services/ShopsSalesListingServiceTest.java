@@ -22,6 +22,9 @@ public class ShopsSalesListingServiceTest {
     @Autowired
     private ShopsAllSoldItemsRepository shopsAllSoldItemsRepository;
 
+    @Autowired
+    private ConvertingValues convertingValues;
+
     public List<ShopsAllSoldItems> allItemsInput = new ArrayList<>();
     @Before
     public void setUp() {
@@ -79,10 +82,10 @@ public class ShopsSalesListingServiceTest {
             itemDTO.setId(item.getId());
             itemDTO.setCategory(item.getCategory());
             itemDTO.setQuantity(item.getQuantity());
-            itemDTO.setPriceListPerUnit(item.getPriceListPerUnit());
-            itemDTO.setPriceSalesPerUnit(item.getPriceSalesPerUnit());
-            itemDTO.setRevenuePerUnit(item.getRevenuePerUnit());
-            itemDTO.setDiscountPercent(item.getDiscountPercent());
+            itemDTO.setPriceListPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceListPerUnit()));
+            itemDTO.setPriceSalesPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceSalesPerUnit()));
+            itemDTO.setRevenuePerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getRevenuePerUnit()));
+            itemDTO.setDiscountPercent(convertingValues.convertLongToDoubleForEntityToDTO(item.getDiscountPercent()));
             itemDTO.setShop(item.getShop());
             itemDTO.setDeliverySending(item.getDeliverySending());
             itemDTO.setItemLastSold(item.getItemLastSold());

@@ -8,13 +8,13 @@ import java.time.LocalDateTime;
 public class ShopDeliveryItemFromWarehouseDTO {
     private long identifierOnDeliveryList;
     private String category;
-    private long listPrice;
-    private long salesPrice;
+    private Double listPrice;
+    private Double salesPrice;
     private long quantity;
     private LocalDateTime timestamp;
     private String comment;
 
-    public ShopDeliveryItemFromWarehouseDTO(long identifierOnDeliveryList, String category, long listPrice, long salesPrice,
+    public ShopDeliveryItemFromWarehouseDTO(long identifierOnDeliveryList, String category, Double listPrice, Double salesPrice,
                                             long quantity, LocalDateTime timestamp, String comment) {
         this.identifierOnDeliveryList = identifierOnDeliveryList;
         this.category = category;

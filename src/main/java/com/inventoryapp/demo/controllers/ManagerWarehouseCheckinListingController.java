@@ -48,7 +48,7 @@ public class ManagerWarehouseCheckinListingController {
         } catch (Error e) {
             System.out.println("error in catch");
             System.err.println(e);
-            ManagerWarehouseCheckinListingDTO item = new ManagerWarehouseCheckinListingDTO("category", 400, 400, 400, "supplierName", LocalDateTime.now() );
+            ManagerWarehouseCheckinListingDTO item = new ManagerWarehouseCheckinListingDTO("category", 400, (double)400, (double)400, "supplierName", LocalDateTime.now() );
             soldItemsList.add(item);
             return soldItemsList;
         }

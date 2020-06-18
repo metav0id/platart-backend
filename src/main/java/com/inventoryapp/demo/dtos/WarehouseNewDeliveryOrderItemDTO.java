@@ -12,9 +12,9 @@ public class WarehouseNewDeliveryOrderItemDTO {
 
     private String category;
     private int quantity;
-    private long priceSalesPerUnit;
-    private int discountPercent;
-    private long priceListPerUnit;
+    private Double priceSalesPerUnit;
+    private Double discountPercent;
+    private Double priceListPerUnit;
     private String deliveryShop;
     private String comment;
 

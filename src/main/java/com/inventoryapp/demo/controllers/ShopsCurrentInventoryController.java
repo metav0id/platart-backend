@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RestController("")
+@RestController
 @RequestMapping("/shops")
 public class ShopsCurrentInventoryController {
 
@@ -22,10 +22,11 @@ public class ShopsCurrentInventoryController {
         this.shopsCurrentInventoryService = shopsCurrentInventoryService;
     }
 
-    @PostMapping("/getAllItemsAllShops")
-    private void getAllItemsAllShops(){
-        System.out.println("return this.shopsCurrentInventoryService.getAllItemsAllShops();");
-    }
+    //TODO Delete
+//    @PostMapping("/getAllItemsAllShops")
+//    private void getAllItemsAllShops(){
+//        System.out.println("return this.shopsCurrentInventoryService.getAllItemsAllShops();");
+//    }
 
     @PostMapping("/getShopInventoryItems")
     private List<ShopsStockItemDto> getShopInventoryItems(@RequestBody ShopsRequestInventoryDTO requestedShop){

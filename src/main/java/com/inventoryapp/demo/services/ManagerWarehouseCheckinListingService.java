@@ -16,6 +16,9 @@ public class ManagerWarehouseCheckinListingService {
     @Autowired
     private WarehouseSupplierItemRepository warehouseSupplierItemRepository;
 
+    @Autowired
+    private ConvertingValues convertingValues;
+
     public ManagerWarehouseCheckinListingService() {
     }
 
@@ -35,8 +38,8 @@ public class ManagerWarehouseCheckinListingService {
                     new ManagerWarehouseCheckinListingDTO(
                             "category",
                             500L,
-                            500L,
-                            500L,
+                            convertingValues.convertLongToDoubleForEntityToDTO(500),
+                            convertingValues.convertLongToDoubleForEntityToDTO(500),
                             "SupplierName",
                             LocalDateTime.now()
                     );
@@ -53,16 +56,14 @@ public class ManagerWarehouseCheckinListingService {
                     new ManagerWarehouseCheckinListingDTO(
                             item.getCategory(),
                             item.getQuantity(),
-                            item.getPriceListPerUnit(),
-                            item.getPriceSupplierPerUnit(),
+                            convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceListPerUnit()),
+                            convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceSupplierPerUnit()),
                             item.getSupplierName(),
                             item.getCreateDateTime()
                     );
 
             shopsAllSoldItemsDTOList.add(itemDTO);
         }
-
         return shopsAllSoldItemsDTOList;
     }
-
 }

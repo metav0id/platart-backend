@@ -4,6 +4,7 @@ package com.inventoryapp.demo.controllers;
 import com.inventoryapp.demo.dtos.WarehouseSupplierItemDTO;
 import com.inventoryapp.demo.entities.WarehouseSupplierItem;
 import com.inventoryapp.demo.repositories.WarehouseDeliverySupplierRepository;
+import com.inventoryapp.demo.services.ConvertingValues;
 import com.inventoryapp.demo.services.WarehouseDeliverySupplierService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,14 +27,17 @@ public class WarehouseDeliverySupplierControllerDeliverySupplierTest {
     @MockBean
     private WarehouseDeliverySupplierRepository repository;
 
+    @Autowired
+    private ConvertingValues convertingValues;
+
     @Test
     public void saveListDeliverySuppliersTest() {
         WarehouseSupplierItemDTO itemDTO1 =
-                new WarehouseSupplierItemDTO("Earring", 50, 30,
-                        1500, "Enrico");
+                new WarehouseSupplierItemDTO("Earring", 50, 30.0,
+                        1500.0, "Enrico");
         WarehouseSupplierItemDTO itemDTO2 =
-                new WarehouseSupplierItemDTO("Necklace", 10, 200,
-                        2000, "Alonzo");
+                new WarehouseSupplierItemDTO("Necklace", 10, 200.0,
+                        2000.0, "Alonzo");
 
         List<WarehouseSupplierItemDTO> listDTO = new ArrayList<>();
         listDTO.add(itemDTO1);
