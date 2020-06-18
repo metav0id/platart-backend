@@ -161,7 +161,16 @@ public class ShopsCheckoutSoldItemsService {
         return shopsCheckoutSoldItemsDTOList;
     }
 
+    public List<ShopsCheckoutSoldItemsDTO> getShopSpecificSoldItemsList(String selectedShop){
 
+        System.out.println("the selected shop is: " + selectedShop);
+
+        List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsList = this.shopsCheckoutSoldItemsRepository.findAll();
+
+        List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList = mapEntityListToDTOList(shopsCheckoutSoldItemsList);
+
+        return shopsCheckoutSoldItemsDTOList;
+    }
 
     public List<ShopsCheckoutSoldItemsDTO> getAllSoldItemsList(){
         List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsList = this.shopsCheckoutSoldItemsRepository.findAll();

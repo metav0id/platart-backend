@@ -1,6 +1,7 @@
 package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.ShopsCheckoutSoldItemsDTO;
+import com.inventoryapp.demo.dtos.ShopsCheckoutSoldItemsShopDTO;
 import com.inventoryapp.demo.dtos.WarehouseGetAllItemsDTO;
 import com.inventoryapp.demo.services.ShopsCheckoutSoldItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,16 @@ public class ShopsCheckoutSoldItemsController {
      * get currenty saved list of sold items.
      * @return List of WarehouseGetAllItemsDTO with "category":string, "quantity": int, "pricePerUnit":long. Price is in pence.
      */
+    @PostMapping("/getShopSpecificSoldItemsList")
+    public List<ShopsCheckoutSoldItemsDTO> getShopSpecificSoldItemsList(@RequestBody ShopsCheckoutSoldItemsShopDTO shopDTO) {
+        System.out.println("Controller: Get current Sold item list.");
+        return this.shopsCheckoutSoldItemsService.getShopSpecificSoldItemsList(shopDTO.getShop());
+    }
+
+    /**
+     * get currenty saved list of sold items.
+     * @return List of WarehouseGetAllItemsDTO with "category":string, "quantity": int, "pricePerUnit":long. Price is in pence.
+     */
     @PostMapping("/deleteCurrentSoldItemsList")
     public void deleteCurrentSoldItemsList() {
         System.out.println("Controller: Delete current Sold item list.");
@@ -56,5 +67,6 @@ public class ShopsCheckoutSoldItemsController {
         System.out.println("Controller: Send current Sold item list.");
         return this.shopsCheckoutSoldItemsService.sendAllSoldItemsList(shopsCheckoutSoldItemsDTOList);
     }
+
 
 }
