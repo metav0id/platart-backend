@@ -14,24 +14,24 @@ public class WarehouseItemCategoriesController {
     @Autowired
     private WarehouseItemCategoryService warehouseItemCategoryService;
 
-    @PostMapping("/getAllCategories")
+    @GetMapping("/getAllCategories")
     public List<WarehouseItemCategoryDTO> getAllCategories() {
         return this.warehouseItemCategoryService.getAllCategories();
     }
 
-    @PostMapping("/getAllActivatedCategories")
+    @GetMapping("/getAllActivatedCategories")
     public List<WarehouseItemCategoryDTO> getAllActivatedCategories() {
         return this.warehouseItemCategoryService.getActivatedCategories();
     }
 
-    @PostMapping("/getAllDeactivatedCategories")
+    @GetMapping("/getAllDeactivatedCategories")
     public List<WarehouseItemCategoryDTO> getAllDeactivatedCategories() {
         return this.warehouseItemCategoryService.getDeactivatedCategories();
     }
 
     @PostMapping("/saveNewCategory")
-    public void saveNewCategory(@RequestBody WarehouseItemCategoryDTO newWarehouseItemCategory) {
-        this.warehouseItemCategoryService.saveNewCategory(newWarehouseItemCategory);
+    public boolean saveNewCategory(@RequestBody WarehouseItemCategoryDTO newWarehouseItemCategory) {
+        return this.warehouseItemCategoryService.saveNewCategory(newWarehouseItemCategory);
     }
 
     @PostMapping("/deactivateCategory")
