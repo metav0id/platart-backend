@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -18,10 +19,12 @@ import java.util.List;
 @RequestMapping("/dashboard")
 public class DashboardController {
 
-    @Autowired
-    private DashboardService dashboardService;
 
-    public DashboardController(){
+    private final DashboardService dashboardService;
+
+    @Autowired
+    public DashboardController(DashboardService dashboardService){
+        this.dashboardService = dashboardService;
         }
 
     /**

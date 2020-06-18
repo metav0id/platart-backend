@@ -37,8 +37,8 @@ public class DashboardControllerTest {
         LocalDateTime startTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
         LocalDateTime endTime = LocalDateTime.of(LocalDate.now().minusDays(7), LocalTime.MIDNIGHT);
         DateRangeDTO dateRangeDTO = new DateRangeDTO();
-        dateRangeDTO.setStartDate(startTime.format(DateTimeFormatter.ISO_DATE_TIME));
-        dateRangeDTO.setEndDate(endTime.format(DateTimeFormatter.ISO_DATE_TIME));
+        dateRangeDTO.setStartDate(startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")));
+        dateRangeDTO.setEndDate(endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")));
 
         for(int i=0; i<5; i++) {
             BarDataDTO barDataDTO = new BarDataDTO();
