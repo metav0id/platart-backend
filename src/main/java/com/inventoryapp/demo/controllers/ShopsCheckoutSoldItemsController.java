@@ -1,6 +1,7 @@
 package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.ShopsCheckoutSoldItemsDTO;
+import com.inventoryapp.demo.dtos.ShopsCheckoutSoldItemsSaveSoldItemsListDTO;
 import com.inventoryapp.demo.dtos.ShopsCheckoutSoldItemsShopDTO;
 import com.inventoryapp.demo.dtos.WarehouseGetAllItemsDTO;
 import com.inventoryapp.demo.services.ShopsCheckoutSoldItemsService;
@@ -23,7 +24,20 @@ public class ShopsCheckoutSoldItemsController {
      * @return List of WarehouseGetAllItemsDTO with "category":string, "quantity": int, "pricePerUnit":long. Price is in pence.
      */
     @PostMapping("/saveAllSoldItemsList")
-    public void saveAllSoldItemsList(@RequestBody List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
+    public void saveAllSoldItemsList(@RequestBody ShopsCheckoutSoldItemsSaveSoldItemsListDTO requestDTO) {
+        System.out.println("Controller: Save current Sold item list.");
+        this.shopsCheckoutSoldItemsService.saveShopSpecificSoldItemsList(
+                requestDTO.getShop(),
+                requestDTO.getItemsDTOList()
+        );
+    }
+
+    /**
+     * save current list of sold items.
+     * @return List of WarehouseGetAllItemsDTO with "category":string, "quantity": int, "pricePerUnit":long. Price is in pence.
+     */
+    @PostMapping("/saveShopSpecificSoldItemsList")
+    public void saveShopSpecificSoldItemsList(@RequestBody List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
         System.out.println("Controller: Save current Sold item list.");
         this.shopsCheckoutSoldItemsService.saveAllSoldItemsList(shopsCheckoutSoldItemsDTOList);
     }
@@ -44,7 +58,6 @@ public class ShopsCheckoutSoldItemsController {
      */
     @PostMapping("/getShopSpecificSoldItemsList")
     public List<ShopsCheckoutSoldItemsDTO> getShopSpecificSoldItemsList(@RequestBody ShopsCheckoutSoldItemsShopDTO shopDTO) {
-        System.out.println("Controller: Get current Sold item list.");
         return this.shopsCheckoutSoldItemsService.getShopSpecificSoldItemsList(shopDTO.getShop());
     }
 
