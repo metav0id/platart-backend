@@ -34,6 +34,16 @@ public class ShopsCheckoutSoldItemsService {
         this.convertingValues = convertingValues;
     }
 
+    public void saveShopSpecificSoldItemsList(String shop, List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
+        // first clear the repository from items from given shop
+        this.shopsCheckoutSoldItemsRepository.deleteByShop(shop);
+
+        // persist the new (current) items
+        List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsEntitiesList = mapDTOListToEntityList(shopsCheckoutSoldItemsDTOList);
+        System.out.println(shopsCheckoutSoldItemsEntitiesList);
+        this.shopsCheckoutSoldItemsRepository.saveAll(shopsCheckoutSoldItemsEntitiesList);
+    }
+
     public void saveAllSoldItemsList(List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
         // first clear the repository
         this.shopsCheckoutSoldItemsRepository.deleteAll();
@@ -163,9 +173,7 @@ public class ShopsCheckoutSoldItemsService {
 
     public List<ShopsCheckoutSoldItemsDTO> getShopSpecificSoldItemsList(String selectedShop){
 
-        System.out.println("the selected shop is: " + selectedShop);
-
-        List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsList = this.shopsCheckoutSoldItemsRepository.findAll();
+        List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsList = this.shopsCheckoutSoldItemsRepository.findAllByShop(selectedShop);
 
         List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList = mapEntityListToDTOList(shopsCheckoutSoldItemsList);
 
