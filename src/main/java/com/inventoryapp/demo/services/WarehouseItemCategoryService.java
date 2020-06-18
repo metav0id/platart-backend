@@ -15,55 +15,48 @@ public class WarehouseItemCategoryService {
     @Autowired
     private WarehouseItemCategoryRepository warehouseItemCategoryRepository;
 
-    /**
-     * Get all elements from database.
-     * @return List<WarehouseItemCategoryDTO> allCategories
-     */
     public List<WarehouseItemCategoryDTO> getAllCategories() {
-        List<WarehouseItemCategoryDTO> allCategories = new ArrayList<>();
+        List<WarehouseItemCategory> allCategoryEntities = this.warehouseItemCategoryRepository.findAll();
+        return mapEntityToDtoList(allCategoryEntities);
+    }
 
-        List<WarehouseItemCategory> allCategoryEntities = this.warehouseItemCategoryRepository.findActiveCategories();
+    public List<WarehouseItemCategoryDTO> getActivatedCategories(){
+        List<WarehouseItemCategory> allActivatedCategories = this.warehouseItemCategoryRepository.findActivatedCategories();
+        return mapEntityToDtoList(allActivatedCategories);
+    }
 
-        for(WarehouseItemCategory entity: allCategoryEntities){
-            WarehouseItemCategoryDTO warehouseItem = new WarehouseItemCategoryDTO();
-            warehouseItem.setCategory(entity.getCategory());
+    public List<WarehouseItemCategoryDTO> getDeactivatedCategories(){
+        List<WarehouseItemCategory> allDeactivatedCategories = this.warehouseItemCategoryRepository.findDeactivatedCategories();
+        return mapEntityToDtoList(allDeactivatedCategories);
+    }
 
-            allCategories.add(warehouseItem);
+    private List<WarehouseItemCategoryDTO> mapEntityToDtoList(List<WarehouseItemCategory> listEntity){
+        List<WarehouseItemCategoryDTO> listDTO = new ArrayList<>();
+        for(WarehouseItemCategory entity : listEntity){
+            listDTO.add(new WarehouseItemCategoryDTO(entity.getCategory(), entity.isActivated()));
         }
+        return listDTO;
+    }
 
-        return allCategories;
+    private WarehouseItemCategory mapDtoToEntity(WarehouseItemCategoryDTO categoryDto){
+        return new WarehouseItemCategory(categoryDto.getCategory(), categoryDto.isActivated());
     }
 
     public void saveNewCategory(WarehouseItemCategoryDTO newCategory){
-
-        int itemInCategoryList = this.warehouseItemCategoryRepository.existsCategoryByName(newCategory.getCategory());
-
-        if ( itemInCategoryList == 0 ) {
-            WarehouseItemCategory newCategoryItem = new WarehouseItemCategory();
-            newCategoryItem.setCategory(newCategory.getCategory());
-            newCategoryItem.setActivated(true);
-
-            this.warehouseItemCategoryRepository.save(newCategoryItem);
+        if(!this.warehouseItemCategoryRepository.existsCategoryByName(newCategory.getCategory())){
+            newCategory.setActivated(true);
+            WarehouseItemCategory categoryEntity = mapDtoToEntity(newCategory);
+            this.warehouseItemCategoryRepository.save(categoryEntity);
         } else {
-            this.warehouseItemCategoryRepository.activateCategory(newCategory.getCategory());
+            System.out.println("Category could not be saved: " + newCategory.getCategory());
         }
-
     }
 
-
-    public void deleteCategory(WarehouseItemCategoryDTO categoryToBeDeletedDTO) {
-
-        System.out.println("Test delete category Service1"+ categoryToBeDeletedDTO.getCategory());
-
-        this.warehouseItemCategoryRepository.deleteCategoryByName(categoryToBeDeletedDTO.getCategory());
-        System.out.println("Test delete category Service2"+ categoryToBeDeletedDTO.getCategory());
+    public void deactivateCategory(WarehouseItemCategoryDTO categoryToBeDeactivatedDTO) {
+        this.warehouseItemCategoryRepository.deactivateCategory(categoryToBeDeactivatedDTO.getCategory());
     }
 
-    // deactivateCategory
-    public void deactivateCategory(WarehouseItemCategoryDTO categoryToBeDeletedDTO) {
-
-        System.out.println("Test delete category Service1"+ categoryToBeDeletedDTO.getCategory());
-
-        this.warehouseItemCategoryRepository.deactivateCategory(categoryToBeDeletedDTO.getCategory());
+    public void activateCategory(WarehouseItemCategoryDTO categoryToBeActivatedDTO){
+        this.warehouseItemCategoryRepository.activateCategory(categoryToBeActivatedDTO.getCategory());
     }
 }

@@ -8,45 +8,39 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RestController("")
+@RestController
 @RequestMapping("/warehouse")
 public class WarehouseItemCategoriesController {
-
     @Autowired
-    private final WarehouseItemCategoryService warehouseItemCategoryService;
+    private WarehouseItemCategoryService warehouseItemCategoryService;
 
-    public WarehouseItemCategoriesController(WarehouseItemCategoryService warehouseItemCategoryService) {
-        this.warehouseItemCategoryService = warehouseItemCategoryService;
-    }
-
-    // returns all active categories
     @PostMapping("/getAllCategories")
-    public List<WarehouseItemCategoryDTO> getAllCategories(){
-        System.out.println("Test this RESTful API");
-        List<WarehouseItemCategoryDTO> allCategories = this.warehouseItemCategoryService.getAllCategories();
-
-        return allCategories;
+    public List<WarehouseItemCategoryDTO> getAllCategories() {
+        return this.warehouseItemCategoryService.getAllCategories();
     }
 
-    @PostMapping("/getAllActiveCategories")
-    public List<WarehouseItemCategoryDTO> getAllActiveCategories(){
+    @PostMapping("/getAllActivatedCategories")
+    public List<WarehouseItemCategoryDTO> getAllActivatedCategories() {
+        return this.warehouseItemCategoryService.getActivatedCategories();
+    }
 
-        System.out.println("Test this RESTful API");
-        List<WarehouseItemCategoryDTO> allCategories = this.warehouseItemCategoryService.getAllCategories();
-
-        return allCategories;
+    @PostMapping("/getAllDeactivatedCategories")
+    public List<WarehouseItemCategoryDTO> getAllDeactivatedCategories() {
+        return this.warehouseItemCategoryService.getDeactivatedCategories();
     }
 
     @PostMapping("/saveNewCategory")
-    public void saveNewCategory(@RequestBody WarehouseItemCategoryDTO newWarehouseItemCategory){
-        System.out.println("Create new Category");
+    public void saveNewCategory(@RequestBody WarehouseItemCategoryDTO newWarehouseItemCategory) {
         this.warehouseItemCategoryService.saveNewCategory(newWarehouseItemCategory);
     }
 
-    @PostMapping("/deleteCategory")
-    public void deleteCategory(@RequestBody WarehouseItemCategoryDTO categoryToBeDeletedDTO){
-        System.out.println("Test Delete Category");
+    @PostMapping("/deactivateCategory")
+    public void deactivateCategory(@RequestBody WarehouseItemCategoryDTO categoryToBeDeactivatedDTO) {
+        this.warehouseItemCategoryService.deactivateCategory(categoryToBeDeactivatedDTO);
+    }
 
-        this.warehouseItemCategoryService.deactivateCategory(categoryToBeDeletedDTO);
+    @PostMapping("/activateCategory")
+    public void activateCategory(@RequestBody WarehouseItemCategoryDTO categoryToBeActivatedDTO) {
+        this.warehouseItemCategoryService.activateCategory(categoryToBeActivatedDTO);
     }
 }
