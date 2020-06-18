@@ -106,8 +106,8 @@ public class DashboardControllerTest {
 
         Mockito.when(dashboardService.getActualsData(dateRangeDTO)).thenReturn(dailyReportingDTOList);
 
-        List<DailyReportingDTO> dailyReportingDTODTOList1 = this.dashboardController.getActualsData(dateRangeDTO);
-        List<DailyReportingDTO> dailyReportingDTODTOList2 = this.dashboardController.getActualsData(dateRangeDTO);
+        List<DailyReportingDTO> dailyReportingDTODTOList1 = this.dashboardController.getPeriodDetailData(dateRangeDTO);
+        List<DailyReportingDTO> dailyReportingDTODTOList2 = this.dashboardController.getPeriodDetailData(dateRangeDTO);
 
         Mockito.verify(dashboardService, Mockito.times(2)).getActualsData(dateRangeDTO);
     }
@@ -119,8 +119,8 @@ public class DashboardControllerTest {
         DateRangeDTO dateRangeDTO = this.getDateRangeDTO(start, end);
         Mockito.when(dashboardService.getAggregatedData(dateRangeDTO)).thenReturn(monthToDateReportingDTO);
 
-        MonthToDateReportingDTO monthToDateReportingDTO1 = this.dashboardController.getLastMonthData(dateRangeDTO);
-        MonthToDateReportingDTO monthToDateReportingDTO2 = this.dashboardController.getLastMonthData(dateRangeDTO);
+        MonthToDateReportingDTO monthToDateReportingDTO1 = this.dashboardController.getPeriodAggregatedData(dateRangeDTO);
+        MonthToDateReportingDTO monthToDateReportingDTO2 = this.dashboardController.getPeriodAggregatedData(dateRangeDTO);
 
         Mockito.verify(dashboardService, Mockito.times(2)).getAggregatedData(dateRangeDTO);
     }

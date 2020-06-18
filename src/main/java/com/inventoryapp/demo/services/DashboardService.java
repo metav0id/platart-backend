@@ -27,21 +27,19 @@ public class DashboardService {
     @Autowired
     DashboardRepositoryWarehouse dashboardRepositoryWarehouse;
 
-//    DashboardService dashboardService;
-
     public DashboardService(DashboardRepositoryShop dashboardRepositoryShop, DashboardRepositoryWarehouse dashboardRepositoryWarehouse){
         this.dashboardRepositoryShop = dashboardRepositoryShop;
         this.dashboardRepositoryWarehouse = dashboardRepositoryWarehouse;
     }
 
     public DashboardService(){
-
     }
 
     // Corresponding Service Methods for Controller-Methods
 
     /**
      * returns aggregated turnover for previous 7 days in List to be utilized in vertical Barchart
+     * @param dateRangeDTO timeframe for returned List
      * @return List<BarDataDTO>
      */
 
@@ -70,6 +68,7 @@ public class DashboardService {
 
     /**
      * returns turnover ranked by shop for previous day to be utilized in horizontal Barchart
+     * @param dateRangeDTO timeframe for returned List
      * @return List <BarDataDTO>
      */
 
@@ -118,6 +117,7 @@ public class DashboardService {
 
     /**
      * returns numbers for previous day to be utilized in gauge-charts
+     * @param dateRangeDTO timeframe for returned List
      * @return DailyReportingDTO
      */
 
@@ -130,6 +130,12 @@ public class DashboardService {
         list = basicReportingDTOS.stream().map(x -> db.mapBasicReportingDTOToDailyReportingDTO(x)).collect(Collectors.toList());
         return list;
     }
+
+    /**
+     * returns sales-numbers by category to be used in BarChart
+     * @param dateRangeDTO timeframe for returned List
+     * @return BarDataDTO
+     */
 
     public List<BarDataDTO> getCategoryData(DateRangeDTO dateRangeDTO) {
         DashboardService db = new DashboardService();
@@ -253,8 +259,7 @@ public class DashboardService {
     }
 
     /**
-     * Utility-Method to convert date delivered by Typescript to date to be handled in Java-code
-     *
+     * Utility-Method to convert date-string created by Typescript to date to be handled in Java-code
      * @param dateToParse
      * @return LocalDateTime-Object of submitted iso-String-Date
      */
