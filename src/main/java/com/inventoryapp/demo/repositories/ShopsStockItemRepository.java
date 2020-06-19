@@ -24,7 +24,8 @@ public interface ShopsStockItemRepository extends JpaRepository<ShopsStockItem, 
     @Query( "SELECT SUM(item.quantity) " +
             "FROM ShopsStockItem item " +
             "WHERE " +
-            "item.shop = :shop AND item.category = :category " +
+            "item.shop = :shop " +
+            "AND item.category = :category " +
             "AND item.priceListPerUnit = :priceListPerUnit " +
             "AND item.priceSalesPerUnit = :priceSalesPerUnit"
     )
