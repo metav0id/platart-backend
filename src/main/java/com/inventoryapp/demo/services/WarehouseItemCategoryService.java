@@ -42,13 +42,16 @@ public class WarehouseItemCategoryService {
         return new WarehouseItemCategory(categoryDto.getCategory(), categoryDto.isActivated());
     }
 
-    public void saveNewCategory(WarehouseItemCategoryDTO newCategory){
+    public boolean saveNewCategory(WarehouseItemCategoryDTO newCategory){
+        newCategory.setCategory(newCategory.getCategory().toLowerCase());
         if(!this.warehouseItemCategoryRepository.existsCategoryByName(newCategory.getCategory())){
             newCategory.setActivated(true);
             WarehouseItemCategory categoryEntity = mapDtoToEntity(newCategory);
             this.warehouseItemCategoryRepository.save(categoryEntity);
+            return true;
         } else {
             System.out.println("Category could not be saved: " + newCategory.getCategory());
+            return false;
         }
     }
 
