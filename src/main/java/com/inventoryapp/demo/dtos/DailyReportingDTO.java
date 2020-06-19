@@ -2,6 +2,7 @@ package com.inventoryapp.demo.dtos;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -14,5 +15,5 @@ public class DailyReportingDTO {
     private double salesMg;
     private double salesMgAvg;
     private double discountRateAvg;
-    private LocalDateTime date;
+    private LocalDate date;
 }

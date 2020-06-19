@@ -31,12 +31,6 @@ public class DashboardServiceTest {
     private DashboardService dashboardService;
 
     @Mock
-    private WarehouseDeliverySupplierRepository warehouseDeliverySupplierRepository;
-
-    @Mock
-    private ShopsAllSoldItemsRepository shopsAllSoldItemsRepository;
-
-    @Mock
     private DashboardRepositoryWarehouse dashboardRepositoryWarehouse;
 
     @Mock
@@ -45,9 +39,6 @@ public class DashboardServiceTest {
     public List<BarDataDTO> barDataDTOList = new ArrayList<>();
     public List<BasicReportingDTO> basicReportingDTOListTest = new ArrayList<>();
     public List<ShopsAllSoldItems> shopsAllSoldItemsListTest = new ArrayList<>();
-    private final LocalDateTime endTime = LocalDateTime.now();
-    private final LocalDateTime startTime = LocalDateTime.now().minusDays(7);
-    private final DateRangeDTO dateRangeDTO = new DateRangeDTO();
 
     @Before
     public void setupData(){
@@ -99,31 +90,37 @@ public class DashboardServiceTest {
         }
     }
 
-    // Tests for corresponding Services from Dashboard-Service
+    // Utility method to provide DateRangeDTO
 
     public DateRangeDTO getDateRangeDTO (LocalDateTime start, LocalDateTime end) {
         DateRangeDTO dateRangeDTO = new DateRangeDTO();
-        dateRangeDTO.setStartDate(start.format(DateTimeFormatter.ISO_DATE_TIME));
-        dateRangeDTO.setEndDate(end.format(DateTimeFormatter.ISO_DATE_TIME));
+        dateRangeDTO.setStartDate(start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")));
+        dateRangeDTO.setEndDate(end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")));
         return dateRangeDTO;
     }
 
+    // Tests for corresponding Services from Dashboard-Service
+
     @Test
     public void getTurnoverByDate() {
+
+        // prepare
         LocalDateTime start = LocalDateTime.of(LocalDate.now().minusMonths(1).withDayOfMonth(1), LocalTime.MIDNIGHT);
         LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
         DateRangeDTO dateRangeDTO = this.getDateRangeDTO(start, end);
         Mockito.when(dashboardRepositoryShop.findByItemLastSoldDateMin(start, end)).thenReturn(shopsAllSoldItemsListTest);
-         List<BarDataDTO> barDataDTOList1 = dashboardService.getTurnoverByDate(dateRangeDTO);
 
-         Assert.assertEquals(barDataDTOList1.size(), 1, 0);
+        // execute
+        List<BarDataDTO> barDataDTOList1 = dashboardService.getTurnoverByDate(dateRangeDTO);
+
+        // verify
+        Assert.assertEquals(barDataDTOList1.size(), 1, 0);
     }
 
     @Test
     public void getTurnoverByShop() {
 
         // prepare
-
         LocalDateTime start = LocalDateTime.of(LocalDate.now().minusMonths(1).withDayOfMonth(1), LocalTime.MIDNIGHT);
         LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
         DateRangeDTO dateRangeDTO = this.getDateRangeDTO(start, end);
@@ -131,9 +128,9 @@ public class DashboardServiceTest {
         Mockito.when(dashboardRepositoryShop.findByItemLastSoldDateMin(start, end)).thenReturn(shopsAllSoldItemsListTest);
 
         // execute
-
          List<BarDataDTO> barDataDTOList1 = dashboardService.getTurnoverByShop(dateRangeDTO);
 
+         // verify
          Assert.assertEquals(barDataDTOList1.size(), 5, 0);
     }
 
@@ -141,7 +138,6 @@ public class DashboardServiceTest {
     public void getAggregatedData() {
 
         // prepare
-
         LocalDateTime start = LocalDateTime.of(LocalDate.now().minusMonths(1).withDayOfMonth(1), LocalTime.MIDNIGHT);
         LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
         DateRangeDTO dateRangeDTO = this.getDateRangeDTO(start, end);
@@ -149,20 +145,31 @@ public class DashboardServiceTest {
         Mockito.when(dashboardRepositoryShop.findByItemLastSoldDateMin(start, end)).thenReturn(shopsAllSoldItemsListTest);
 
         // execute
-
         MonthToDateReportingDTO monthToDateReportingDTO = dashboardService.getAggregatedData(dateRangeDTO);
+
+        // verify
         Assert.assertEquals(monthToDateReportingDTO.getSalesTo(), 226.5, 0);
     }
 
     @Test
     public void getActuals() {
+
+        // execute
         DailyReportingDTO dRD = dashboardService.mapBasicReportingDTOToDailyReportingDTO(basicReportingDTOListTest.get(0));
+
+        // verify
         Assert.assertEquals(dRD.getSalesMg(), 1.0, 0.0);
     }
 
+    // Tests for mapping-services from Dashboard-Service
+
     @Test
     public void mappingTestBasicToBarchart() {
+
+        // execute
         DailyReportingDTO dRD = dashboardService.mapBasicReportingDTOToDailyReportingDTO(basicReportingDTOListTest.get(0));
+
+        // verify
         Assert.assertEquals(dRD.getSalesMg(), 1.0, 0.0);
     }
 
@@ -170,8 +177,12 @@ public class DashboardServiceTest {
 
     @Test
     public void mappingTestShopsAllServices(){
+
+        // execute
         basicReportingDTOListTest = shopsAllSoldItemsListTest.stream().map(x -> dashboardService.mapShopsAllSoldToBasicReporting(x))
                 .collect(Collectors.toList());
+
+        // verify
         Assert.assertEquals(basicReportingDTOListTest.size(),5);
     }
 
