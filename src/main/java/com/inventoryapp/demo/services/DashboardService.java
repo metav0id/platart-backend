@@ -5,6 +5,7 @@ import com.inventoryapp.demo.entities.ShopsAllSoldItems;
 import com.inventoryapp.demo.entities.WarehouseSupplierItem;
 import com.inventoryapp.demo.repositories.DashboardRepositoryShop;
 import com.inventoryapp.demo.repositories.DashboardRepositoryWarehouse;
+import com.inventoryapp.demo.repositories.ShopsAllSoldItemsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +13,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.OptionalDouble;
+import java.util.*;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,42 +28,30 @@ public class DashboardService {
     @Autowired
     DashboardRepositoryWarehouse dashboardRepositoryWarehouse;
 
-//    DashboardService dashboardService;
-
-    public DashboardService(DashboardRepositoryShop dashboardRepositoryShop, DashboardRepositoryWarehouse dashboardRepositoryWarehouse){
-        this.dashboardRepositoryShop = dashboardRepositoryShop;
-        this.dashboardRepositoryWarehouse = dashboardRepositoryWarehouse;
-    }
-
-    public DashboardService(){
-
-    }
+    @Autowired
+    ShopsAllSoldItemsRepository shopsAllSoldItemsRepository;
 
     // Corresponding Service Methods for Controller-Methods
 
     /**
      * returns aggregated turnover for previous 7 days in List to be utilized in vertical Barchart
+     * @param dateRangeDTO timeframe for returned List
      * @return List<BarDataDTO>
      */
 
     public List<BarDataDTO> getTurnoverByDate(DateRangeDTO dateRangeDTO){
-        DashboardService db = new DashboardService();
-        LocalDateTime start = db.typescriptDateConversion(dateRangeDTO.getStartDate());
-        LocalDateTime end = db.typescriptDateConversion(dateRangeDTO.getEndDate());
+        LocalDateTime start = typescriptDateConversion(dateRangeDTO.getStartDate());
+        LocalDateTime end = typescriptDateConversion(dateRangeDTO.getEndDate());
         List <BasicReportingDTO> basicReportingDTOS = this.extractDataByDate(start, end);
         Map <LocalDateTime, Long> turnoverMap = basicReportingDTOS.stream().
                 collect(Collectors.groupingBy(p -> p.getDate(),
                         Collectors.summingLong(p -> p.getSalesQuantity()*p.getSalesPrice())));
         List<BarDataDTO> barDataDTOs = new ArrayList<>();
-        for (long i = 0; i<turnoverMap.size(); i++) {
+        for (Map.Entry<LocalDateTime, Long> entry : turnoverMap.entrySet()) {
             BarDataDTO newEntry = new BarDataDTO();
-            newEntry.setDate(LocalDateTime.now().minusDays(7-i));
+            newEntry.setDate(entry.getKey());
+            newEntry.setValue(entry.getValue());
             newEntry.setName(newEntry.getDate().getDayOfWeek().toString());
-            if (turnoverMap.get(newEntry.getDate()) != null) {
-                newEntry.setValue(turnoverMap.get(newEntry.getDate()));
-            } else {
-                newEntry.setValue(0.0);
-            }
             barDataDTOs.add(newEntry);
         }
         return barDataDTOs;
@@ -70,13 +59,13 @@ public class DashboardService {
 
     /**
      * returns turnover ranked by shop for previous day to be utilized in horizontal Barchart
+     * @param dateRangeDTO timeframe for returned List
      * @return List <BarDataDTO>
      */
 
     public List <BarDataDTO> getTurnoverByShop(DateRangeDTO dateRangeDTO) {
-        DashboardService db = new DashboardService();
-        LocalDateTime start = db.typescriptDateConversion(dateRangeDTO.getStartDate());
-        LocalDateTime end = db.typescriptDateConversion(dateRangeDTO.getEndDate());
+        LocalDateTime start = typescriptDateConversion(dateRangeDTO.getStartDate());
+        LocalDateTime end = typescriptDateConversion(dateRangeDTO.getEndDate());
         List <BasicReportingDTO> basicReportingDTOS = this.extractDataByDate(start, end);
         Map <String, Long> turnoverMap = basicReportingDTOS.stream().
                 collect(Collectors.groupingBy(p -> p.getShop(),
@@ -102,8 +91,8 @@ public class DashboardService {
 
     public MonthToDateReportingDTO getAggregatedData(DateRangeDTO dateRangeDTO) {
         DashboardService db = new DashboardService();
-        LocalDateTime start = db.typescriptDateConversion(dateRangeDTO.getStartDate());
-        LocalDateTime end = db.typescriptDateConversion(dateRangeDTO.getEndDate());
+        LocalDateTime start = typescriptDateConversion(dateRangeDTO.getStartDate());
+        LocalDateTime end = typescriptDateConversion(dateRangeDTO.getEndDate());
         List <BasicReportingDTO> basicReportingDTOS = this.extractDataByDate(start, end);
         BasicReportingDTO aggregatedData = new BasicReportingDTO();
         aggregatedData.setSalesPrice(basicReportingDTOS.stream().map(x -> x.getSalesPrice()).reduce(0L, (a,b) -> a+b));
@@ -118,24 +107,59 @@ public class DashboardService {
 
     /**
      * returns numbers for previous day to be utilized in gauge-charts
+     * @param dateRangeDTO timeframe for returned List
      * @return DailyReportingDTO
      */
 
     public List<DailyReportingDTO> getActualsData(DateRangeDTO dateRangeDTO) {
         DashboardService db = new DashboardService();
-        LocalDateTime start = db.typescriptDateConversion(dateRangeDTO.getStartDate());
-        LocalDateTime end = db.typescriptDateConversion(dateRangeDTO.getEndDate());
-        List <BasicReportingDTO> basicReportingDTOS = db.extractDataByDate(start, end);
+        LocalDateTime start = typescriptDateConversion(dateRangeDTO.getStartDate());
+        LocalDateTime end = typescriptDateConversion(dateRangeDTO.getEndDate());
+        List <BasicReportingDTO> basicReportingDTOS = this.extractDataByDate(start, end);
         List<DailyReportingDTO> list = new ArrayList<>();
-        list = basicReportingDTOS.stream().map(x -> db.mapBasicReportingDTOToDailyReportingDTO(x)).collect(Collectors.toList());
-        return list;
+        list = basicReportingDTOS.stream().map(x -> this.mapBasicReportingDTOToDailyReportingDTO(x)).collect(Collectors.toList());
+
+        // Function to map DailyreportingDTOs of same Date to one DailyReportingDTO
+
+        Function<Map.Entry<LocalDate, List<DailyReportingDTO>>, DailyReportingDTO> dailyRepAggregator = p -> {
+            DailyReportingDTO dailyReportingDTO = new DailyReportingDTO();
+            for (DailyReportingDTO entry : p.getValue()) {
+                dailyReportingDTO.setSalesNo(dailyReportingDTO.getSalesNo()+entry.getSalesNo());
+                dailyReportingDTO.setSalesMg(roundUp(dailyReportingDTO.getSalesMg()+entry.getSalesMg()));
+                dailyReportingDTO.setSalesTo(roundUp(dailyReportingDTO.getSalesTo()+entry.getSalesTo()));
+                dailyReportingDTO.setListPr(roundUp(dailyReportingDTO.getListPr() + entry.getListPr()));
+                dailyReportingDTO.setPurchCo(roundUp(dailyReportingDTO.getPurchCo() + entry.getPurchCo()));
+                dailyReportingDTO.setDate(entry.getDate());
+                dailyReportingDTO.setShop(entry.getShop());
+            }
+            dailyReportingDTO.setSalesMgAvg(roundUp(dailyReportingDTO.getSalesMg()/dailyReportingDTO.getSalesNo()));
+            dailyReportingDTO.setDiscountRateAvg(roundUp(dailyReportingDTO.getDiscountRateAvg()));
+            return dailyReportingDTO;
+        };
+
+        Map <LocalDate, List<DailyReportingDTO>> actualsMap = list.stream().collect(Collectors.groupingBy(p -> p.getDate()));
+        List<DailyReportingDTO> dailyReportingDTOList = actualsMap.entrySet().stream().map(dailyRepAggregator).collect(Collectors.toList());
+
+        Collections.sort(dailyReportingDTOList, new Comparator<DailyReportingDTO>() {
+            public int compare(DailyReportingDTO t, DailyReportingDTO t1) {
+                return t.getDate().compareTo(t1.getDate());
+            }
+        });
+
+        return dailyReportingDTOList;
     }
 
+    /**
+     * returns sales-numbers by category to be used in BarChart
+     * @param dateRangeDTO timeframe for returned List
+     * @return BarDataDTO
+     */
+
     public List<BarDataDTO> getCategoryData(DateRangeDTO dateRangeDTO) {
-        DashboardService db = new DashboardService();
-        LocalDateTime start = db.typescriptDateConversion(dateRangeDTO.getStartDate());
-        LocalDateTime end = db.typescriptDateConversion(dateRangeDTO.getEndDate());
-        List <BasicReportingDTO> basicReportingDTOS = db.extractDataByDate(start, end);
+
+        LocalDateTime start = typescriptDateConversion(dateRangeDTO.getStartDate());
+        LocalDateTime end = typescriptDateConversion(dateRangeDTO.getEndDate());
+        List <BasicReportingDTO> basicReportingDTOS = this.extractDataByDate(start, end);
         Map <String, Long> categoryMap = basicReportingDTOS.stream().
                 collect(Collectors.groupingBy(p -> p.getCategory(),
                         Collectors.summingLong(p -> p.getSalesQuantity())));
@@ -185,15 +209,16 @@ public class DashboardService {
 
     public DailyReportingDTO mapBasicReportingDTOToDailyReportingDTO(BasicReportingDTO basicReportingDTO){
         DailyReportingDTO dailyReportingDTO = new DailyReportingDTO();
-        dailyReportingDTO.setShop(""); // aggregated data
-        dailyReportingDTO.setDate(LocalDateTime.now());
+        dailyReportingDTO.setShop(basicReportingDTO.getShop());
+        dailyReportingDTO.setDate(basicReportingDTO.getDate().toLocalDate());
         dailyReportingDTO.setSalesNo(basicReportingDTO.getSalesQuantity());
         dailyReportingDTO.setSalesTo((basicReportingDTO.getSalesPrice().doubleValue()/100)*basicReportingDTO.getSalesQuantity());
         dailyReportingDTO.setListPr(basicReportingDTO.getListPrice().doubleValue()/100);
         dailyReportingDTO.setPurchCo(basicReportingDTO.getPurchasingCost().doubleValue()/100);
-        dailyReportingDTO.setDiscountRateAvg(dailyReportingDTO.getSalesTo()/(dailyReportingDTO.getListPr()*100));
+        dailyReportingDTO.setDiscountRateAvg(roundUp(dailyReportingDTO.getSalesTo()/(dailyReportingDTO.getListPr()*100)));
         dailyReportingDTO.setSalesMg(dailyReportingDTO.getSalesTo()-dailyReportingDTO.getPurchCo());
-        dailyReportingDTO.setSalesMgAvg(dailyReportingDTO.getSalesMg()/dailyReportingDTO.getSalesNo());
+        dailyReportingDTO.setSalesMgAvg(roundUp(dailyReportingDTO.getSalesMg()/dailyReportingDTO.getSalesNo()));
+        System.out.println(dailyReportingDTO.getSalesMgAvg());
         return dailyReportingDTO;
     }
 
@@ -226,7 +251,6 @@ public class DashboardService {
      */
 
     public List<BasicReportingDTO> extractDataByDate(LocalDateTime start, LocalDateTime end) {
-
         List <ShopsAllSoldItems> soldItemsList = this.dashboardRepositoryShop.findByItemLastSoldDateMin(start, end);
         return soldItemsList.stream().map(x -> this.mapShopsAllSoldToBasicReporting(x))
                 .collect(Collectors.toList());
@@ -253,15 +277,18 @@ public class DashboardService {
     }
 
     /**
-     * Utility-Method to convert date delivered by Typescript to date to be handled in Java-code
-     *
+     * Utility-Method to convert date-string created by Typescript to date to be handled in Java-code
      * @param dateToParse
      * @return LocalDateTime-Object of submitted iso-String-Date
      */
 
-    public LocalDateTime typescriptDateConversion(String dateToParse) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    public static LocalDateTime typescriptDateConversion(String dateToParse) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         return LocalDateTime.parse(dateToParse, formatter);
+    }
+
+    public static double roundUp(double input){
+        return Math.round(input *100)/100.00;
     }
 }
 

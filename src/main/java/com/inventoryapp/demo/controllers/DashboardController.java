@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -18,14 +19,17 @@ import java.util.List;
 @RequestMapping("/dashboard")
 public class DashboardController {
 
-    @Autowired
-    private DashboardService dashboardService;
 
-    public DashboardController(){
+    private final DashboardService dashboardService;
+
+    @Autowired
+    public DashboardController(DashboardService dashboardService){
+        this.dashboardService = dashboardService;
         }
 
     /**
      * returns list containing previous days' turnover sorted by shop (for vertical barchart)
+     * @param dateRangeDTO containing required Date Range
      * @return List<BarDataDTO>
      */
 
@@ -36,6 +40,7 @@ public class DashboardController {
 
     /**
      * returns list containing last seven days' aggregated turnover (for horizontal barchart)
+     * @param dateRangeDTO containing required Date Range
      * @return List<BarDataDTO>
      */
 
@@ -45,55 +50,34 @@ public class DashboardController {
     }
 
     /**
-     * returns single json-object with aggregated data of last Month (central dashboard table)
-     * corresponding to this months month-to-data data
-     * @return MonthToDateReportingDTO
-     */
-
-    @PostMapping("/getLastMonthData")
-    public MonthToDateReportingDTO getLastMonthData(@RequestBody DateRangeDTO dateRangeDTO){
-        return this.dashboardService.getAggregatedData(dateRangeDTO);
-    }
-
-    /**
-     * returns single json-object containing aggregated month-to-date-data of current month (central dashboard table)
-     * @return MonthToDateReportingDTO
-     */
-
-    @PostMapping("/getCurrentMonthData")
-    public MonthToDateReportingDTO getCurrentMonthData(@RequestBody DateRangeDTO dateRangeDTO){
-        return this.dashboardService.getAggregatedData(dateRangeDTO);
-    }
-
-    /**
-     * returns single json-object containing yesterdays' aggregated data (for use in Gauge-Charts)
-     * @return MonthToDateReportingDTO
-     */
-
-    @PostMapping("/getYesterdaysData")
-    public MonthToDateReportingDTO getYesterdaysData(@RequestBody DateRangeDTO dateRangeDTO){
-         return this.dashboardService.getAggregatedData(dateRangeDTO);
-    }
-
-    /**
      * returns list containing detailed month-to-date performance aggregated on daily basis (for use in central table)
+     * @param dateRangeDTO containing required Date Range
      * @return List of DailyReportingDTOs
      */
-
-    @PostMapping("/getActualsData")
-    public List <DailyReportingDTO> getActualsData(@RequestBody DateRangeDTO dateRangeDTO){
-        return this.dashboardService.getActualsData(dateRangeDTO);
-    }
 
     @PostMapping("/getDailyDataForPeriod")
     public List <DailyReportingDTO> getPeriodDetailData(@RequestBody DateRangeDTO dateRangeDTO) {
         return this.dashboardService.getActualsData(dateRangeDTO);
     }
 
+    /**
+     * returns single json-object with aggregated data of specified period (central dashboard table/gauge-charts)
+     * corresponding to this months month-to-data data
+     * @param dateRangeDTO containing required Date Range
+     * @return MonthToDateReportingDTO
+     */
+
     @PostMapping("/getAggregatedDataForPeriod")
     public MonthToDateReportingDTO getPeriodAggregatedData(@RequestBody DateRangeDTO dateRangeDTO) {
+        System.out.println("Ho");
         return this.dashboardService.getAggregatedData(dateRangeDTO);
     }
+
+    /**
+     * returns number of sales by category for specified period
+     * @param dateRangeDTO containing required Date Range
+     * @return List of BarDataDTOs
+     */
 
     @PostMapping("/getCategoryData")
     public List <BarDataDTO> getCategoryData(@RequestBody DateRangeDTO dateRangeDTO){
