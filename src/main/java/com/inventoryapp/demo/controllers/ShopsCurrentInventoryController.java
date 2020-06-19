@@ -22,12 +22,6 @@ public class ShopsCurrentInventoryController {
         this.shopsCurrentInventoryService = shopsCurrentInventoryService;
     }
 
-    //TODO Delete
-//    @PostMapping("/getAllItemsAllShops")
-//    private void getAllItemsAllShops(){
-//        System.out.println("return this.shopsCurrentInventoryService.getAllItemsAllShops();");
-//    }
-
     @PostMapping("/getShopInventoryItems")
     private List<ShopsStockItemDto> getShopInventoryItems(@RequestBody ShopsRequestInventoryDTO requestedShop){
         String shop = requestedShop.getShop();
