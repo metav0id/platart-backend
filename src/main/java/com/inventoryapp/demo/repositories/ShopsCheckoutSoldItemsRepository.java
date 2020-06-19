@@ -21,5 +21,4 @@ public interface ShopsCheckoutSoldItemsRepository extends JpaRepository<ShopsChe
     @Query("DELETE FROM ShopsCheckoutSoldItems item WHERE item.shop = :shop")
     void deleteByShop(@Param("shop") String shop);
 
-
 }
