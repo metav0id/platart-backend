@@ -43,6 +43,7 @@ public class WarehouseItemCategoryService {
     }
 
     public boolean saveNewCategory(WarehouseItemCategoryDTO newCategory){
+        newCategory.setCategory(newCategory.getCategory().toLowerCase());
         if(!this.warehouseItemCategoryRepository.existsCategoryByName(newCategory.getCategory())){
             newCategory.setActivated(true);
             WarehouseItemCategory categoryEntity = mapDtoToEntity(newCategory);
