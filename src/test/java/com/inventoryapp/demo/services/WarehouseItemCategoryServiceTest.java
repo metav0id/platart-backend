@@ -167,7 +167,7 @@ public class WarehouseItemCategoryServiceTest {
 
         // 2. Delete the first element from the allCategoryEntitiesPositiveTest-array by the category field
         String categoryOfRemovedFirstItem = allCategoryEntitiesPositiveTest.get(0).getCategory();
-        warehouseItemCategoryRepository.deleteCategoryByName(categoryOfRemovedFirstItem);
+        warehouseItemCategoryRepository.deactivateCategory(categoryOfRemovedFirstItem);
 
         // 3. Fetch the remaining entities and check, if removed item, not in fetched list
         List<WarehouseItemCategory> warehouseItemCategoriesFetched = warehouseItemCategoryRepository.findAll();

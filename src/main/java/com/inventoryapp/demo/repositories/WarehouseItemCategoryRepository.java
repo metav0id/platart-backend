@@ -12,25 +12,28 @@ import java.util.List;
 
 @Repository
 public interface WarehouseItemCategoryRepository extends JpaRepository<WarehouseItemCategory, Long> {
+//
+//    @Modifying(clearAutomatically = true)
+//    @Transactional
+//    @Query("delete from WarehouseItemCategory item where item.category=:category")
+//    void deleteCategoryByName(@Param("category") String category);
 
-    @Modifying(clearAutomatically = true)
-    @Transactional
-    @Query("delete from WarehouseItemCategory item where item.category=:category")
-    void deleteCategoryByName(@Param("category") String category);
+    @Query("SELECT item FROM WarehouseItemCategory item WHERE item.activated = true")
+    List<WarehouseItemCategory> findActivatedCategories();
 
-    @Query("SELECT item FROM WarehouseItemCategory item WHERE item.Activated = true")
-    List<WarehouseItemCategory> findActiveCategories();
+    @Query("SELECT item FROM WarehouseItemCategory item WHERE item.activated = false")
+    List<WarehouseItemCategory> findDeactivatedCategories();
 
     @Modifying
     @Transactional
-    @Query("UPDATE WarehouseItemCategory item SET item.Activated = false WHERE item.category = :category")
+    @Query("UPDATE WarehouseItemCategory item SET item.activated = false WHERE item.category = :category")
     void deactivateCategory(@Param("category") String category);
 
     @Modifying
     @Transactional
-    @Query("UPDATE WarehouseItemCategory item SET item.Activated = true WHERE item.category = :category")
+    @Query("UPDATE WarehouseItemCategory item SET item.activated = true WHERE item.category = :category")
     void activateCategory(@Param("category") String category);
 
-    @Query(value = "SELECT count(item) FROM WarehouseItemCategory item where item.category=:category")
-    int existsCategoryByName(@Param("category") String category);
+    @Query("SELECT CASE WHEN COUNT(item) > 0 THEN true ELSE false END FROM WarehouseItemCategory item where item.category=:category")
+    boolean existsCategoryByName(@Param("category") String category);
 }

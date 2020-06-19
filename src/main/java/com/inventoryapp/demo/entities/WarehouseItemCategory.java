@@ -15,5 +15,13 @@ public class WarehouseItemCategory {
     private Long id;
 
     private String category;
-    private boolean Activated;
+    private boolean activated;
+
+    public WarehouseItemCategory() {
+    }
+
+    public WarehouseItemCategory(String category, boolean activated) {
+        this.category = category;
+        this.activated = activated;
+    }
 }
