@@ -36,9 +36,6 @@ public class ShopsCheckoutSoldItemsControllerTest {
     @MockBean
     private ShopsStockItemRepository shopsStockItemRepository;
 
-    @MockBean
-    private ShopsAllSoldItemsRepository shopsAllSoldItemsRepository;
-
     private List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsEntitiesList = new ArrayList<>();
     private List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOSList = new ArrayList<>();
 
@@ -137,7 +134,7 @@ public class ShopsCheckoutSoldItemsControllerTest {
         when(shopsCheckoutSoldItemsRepository.findAll()).thenReturn(this.shopsCheckoutSoldItemsEntitiesList);
 
         // 2. Fetch the Data
-        List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList = shopsCheckoutSoldItemsService.getAllSoldItemsList();
+        List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList = shopsCheckoutSoldItemsService.getShopSpecificSoldItemsList("shop1");
 
         for(int i=0; i<shopsCheckoutSoldItemsDTOList.size(); i++){
             String fetchedItemShop = shopsCheckoutSoldItemsDTOList.get(i).getShop();
@@ -157,7 +154,7 @@ public class ShopsCheckoutSoldItemsControllerTest {
     @Test
     public void saveListDeliverySuppliersTestPositiveTest(){
         // 1. Step: prepare the data
-        shopsCheckoutSoldItemsService.saveAllSoldItemsList(shopsCheckoutSoldItemsDTOSList);
+        shopsCheckoutSoldItemsService.saveShopSpecificSoldItemsList("shop1", shopsCheckoutSoldItemsDTOSList);
 
         // 2. Verify:
         Mockito.verify(shopsCheckoutSoldItemsRepository, Mockito.times(1)).saveAll(Mockito.anyList());
@@ -166,7 +163,7 @@ public class ShopsCheckoutSoldItemsControllerTest {
     @Test
     public void deleteCurrentSoldItemsListPositiveTest(){
         // 1. Step: prepare the data
-        shopsCheckoutSoldItemsService.deleteCurrentSoldItemsList();
+        shopsCheckoutSoldItemsService.deleteSpecificShopCurrentSoldItemsList("shop1");
 
         // 2. Verify:
         Mockito.verify(shopsCheckoutSoldItemsRepository, Mockito.times(1)).deleteAll();
@@ -204,7 +201,7 @@ public class ShopsCheckoutSoldItemsControllerTest {
         Mockito.doNothing().when(shopsCheckoutSoldItemsRepository).deleteAll();
 
         // 3. Execute method
-        List<ShopsCheckoutSoldItemsDTO> soldItemsListFetched = shopsCheckoutSoldItemsService.sendAllSoldItemsList(shopsCheckoutSoldItemsDTOSList);
+        List<ShopsCheckoutSoldItemsDTO> soldItemsListFetched = shopsCheckoutSoldItemsService.sendSpecificShopSoldItemsList("shop1", shopsCheckoutSoldItemsDTOSList);
 
         // 4. Assert the data is fetched correctly
         Assert.assertTrue(soldItemsListFetched.size()==0);
