@@ -16,6 +16,7 @@ public class WarehouseItemCategoriesController {
 
     @GetMapping("/getAllCategories")
     public List<WarehouseItemCategoryDTO> getAllCategories() {
+        System.out.println("it all works just fine!");
         return this.warehouseItemCategoryService.getAllCategories();
     }
 
