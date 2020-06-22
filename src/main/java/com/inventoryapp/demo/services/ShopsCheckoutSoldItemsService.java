@@ -3,6 +3,7 @@ package com.inventoryapp.demo.services;
 import com.inventoryapp.demo.dtos.ShopsCheckoutSoldItemsDTO;
 import com.inventoryapp.demo.entities.ShopsAllSoldItems;
 import com.inventoryapp.demo.entities.ShopsCheckoutSoldItems;
+import com.inventoryapp.demo.entities.ShopsStockItem;
 import com.inventoryapp.demo.repositories.ShopsAllSoldItemsRepository;
 import com.inventoryapp.demo.repositories.ShopsCheckoutSoldItemsRepository;
 import com.inventoryapp.demo.repositories.ShopsStockItemRepository;
@@ -127,31 +128,27 @@ public class ShopsCheckoutSoldItemsService {
                 // 3.2.1 save all sold items and reduce amount from ShopsStockItem table
                 List<ShopsAllSoldItems> shopsAllSoldItemsList = mapCheckoutDTOListToSoldItemsList(shopsCheckoutSoldItemsDTOList);
                 for(ShopsAllSoldItems shopItem: shopsAllSoldItemsList){
-                    Long amountOnShopsStockItem = this.shopsStockItemRepository.findAmountItemsByAllInfo(
+                    ShopsStockItem item = this.shopsStockItemRepository.findItemByCriteria(
                             shop,
                             shopItem.getCategory(),
                             shopItem.getPriceListPerUnit(),
-                            shopItem.getPriceSalesPerUnit() );
+                            shopItem.getPriceSalesPerUnit());
 
-                    Long newAmountOnShopsStockItem = amountOnShopsStockItem-shopItem.getQuantity();
-                    System.out.println("REDUCE AMOUNT ! -> "+ newAmountOnShopsStockItem);
-
-                    this.shopsStockItemRepository.updateAmountByAllInfo(
-                            newAmountOnShopsStockItem,
-                            shop,
-                            shopItem.getCategory(),
-                            shopItem.getPriceListPerUnit(),
-                            shopItem.getPriceSalesPerUnit() );
+                    if(item != null){
+                        item.setQuantity(item.getQuantity()-shopItem.getQuantity());
+                        if(item.getQuantity() <= 0){
+                            this.shopsStockItemRepository.delete(item);
+                        } else {
+                            this.shopsStockItemRepository.save(item);
+                        }
+                    }
                 }
-
-                this.shopsAllSoldItemsRepository.saveAll(shopsAllSoldItemsList);
 
                 // 3.2.2 Delete items from repository
                 this.shopsCheckoutSoldItemsRepository.deleteByShop(shop);
 
                 // 3.2.1 Delete current order list before returning empty list
-                List<ShopsCheckoutSoldItemsDTO> returnList = new ArrayList<>();
-                return returnList;
+                return new ArrayList<ShopsCheckoutSoldItemsDTO>();
             }
         } catch (Exception e){
             System.err.println("ShopsCheckoutSoldItemsService -> sendAllSoldItemsList -> persistance error.");

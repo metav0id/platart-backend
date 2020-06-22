@@ -68,4 +68,19 @@ public interface ShopsStockItemRepository extends JpaRepository<ShopsStockItem, 
      */
     @Query("SELECT item FROM ShopsStockItem item WHERE item.shop = :itemInShop")
     List<ShopsStockItem> findByShop(@Param("itemInShop") String itemInShop);
+
+//    @Modifying(clearAutomatically = true)
+//    @Transactional
+    @Query( "SELECT item FROM  ShopsStockItem item WHERE " +
+            "item.shop = :shop " +
+            "AND item.category = :category " +
+            "AND item.priceListPerUnit = :priceListPerUnit " +
+            "AND item.priceSalesPerUnit = :priceSalesPerUnit")
+    ShopsStockItem findItemByCriteria(
+            @Param("shop") String shop,
+            @Param("category") String category,
+            @Param("priceListPerUnit") Long priceListPerUnit,
+            @Param("priceSalesPerUnit") Long priceSalesPerUnit
+    );
+
 }
