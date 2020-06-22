@@ -9,6 +9,9 @@ import com.inventoryapp.demo.repositories.ShopsAllSoldItemsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -39,13 +42,13 @@ public class DashboardService {
      * @return List<BarDataDTO>
      */
 
-    public List<BarDataDTO> getTurnoverByDate(DateRangeDTO dateRangeDTO){
+    public List<BarDataDTO> getTurnoverByDate(DateRangeDTO dateRangeDTO) {
         LocalDateTime start = typescriptDateConversion(dateRangeDTO.getStartDate());
         LocalDateTime end = typescriptDateConversion(dateRangeDTO.getEndDate());
-        List <BasicReportingDTO> basicReportingDTOS = this.extractDataByDate(start, end);
-        Map <LocalDateTime, Long> turnoverMap = basicReportingDTOS.stream().
+        List<BasicReportingDTO> basicReportingDTOS = this.extractDataByDate(start, end);
+        Map<LocalDateTime, Long> turnoverMap = basicReportingDTOS.stream().
                 collect(Collectors.groupingBy(p -> p.getDate(),
-                        Collectors.summingLong(p -> p.getSalesQuantity()*p.getSalesPrice())));
+                        Collectors.summingLong(p -> p.getSalesQuantity() * p.getSalesPrice())));
         List<BarDataDTO> barDataDTOs = new ArrayList<>();
         for (Map.Entry<LocalDateTime, Long> entry : turnoverMap.entrySet()) {
             BarDataDTO newEntry = new BarDataDTO();
@@ -54,8 +57,18 @@ public class DashboardService {
             newEntry.setName(newEntry.getDate().getDayOfWeek().toString());
             barDataDTOs.add(newEntry);
         }
+
+        barDataDTOs.sort(new Comparator<BarDataDTO>() {
+            @Override
+            public int compare(BarDataDTO b1, BarDataDTO b2) {
+                DayOfWeek d1 = DayOfWeek.valueOf(b1.getName());
+                DayOfWeek d2 = DayOfWeek.valueOf(b2.getName());
+                return d1.compareTo(d2);
+            };});
+
         return barDataDTOs;
-    }
+        }
+
 
     /**
      * returns turnover ranked by shop for previous day to be utilized in horizontal Barchart
@@ -140,7 +153,7 @@ public class DashboardService {
         Map <LocalDate, List<DailyReportingDTO>> actualsMap = list.stream().collect(Collectors.groupingBy(p -> p.getDate()));
         List<DailyReportingDTO> dailyReportingDTOList = actualsMap.entrySet().stream().map(dailyRepAggregator).collect(Collectors.toList());
 
-        Collections.sort(dailyReportingDTOList, new Comparator<DailyReportingDTO>() {
+        dailyReportingDTOList.sort(new Comparator<DailyReportingDTO>() {
             public int compare(DailyReportingDTO t, DailyReportingDTO t1) {
                 return t.getDate().compareTo(t1.getDate());
             }
@@ -188,12 +201,12 @@ public class DashboardService {
         MonthToDateReportingDTO monthToDateReportingDTO = new MonthToDateReportingDTO();
         monthToDateReportingDTO.setShop(basicReportingDTO.getShop());
         monthToDateReportingDTO.setSalesNo(basicReportingDTO.getSalesQuantity());
-        monthToDateReportingDTO.setSalesTo((basicReportingDTO.getSalesPrice().doubleValue()/100)*monthToDateReportingDTO.getSalesNo());
-        monthToDateReportingDTO.setSalesMg(monthToDateReportingDTO.getSalesTo()-(basicReportingDTO.getPurchasingCost().doubleValue()
-                *basicReportingDTO.getSalesQuantity())/100);
-        monthToDateReportingDTO.setSalesMgAvg(monthToDateReportingDTO.getSalesMg()/monthToDateReportingDTO.getSalesNo());
+        monthToDateReportingDTO.setSalesTo(roundUp((basicReportingDTO.getSalesPrice().doubleValue()/100)*monthToDateReportingDTO.getSalesNo()));
+        monthToDateReportingDTO.setSalesMg(roundUp(monthToDateReportingDTO.getSalesTo()-(basicReportingDTO.getPurchasingCost().doubleValue()
+                *basicReportingDTO.getSalesQuantity())/100));
+        monthToDateReportingDTO.setSalesMgAvg(roundUp(monthToDateReportingDTO.getSalesMg()/monthToDateReportingDTO.getSalesNo()));
         try{
-            monthToDateReportingDTO.setDiscountRateAvg(100-(basicReportingDTO.getPurchasingCost()/basicReportingDTO.getListPrice())*100);
+            monthToDateReportingDTO.setDiscountRateAvg(roundUp(100-(basicReportingDTO.getPurchasingCost()/basicReportingDTO.getListPrice())*100));
         } catch (ArithmeticException ae) {
             monthToDateReportingDTO.setDiscountRateAvg(0.0);
         }
@@ -212,13 +225,12 @@ public class DashboardService {
         dailyReportingDTO.setShop(basicReportingDTO.getShop());
         dailyReportingDTO.setDate(basicReportingDTO.getDate().toLocalDate());
         dailyReportingDTO.setSalesNo(basicReportingDTO.getSalesQuantity());
-        dailyReportingDTO.setSalesTo((basicReportingDTO.getSalesPrice().doubleValue()/100)*basicReportingDTO.getSalesQuantity());
+        dailyReportingDTO.setSalesTo(((basicReportingDTO.getSalesPrice().doubleValue())/100)*basicReportingDTO.getSalesQuantity());
         dailyReportingDTO.setListPr(basicReportingDTO.getListPrice().doubleValue()/100);
         dailyReportingDTO.setPurchCo(basicReportingDTO.getPurchasingCost().doubleValue()/100);
         dailyReportingDTO.setDiscountRateAvg(roundUp(dailyReportingDTO.getSalesTo()/(dailyReportingDTO.getListPr()*100)));
         dailyReportingDTO.setSalesMg(dailyReportingDTO.getSalesTo()-dailyReportingDTO.getPurchCo());
         dailyReportingDTO.setSalesMgAvg(roundUp(dailyReportingDTO.getSalesMg()/dailyReportingDTO.getSalesNo()));
-        System.out.println(dailyReportingDTO.getSalesMgAvg());
         return dailyReportingDTO;
     }
 
@@ -277,7 +289,7 @@ public class DashboardService {
     }
 
     /**
-     * Utility-Method to convert date-string created by Typescript to date to be handled in Java-code
+     * Utility-method to convert date-string created by Typescript to date to be handled in Java-code
      * @param dateToParse
      * @return LocalDateTime-Object of submitted iso-String-Date
      */
@@ -287,6 +299,11 @@ public class DashboardService {
         return LocalDateTime.parse(dateToParse, formatter);
     }
 
+    /**
+     * Utility-method to round values to 2 digits floating
+     * @param any double
+     * @return double rounded to 2 digits floating
+     */
     public static double roundUp(double input){
         return Math.round(input *100)/100.00;
     }

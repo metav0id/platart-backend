@@ -69,7 +69,6 @@ public class DashboardController {
 
     @PostMapping("/getAggregatedDataForPeriod")
     public MonthToDateReportingDTO getPeriodAggregatedData(@RequestBody DateRangeDTO dateRangeDTO) {
-        System.out.println("Ho");
         return this.dashboardService.getAggregatedData(dateRangeDTO);
     }
 
