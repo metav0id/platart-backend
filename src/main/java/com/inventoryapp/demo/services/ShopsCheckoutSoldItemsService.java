@@ -34,9 +34,9 @@ public class ShopsCheckoutSoldItemsService {
         this.convertingValues = convertingValues;
     }
 
-    public void saveAllSoldItemsList(List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
-        // first clear the repository
-        this.shopsCheckoutSoldItemsRepository.deleteAll();
+    public void saveShopSpecificSoldItemsList(String shop, List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
+        // first clear the repository from items from given shop
+        this.shopsCheckoutSoldItemsRepository.deleteByShop(shop);
 
         // persist the new (current) items
         List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsEntitiesList = mapDTOListToEntityList(shopsCheckoutSoldItemsDTOList);
@@ -44,7 +44,8 @@ public class ShopsCheckoutSoldItemsService {
         this.shopsCheckoutSoldItemsRepository.saveAll(shopsCheckoutSoldItemsEntitiesList);
     }
 
-    public List<ShopsCheckoutSoldItemsDTO> sendAllSoldItemsList(List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
+
+    public List<ShopsCheckoutSoldItemsDTO> sendSpecificShopSoldItemsList(String shop, List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList) {
         System.out.println("ShopsCheckoutSoldItemsService -> sendAllSoldItemsList()");
 
         // 1. Boolean for verification-Logic, if items are available on the shop inventory
@@ -57,23 +58,23 @@ public class ShopsCheckoutSoldItemsService {
             // 2.1 aggregate quantity with streams
             soldItemsAggregatedDTOList.stream()
                     .filter(
-                        o ->
-                        itemDTO.getCategory().equals(o.getCategory()) &&
-                        itemDTO.getPriceListPerUnit()==o.getPriceListPerUnit() &&
-                        itemDTO.getPriceSalesPerUnit()==o.getPriceSalesPerUnit() )
+                            o ->
+                                    itemDTO.getCategory().equals(o.getCategory()) &&
+                                            itemDTO.getPriceListPerUnit()==o.getPriceListPerUnit() &&
+                                            itemDTO.getPriceSalesPerUnit()==o.getPriceSalesPerUnit())
                     .forEach(
-                        o -> o.setQuantity(o.getQuantity() + itemDTO.getQuantity())
+                            o -> o.setQuantity(o.getQuantity() + itemDTO.getQuantity())
                     );
 
             // 2.2 check if category and List-price exist
             boolean itemIsNotFound = soldItemsAggregatedDTOList
-                        .stream()
-                        .noneMatch(
-                                o ->
-                                o.getCategory().equals(itemDTO.getCategory()) &&
-                                o.getPriceListPerUnit() == itemDTO.getPriceListPerUnit() &&
-                                o.getPriceSalesPerUnit() == itemDTO.getPriceSalesPerUnit()
-                        );
+                    .stream()
+                    .noneMatch(
+                            o ->
+                                    o.getCategory().equals(itemDTO.getCategory()) &&
+                                            o.getPriceListPerUnit() == itemDTO.getPriceListPerUnit() &&
+                                            o.getPriceSalesPerUnit() == itemDTO.getPriceSalesPerUnit()
+                    );
 
             // 2.3 add new item category and list-price, if not already existant
             if(itemIsNotFound){
@@ -97,12 +98,14 @@ public class ShopsCheckoutSoldItemsService {
         // 3. verify if transaction is feasible for all items in sold-item-list
 
         // 3.1 for comparison fetch shop-related items from shop warehouse list
-        String shopRelevant = shopsCheckoutSoldItemsDTOList.get(0).getShop();
-        List<ShopsStockItem> shopsStockItemList = this.shopsStockItemRepository.findAllItemsByShop(shopRelevant);
+//        String shopRelevant = shopsCheckoutSoldItemsDTOList.get(0).getShop();
+//        List<ShopsStockItem> shopsStockItemList = this.shopsStockItemRepository.findAllItemsByShop(shopRelevant);
 
         for(ShopsCheckoutSoldItemsDTO itemSold: soldItemsAggregatedDTOList){
             Long amountItemsShopWarehouse =
-                    shopsStockItemRepository.findAmountItemsByAllInfo(itemSold.getShop(), itemSold.getCategory(),
+                    shopsStockItemRepository.findAmountItemsByAllInfo(
+                            shop,
+                            itemSold.getCategory(),
                             convertingValues.convertDoubleToLongForDTOtoEntity(itemSold.getPriceListPerUnit()),
                             convertingValues.convertDoubleToLongForDTOtoEntity(itemSold.getPriceSalesPerUnit()));
 
@@ -125,54 +128,51 @@ public class ShopsCheckoutSoldItemsService {
                 // 3.2.1 save all sold items and reduce amount from ShopsStockItem table
                 List<ShopsAllSoldItems> shopsAllSoldItemsList = mapCheckoutDTOListToSoldItemsList(shopsCheckoutSoldItemsDTOList);
                 for(ShopsAllSoldItems shopItem: shopsAllSoldItemsList){
-                    Long amountOnShopsStockItem = this.shopsStockItemRepository.findAmountItemsByAllInfo(
-                                                                            shopItem.getShop(),
-                                                                            shopItem.getCategory(),
-                                                                            shopItem.getPriceListPerUnit(),
-                                                                            shopItem.getPriceSalesPerUnit() );
-
-                    Long newAmountOnShopsStockItem = amountOnShopsStockItem-shopItem.getQuantity();
-                    System.out.println("REDUCE AMOUNT ! -> "+ newAmountOnShopsStockItem);
-
-                    this.shopsStockItemRepository.updateAmountByAllInfo(
-                            newAmountOnShopsStockItem,
-                            shopItem.getShop(),
+                    ShopsStockItem item = this.shopsStockItemRepository.findItemByCriteria(
+                            shop,
                             shopItem.getCategory(),
                             shopItem.getPriceListPerUnit(),
-                            shopItem.getPriceSalesPerUnit() );
+                            shopItem.getPriceSalesPerUnit());
+
+                    if(item != null){
+                        item.setQuantity(item.getQuantity()-shopItem.getQuantity());
+                        if(item.getQuantity() <= 0){
+                            this.shopsStockItemRepository.delete(item);
+                        } else {
+                            this.shopsStockItemRepository.save(item);
+                        }
+                    }
                 }
 
-                this.shopsAllSoldItemsRepository.saveAll(shopsAllSoldItemsList);
-
                 // 3.2.2 Delete items from repository
-                this.shopsCheckoutSoldItemsRepository.deleteAll();
+                this.shopsCheckoutSoldItemsRepository.deleteByShop(shop);
 
                 // 3.2.1 Delete current order list before returning empty list
-                List<ShopsCheckoutSoldItemsDTO> returnList = new ArrayList<>();
-                this.deleteCurrentSoldItemsList();
-                return returnList;
+                return new ArrayList<ShopsCheckoutSoldItemsDTO>();
+            } else{
+                // 4. Save new List before returning it
+                this.saveShopSpecificSoldItemsList(shop, shopsCheckoutSoldItemsDTOList);
+                return shopsCheckoutSoldItemsDTOList;
             }
         } catch (Exception e){
             System.err.println("ShopsCheckoutSoldItemsService -> sendAllSoldItemsList -> persistance error.");
+            // 4. Save new List before returning it
+            this.saveShopSpecificSoldItemsList(shop, shopsCheckoutSoldItemsDTOList);
+            return shopsCheckoutSoldItemsDTOList;
         }
-
-        // 4. Save new List before returning it
-        this.saveAllSoldItemsList(shopsCheckoutSoldItemsDTOList);
-        return shopsCheckoutSoldItemsDTOList;
     }
 
+    public List<ShopsCheckoutSoldItemsDTO> getShopSpecificSoldItemsList(String selectedShop){
 
-
-    public List<ShopsCheckoutSoldItemsDTO> getAllSoldItemsList(){
-        List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsList = this.shopsCheckoutSoldItemsRepository.findAll();
+        List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsList = this.shopsCheckoutSoldItemsRepository.findAllByShop(selectedShop);
 
         List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOList = mapEntityListToDTOList(shopsCheckoutSoldItemsList);
 
         return shopsCheckoutSoldItemsDTOList;
     }
 
-    public void deleteCurrentSoldItemsList() {
-        this.shopsCheckoutSoldItemsRepository.deleteAll();
+    public void deleteSpecificShopCurrentSoldItemsList(String shop) {
+        this.shopsCheckoutSoldItemsRepository.deleteByShop(shop);
     }
 
     // Mapping functions

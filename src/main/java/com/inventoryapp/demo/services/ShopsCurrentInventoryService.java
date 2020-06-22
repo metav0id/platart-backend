@@ -57,8 +57,11 @@ public class ShopsCurrentInventoryService {
                 convertingValues.convertDoubleToLongForDTOtoEntity(shopsCheckoutSoldItemsDTO.getPriceSalesPerUnit())
                 );
 
-        shopsCheckoutSoldItemsDTO.setQuantity(amountItems);
-
+        if(amountItems == null) {
+            shopsCheckoutSoldItemsDTO.setQuantity(0L);
+        } else {
+            shopsCheckoutSoldItemsDTO.setQuantity(amountItems);
+        }
         return shopsCheckoutSoldItemsDTO;
     }
 

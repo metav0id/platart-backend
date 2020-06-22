@@ -1,18 +1,11 @@
 package com.inventoryapp.demo.controllers;
 
 import com.inventoryapp.demo.dtos.WarehouseItemCategoryDTO;
-import com.inventoryapp.demo.entities.WarehouseItemCategory;
 import com.inventoryapp.demo.services.WarehouseItemCategoryService;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -105,7 +98,7 @@ public class WarehouseItemCategoriesControllerTest {
         Mockito.doNothing().when(service).deactivateCategory(Mockito.any()) ;
 
         // 2. Use the method
-        controller.deleteCategory(warehouseItemDto1);
+        controller.deactivateCategory(warehouseItemDto1);
 
         // 3. Verify with Mockito
         Mockito.verify(service, Mockito.times(1)).

@@ -15,55 +15,51 @@ public class WarehouseItemCategoryService {
     @Autowired
     private WarehouseItemCategoryRepository warehouseItemCategoryRepository;
 
-    /**
-     * Get all elements from database.
-     * @return List<WarehouseItemCategoryDTO> allCategories
-     */
     public List<WarehouseItemCategoryDTO> getAllCategories() {
-        List<WarehouseItemCategoryDTO> allCategories = new ArrayList<>();
-
-        List<WarehouseItemCategory> allCategoryEntities = this.warehouseItemCategoryRepository.findActiveCategories();
-
-        for(WarehouseItemCategory entity: allCategoryEntities){
-            WarehouseItemCategoryDTO warehouseItem = new WarehouseItemCategoryDTO();
-            warehouseItem.setCategory(entity.getCategory());
-
-            allCategories.add(warehouseItem);
-        }
-
-        return allCategories;
+        List<WarehouseItemCategory> allCategoryEntities = this.warehouseItemCategoryRepository.findAll();
+        return mapEntityToDtoList(allCategoryEntities);
     }
 
-    public void saveNewCategory(WarehouseItemCategoryDTO newCategory){
+    public List<WarehouseItemCategoryDTO> getActivatedCategories(){
+        List<WarehouseItemCategory> allActivatedCategories = this.warehouseItemCategoryRepository.findActivatedCategories();
+        return mapEntityToDtoList(allActivatedCategories);
+    }
 
-        int itemInCategoryList = this.warehouseItemCategoryRepository.existsCategoryByName(newCategory.getCategory());
+    public List<WarehouseItemCategoryDTO> getDeactivatedCategories(){
+        List<WarehouseItemCategory> allDeactivatedCategories = this.warehouseItemCategoryRepository.findDeactivatedCategories();
+        return mapEntityToDtoList(allDeactivatedCategories);
+    }
 
-        if ( itemInCategoryList == 0 ) {
-            WarehouseItemCategory newCategoryItem = new WarehouseItemCategory();
-            newCategoryItem.setCategory(newCategory.getCategory());
-            newCategoryItem.setActivated(true);
+    private List<WarehouseItemCategoryDTO> mapEntityToDtoList(List<WarehouseItemCategory> listEntity){
+        List<WarehouseItemCategoryDTO> listDTO = new ArrayList<>();
+        for(WarehouseItemCategory entity : listEntity){
+            listDTO.add(new WarehouseItemCategoryDTO(entity.getCategory(), entity.isActivated()));
+        }
+        return listDTO;
+    }
 
-            this.warehouseItemCategoryRepository.save(newCategoryItem);
+    private WarehouseItemCategory mapDtoToEntity(WarehouseItemCategoryDTO categoryDto){
+        return new WarehouseItemCategory(categoryDto.getCategory(), categoryDto.isActivated());
+    }
+
+    public boolean saveNewCategory(WarehouseItemCategoryDTO newCategory){
+        newCategory.setCategory(newCategory.getCategory().toLowerCase());
+        if(!this.warehouseItemCategoryRepository.existsCategoryByName(newCategory.getCategory())){
+            newCategory.setActivated(true);
+            WarehouseItemCategory categoryEntity = mapDtoToEntity(newCategory);
+            this.warehouseItemCategoryRepository.save(categoryEntity);
+            return true;
         } else {
-            this.warehouseItemCategoryRepository.activateCategory(newCategory.getCategory());
+            System.out.println("Category could not be saved: " + newCategory.getCategory());
+            return false;
         }
-
     }
 
-
-    public void deleteCategory(WarehouseItemCategoryDTO categoryToBeDeletedDTO) {
-
-        System.out.println("Test delete category Service1"+ categoryToBeDeletedDTO.getCategory());
-
-        this.warehouseItemCategoryRepository.deleteCategoryByName(categoryToBeDeletedDTO.getCategory());
-        System.out.println("Test delete category Service2"+ categoryToBeDeletedDTO.getCategory());
+    public void deactivateCategory(WarehouseItemCategoryDTO categoryToBeDeactivatedDTO) {
+        this.warehouseItemCategoryRepository.deactivateCategory(categoryToBeDeactivatedDTO.getCategory());
     }
 
-    // deactivateCategory
-    public void deactivateCategory(WarehouseItemCategoryDTO categoryToBeDeletedDTO) {
-
-        System.out.println("Test delete category Service1"+ categoryToBeDeletedDTO.getCategory());
-
-        this.warehouseItemCategoryRepository.deactivateCategory(categoryToBeDeletedDTO.getCategory());
+    public void activateCategory(WarehouseItemCategoryDTO categoryToBeActivatedDTO){
+        this.warehouseItemCategoryRepository.activateCategory(categoryToBeActivatedDTO.getCategory());
     }
 }
