@@ -149,14 +149,17 @@ public class ShopsCheckoutSoldItemsService {
 
                 // 3.2.1 Delete current order list before returning empty list
                 return new ArrayList<ShopsCheckoutSoldItemsDTO>();
+            } else{
+                // 4. Save new List before returning it
+                this.saveShopSpecificSoldItemsList(shop, shopsCheckoutSoldItemsDTOList);
+                return shopsCheckoutSoldItemsDTOList;
             }
         } catch (Exception e){
             System.err.println("ShopsCheckoutSoldItemsService -> sendAllSoldItemsList -> persistance error.");
+            // 4. Save new List before returning it
+            this.saveShopSpecificSoldItemsList(shop, shopsCheckoutSoldItemsDTOList);
+            return shopsCheckoutSoldItemsDTOList;
         }
-
-        // 4. Save new List before returning it
-        this.saveShopSpecificSoldItemsList(shop, shopsCheckoutSoldItemsDTOList);
-        return shopsCheckoutSoldItemsDTOList;
     }
 
     public List<ShopsCheckoutSoldItemsDTO> getShopSpecificSoldItemsList(String selectedShop){
