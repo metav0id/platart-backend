@@ -22,7 +22,6 @@ public class WarehouseVerifyAmountItemsOnStockServiceTest {
     @Autowired
     private WarehouseRepository warehouseRepository;
 
-    @Autowired
     private ConvertingValues convertingValues;
 
     List<WarehouseStockItem> warehouseStockItemsEntities = new ArrayList<>();
@@ -63,6 +62,7 @@ public class WarehouseVerifyAmountItemsOnStockServiceTest {
         warehouseStockItem5.setQuantity(500);
         warehouseStockItem5.setPriceListPerUnit(50);
         warehouseStockItemsEntities.add(warehouseStockItem5);
+        convertingValues = new ConvertingValues();
     }
 
     @Test

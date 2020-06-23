@@ -6,6 +6,7 @@ import com.inventoryapp.demo.entities.ShopsStockItem;
 import com.inventoryapp.demo.repositories.ShopsAllSoldItemsRepository;
 import com.inventoryapp.demo.repositories.ShopsCheckoutSoldItemsRepository;
 import com.inventoryapp.demo.repositories.ShopsStockItemRepository;
+import com.inventoryapp.demo.services.ConvertingValues;
 import com.inventoryapp.demo.services.ShopsCheckoutSoldItemsService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,6 +39,8 @@ public class ShopsCheckoutSoldItemsControllerTest {
 
     private List<ShopsCheckoutSoldItems> shopsCheckoutSoldItemsEntitiesList = new ArrayList<>();
     private List<ShopsCheckoutSoldItemsDTO> shopsCheckoutSoldItemsDTOSList = new ArrayList<>();
+
+    private ConvertingValues convertingValues;
 
     @Before
     public void setUp(){
@@ -126,6 +129,8 @@ public class ShopsCheckoutSoldItemsControllerTest {
         itemDTO3.setItemLastSold(LocalDateTime.now());
         itemDTO3.setComment("NoComment");
         shopsCheckoutSoldItemsDTOSList.add(itemDTO3);
+
+        this.convertingValues = new ConvertingValues();
     }
 
     @Test
@@ -146,7 +151,7 @@ public class ShopsCheckoutSoldItemsControllerTest {
             Assert.assertEquals(savedItemCategory, fetchedItemCategory);
 
             Double fetchedItemPriceList = shopsCheckoutSoldItemsDTOList.get(i).getPriceListPerUnit();
-            Double savedItemPriceList = (double)shopsCheckoutSoldItemsEntitiesList.get(i).getPriceListPerUnit();
+            Double savedItemPriceList = convertingValues.convertLongToDoubleForEntityToDTO(shopsCheckoutSoldItemsEntitiesList.get(i).getPriceListPerUnit());
             Assert.assertEquals(savedItemPriceList, fetchedItemPriceList);
         }
     }
