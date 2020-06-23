@@ -25,26 +25,27 @@ public class WarehouseDeliverySupplierService {
      * This method persists the list from warehouse of new items from suppliers
      * @param listDTO DTO of new item list
      */
-    public void saveListDeliverySuppliers(List<WarehouseSupplierItemDTO> listDTO){
-        System.out.println("Saving new item list from supplier to database...");
-        System.out.println(listDTO);
-        List<WarehouseSupplierItem> listEntity = new ArrayList<>();
-        for(WarehouseSupplierItemDTO entry : listDTO){
-            WarehouseSupplierItem itemEntity = new WarehouseSupplierItem(entry.getCategory(),
-                    entry.getQuantity(),
-                    convertingValues.convertDoubleToLongForDTOtoEntity(entry.getPriceSupplierPerUnit()),
-                    convertingValues.convertDoubleToLongForDTOtoEntity(entry.getPriceListPerUnit()),
-                    entry.getSupplierName());
-            listEntity.add(itemEntity);
+    public boolean saveListDeliverySuppliers(List<WarehouseSupplierItemDTO> listDTO){
+        try{
+            List<WarehouseSupplierItem> listEntity = new ArrayList<>();
+            for(WarehouseSupplierItemDTO entry : listDTO){
+                WarehouseSupplierItem itemEntity = new WarehouseSupplierItem(entry.getCategory(),
+                        entry.getQuantity(),
+                        convertingValues.convertDoubleToLongForDTOtoEntity(entry.getPriceSupplierPerUnit()),
+                        convertingValues.convertDoubleToLongForDTOtoEntity(entry.getPriceListPerUnit()),
+                        entry.getSupplierName());
+                listEntity.add(itemEntity);
+            }
+            warehouseDeliverySupplierRepository.saveAll(listEntity);
+            this.transferListToStock(listDTO);
+            return true;
+        } catch (Exception e){
+            System.out.println("saveListDeliverySuppliers: An error occured during saving list in");
+            return false;
         }
-        System.out.println(listEntity);
-        warehouseDeliverySupplierRepository.saveAll(listEntity);
-        System.out.println("Successfully saved!");
-        this.transferListToStock(listDTO);
     }
 
     public void transferListToStock(List<WarehouseSupplierItemDTO> listDTO){
-        System.out.println("Transferring list to stock inventory...");
         warehouseInStockService.saveListToInventoryStock(listDTO);
     }
 }

@@ -13,7 +13,6 @@ import java.util.List;
 @RestController("")
 @RequestMapping("/warehouse")
 public class WarehouseDeliverySupplierController {
-
     @Autowired
     private WarehouseDeliverySupplierService warehouseDeliverySupplierService;
 
@@ -22,7 +21,7 @@ public class WarehouseDeliverySupplierController {
      * @param listDeliverySupplier DTO as list of delivered products from suppliers
      */
     @PostMapping("savelistdeliverysupplier")
-    public void saveListDeliverySuppliers(@RequestBody List<WarehouseSupplierItemDTO> listDeliverySupplier){
-        warehouseDeliverySupplierService.saveListDeliverySuppliers(listDeliverySupplier);
+    public boolean saveListDeliverySuppliers(@RequestBody List<WarehouseSupplierItemDTO> listDeliverySupplier){
+        return warehouseDeliverySupplierService.saveListDeliverySuppliers(listDeliverySupplier);
     }
 }
