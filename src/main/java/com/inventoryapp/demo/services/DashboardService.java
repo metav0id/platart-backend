@@ -48,7 +48,7 @@ public class DashboardService {
         List<BasicReportingDTO> basicReportingDTOS = this.extractDataByDate(start, end);
         Map<LocalDateTime, Long> turnoverMap = basicReportingDTOS.stream().
                 collect(Collectors.groupingBy(p -> p.getDate(),
-                        Collectors.summingLong(p -> p.getSalesQuantity() * p.getSalesPrice())));
+                        Collectors.summingLong(p -> p.getTurnoverPerSale())));
         List<BarDataDTO> barDataDTOs = new ArrayList<>();
         for (Map.Entry<LocalDateTime, Long> entry : turnoverMap.entrySet()) {
             BarDataDTO newEntry = new BarDataDTO();
@@ -58,13 +58,11 @@ public class DashboardService {
             barDataDTOs.add(newEntry);
         }
 
-        barDataDTOs.sort(new Comparator<BarDataDTO>() {
-            @Override
-            public int compare(BarDataDTO b1, BarDataDTO b2) {
-                DayOfWeek d1 = DayOfWeek.valueOf(b1.getName());
-                DayOfWeek d2 = DayOfWeek.valueOf(b2.getName());
-                return d1.compareTo(d2);
-            };});
+        barDataDTOs.sort((b1, b2) -> {
+            DayOfWeek d1 = DayOfWeek.valueOf(b1.getName());
+            DayOfWeek d2 = DayOfWeek.valueOf(b2.getName());
+            return d1.compareTo(d2);
+        });
 
         return barDataDTOs;
         }
@@ -82,7 +80,7 @@ public class DashboardService {
         List <BasicReportingDTO> basicReportingDTOS = this.extractDataByDate(start, end);
         Map <String, Long> turnoverMap = basicReportingDTOS.stream().
                 collect(Collectors.groupingBy(p -> p.getShop(),
-                        Collectors.summingLong(p -> p.getSalesQuantity()*p.getSalesPrice())));
+                        Collectors.summingLong(p -> p.getTurnoverPerSale())));
         List<BarDataDTO> barDataDTOs = new ArrayList<>();
         List<String> turnoverKeyList= new ArrayList<>(turnoverMap.keySet());
 
@@ -108,6 +106,7 @@ public class DashboardService {
         LocalDateTime end = typescriptDateConversion(dateRangeDTO.getEndDate());
         List <BasicReportingDTO> basicReportingDTOS = this.extractDataByDate(start, end);
         BasicReportingDTO aggregatedData = new BasicReportingDTO();
+        aggregatedData.setTurnoverPerSale(basicReportingDTOS.stream().map(x -> x.getSalesQuantity() * x.getSalesPrice()).reduce(0L, (a,b) -> a+b));
         aggregatedData.setSalesPrice(basicReportingDTOS.stream().map(x -> x.getSalesPrice()).reduce(0L, (a,b) -> a+b));
         aggregatedData.setSalesQuantity(basicReportingDTOS.stream().map(x -> x.getSalesQuantity()).reduce(0L, (a,b) -> a+b));
         aggregatedData.setListPrice(basicReportingDTOS.stream().map(x -> x.getListPrice()).reduce(0L, (a,b) -> a+b));
@@ -153,11 +152,7 @@ public class DashboardService {
         Map <LocalDate, List<DailyReportingDTO>> actualsMap = list.stream().collect(Collectors.groupingBy(p -> p.getDate()));
         List<DailyReportingDTO> dailyReportingDTOList = actualsMap.entrySet().stream().map(dailyRepAggregator).collect(Collectors.toList());
 
-        dailyReportingDTOList.sort(new Comparator<DailyReportingDTO>() {
-            public int compare(DailyReportingDTO t, DailyReportingDTO t1) {
-                return t.getDate().compareTo(t1.getDate());
-            }
-        });
+        dailyReportingDTOList.sort(Comparator.comparing(DailyReportingDTO::getDate));
 
         return dailyReportingDTOList;
     }
@@ -185,6 +180,7 @@ public class DashboardService {
             newEntry.setValue(categoryMap.get(newEntry.getName()));
             list.add(newEntry);
         }
+        list.sort((x, y) -> Double.compare(y.getValue(),(x.getValue())));
         return list;
     }
 
@@ -201,8 +197,8 @@ public class DashboardService {
         MonthToDateReportingDTO monthToDateReportingDTO = new MonthToDateReportingDTO();
         monthToDateReportingDTO.setShop(basicReportingDTO.getShop());
         monthToDateReportingDTO.setSalesNo(basicReportingDTO.getSalesQuantity());
-        monthToDateReportingDTO.setSalesTo(roundUp((basicReportingDTO.getSalesPrice().doubleValue()/100)*monthToDateReportingDTO.getSalesNo()));
-        monthToDateReportingDTO.setSalesMg(roundUp(monthToDateReportingDTO.getSalesTo()-(basicReportingDTO.getPurchasingCost().doubleValue()
+        monthToDateReportingDTO.setSalesTo(roundUp((basicReportingDTO.getTurnoverPerSale().doubleValue()/100)));
+        monthToDateReportingDTO.setSalesMg(roundUp(monthToDateReportingDTO.getSalesTo()-((basicReportingDTO.getPurchasingCost().doubleValue()/100)
                 *basicReportingDTO.getSalesQuantity())/100));
         monthToDateReportingDTO.setSalesMgAvg(roundUp(monthToDateReportingDTO.getSalesMg()/monthToDateReportingDTO.getSalesNo()));
         try{
@@ -215,7 +211,7 @@ public class DashboardService {
     }
 
     /**
-     * mapper to convert BasicReportingDTO into DailyReportingDTO
+     * Mapper to convert BasicReportingDTO into DailyReportingDTO
      * @param basicReportingDTO Aggregated List of Sales
      * @return DailyReportingDTO
      */
@@ -225,11 +221,11 @@ public class DashboardService {
         dailyReportingDTO.setShop(basicReportingDTO.getShop());
         dailyReportingDTO.setDate(basicReportingDTO.getDate().toLocalDate());
         dailyReportingDTO.setSalesNo(basicReportingDTO.getSalesQuantity());
-        dailyReportingDTO.setSalesTo(((basicReportingDTO.getSalesPrice().doubleValue())/100)*basicReportingDTO.getSalesQuantity());
-        dailyReportingDTO.setListPr(basicReportingDTO.getListPrice().doubleValue()/100);
-        dailyReportingDTO.setPurchCo(basicReportingDTO.getPurchasingCost().doubleValue()/100);
+        dailyReportingDTO.setSalesTo(roundUp((basicReportingDTO.getTurnoverPerSale().doubleValue())/100));
+        dailyReportingDTO.setListPr(roundUp(basicReportingDTO.getListPrice().doubleValue()/100));
+        dailyReportingDTO.setPurchCo(roundUp(basicReportingDTO.getPurchasingCost().doubleValue()/100));
         dailyReportingDTO.setDiscountRateAvg(roundUp(dailyReportingDTO.getSalesTo()/(dailyReportingDTO.getListPr()*100)));
-        dailyReportingDTO.setSalesMg(dailyReportingDTO.getSalesTo()-dailyReportingDTO.getPurchCo());
+        dailyReportingDTO.setSalesMg(roundUp(dailyReportingDTO.getSalesTo()-dailyReportingDTO.getPurchCo()));
         dailyReportingDTO.setSalesMgAvg(roundUp(dailyReportingDTO.getSalesMg()/dailyReportingDTO.getSalesNo()));
         return dailyReportingDTO;
     }
@@ -237,7 +233,7 @@ public class DashboardService {
     // Internal methods to aggregate necessary data from different sources
 
     /**
-     * mapper to map shopsallsolditems to basic reporting
+     * Mapper to map shopsallsolditems to basic reporting
      * @param shopsAllSoldItems from corresponding database-table
      * @return BasicReportingDTO
      */
@@ -246,6 +242,7 @@ public class DashboardService {
         BasicReportingDTO basicReportingDTO = new BasicReportingDTO();
         basicReportingDTO.setShop(shopsAllSoldItems.getShop());
         basicReportingDTO.setDate(shopsAllSoldItems.getItemLastSold());
+        basicReportingDTO.setTurnoverPerSale(shopsAllSoldItems.getPriceSalesPerUnit()*shopsAllSoldItems.getQuantity());
         basicReportingDTO.setSalesQuantity(shopsAllSoldItems.getQuantity());
         basicReportingDTO.setListPrice(shopsAllSoldItems.getPriceListPerUnit());
         basicReportingDTO.setSalesPrice(shopsAllSoldItems.getPriceSalesPerUnit());
@@ -301,7 +298,7 @@ public class DashboardService {
 
     /**
      * Utility-method to round values to 2 digits floating
-     * @param any double
+     * @param input (not rounded)
      * @return double rounded to 2 digits floating
      */
     public static double roundUp(double input){

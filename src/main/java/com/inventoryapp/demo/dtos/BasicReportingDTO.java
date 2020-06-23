@@ -10,6 +10,7 @@ public class BasicReportingDTO {
     private LocalDateTime date;
     private Long salesQuantity;
     private Long purchasingCost;
+    private Long turnoverPerSale;
     private Long listPrice;
     private Long salesPrice;
     private String category;
