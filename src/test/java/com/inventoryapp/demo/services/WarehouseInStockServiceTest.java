@@ -6,6 +6,7 @@ import com.inventoryapp.demo.dtos.WarehouseSupplierItemDTO;
 import com.inventoryapp.demo.entities.WarehouseStockItem;
 import com.inventoryapp.demo.repositories.WarehouseRepository;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,18 @@ import java.util.List;
 @DataJpaTest
 public class WarehouseInStockServiceTest {
 
-
     @Autowired
     private WarehouseRepository warehouseRepository;
 
-    @Autowired
     private WarehouseInStockService warehouseInStockService;
 
-    @Autowired
     private ConvertingValues convertingValues;
+
+    @Before
+    public void setUp(){
+        convertingValues = new ConvertingValues();
+        warehouseInStockService = new WarehouseInStockService();
+    }
 
     @Test
     public void getAllStockItemsTest() {
@@ -40,7 +44,6 @@ public class WarehouseInStockServiceTest {
 //        WarehouseInStockService warehouseInStockService = new WarehouseInStockService(warehouseRepository);
 
         List<WarehouseGetAllItemsDTO> listItems = warehouseInStockService.getAllStockItems();
-        System.out.println(listItems.size());
 
         Assert.assertEquals(listItems.size(), 2);
     }

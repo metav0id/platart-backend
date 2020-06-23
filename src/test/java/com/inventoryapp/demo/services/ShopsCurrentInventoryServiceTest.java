@@ -23,9 +23,6 @@ public class ShopsCurrentInventoryServiceTest {
     @Autowired
     private ShopsStockItemRepository shopsStockItemRepository;
 
-    @Autowired
-    private ConvertingValues convertingValues;
-
     public ShopsCurrentInventoryServiceTest() {
     }
 

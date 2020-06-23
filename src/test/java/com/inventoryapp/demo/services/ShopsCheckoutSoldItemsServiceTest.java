@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
@@ -32,7 +33,6 @@ public class ShopsCheckoutSoldItemsServiceTest {
     @Autowired
     private ShopsStockItemRepository shopsStockItemRepository;
 
-    @Autowired
     private ConvertingValues convertingValues;
 
     public ShopsCheckoutSoldItemsServiceTest() {
@@ -116,6 +116,7 @@ public class ShopsCheckoutSoldItemsServiceTest {
         itemDTO2.setComment("Comment1");
         shopsCheckoutSoldItemsDTOList.add(itemDTO2);
 
+        this.convertingValues = new ConvertingValues();
     }
 
     @Test

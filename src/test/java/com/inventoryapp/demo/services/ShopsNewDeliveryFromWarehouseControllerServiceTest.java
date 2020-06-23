@@ -31,7 +31,6 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
 
     private List<WarehouseSendDeliveryOrderItem> listSendItems = new ArrayList<>();
 
-    @Autowired
     private ConvertingValues convertingValues;
 
 
@@ -88,6 +87,7 @@ public class ShopsNewDeliveryFromWarehouseControllerServiceTest {
         item4.setShopsCheckedInProductsFromWarehouse(new ShopsCheckedInProductsFromWarehouse());
         item4.getShopsCheckedInProductsFromWarehouse().setIsAddedToStockOfShop(true);
         this.listSendItems.add(item4);
+        convertingValues = new ConvertingValues();
     }
 
     @Test
