@@ -22,7 +22,6 @@ public class ManagerWarehouseCheckinListingServiceTest {
     @Autowired
     private WarehouseSupplierItemRepository warehouseSupplierItemRepository;
 
-    @Autowired
     private ConvertingValues convertingValues;
 
     List<WarehouseSupplierItem> allItemsInput = new ArrayList<>();
@@ -40,6 +39,7 @@ public class ManagerWarehouseCheckinListingServiceTest {
         allItemsInput.add(item5);
         WarehouseSupplierItem item6 = new WarehouseSupplierItem("Test category 6", 111, 333, 888, "Test Supplier");
         allItemsInput.add(item6);
+        convertingValues = new ConvertingValues();
     }
 
     @Test

@@ -31,7 +31,6 @@ public class WarehouseNewDeliveryOrderServiceTest {
     @Autowired
     private WarehouseShopDeliveryOrdersSendRepository warehouseShopDeliveryOrdersSendRepository;
 
-    @Autowired
     private ConvertingValues convertingValues;
 
     List<WarehouseNewDeliveryOrderItem> deliveryOrderItemsEntities = new ArrayList<>();
@@ -77,6 +76,7 @@ public class WarehouseNewDeliveryOrderServiceTest {
         newDeliveryItemDTO2.setPriceListPerUnit(15.0);
         newDeliveryItemDTO2.setComment("Hier herrscht Professoren-Aura");
         deliveryOrderItemDTOS.add(newDeliveryItemDTO2);
+        convertingValues = new ConvertingValues();
     }
 
     /**

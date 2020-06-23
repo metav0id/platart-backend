@@ -22,7 +22,6 @@ public class ShopsSalesListingServiceTest {
     @Autowired
     private ShopsAllSoldItemsRepository shopsAllSoldItemsRepository;
 
-    @Autowired
     private ConvertingValues convertingValues;
 
     public List<ShopsAllSoldItems> allItemsInput = new ArrayList<>();
@@ -40,6 +39,7 @@ public class ShopsSalesListingServiceTest {
         allItemsInput.add(item5);
         ShopsAllSoldItems item6 = new ShopsAllSoldItems( 6L, "category", 88L, 888L, 666L , 888L, 50, "shop", LocalDateTime.now(), LocalDateTime.now(), "comment 6");
         allItemsInput.add(item6);
+        convertingValues = new ConvertingValues();
     }
 
     @Test
