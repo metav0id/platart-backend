@@ -38,7 +38,6 @@ public class WarehouseNewDeliveryOrderController {
      */
     @PostMapping("/setAllNewOrderItems")
     public void setAllNewOrderItems(@RequestBody List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
-        System.out.println(newDeliveryOrderItemDTOList.toString());
         warehouseNewDeliveryOrderService.setAllDeliveryOrderItems(newDeliveryOrderItemDTOList);
     }
 
