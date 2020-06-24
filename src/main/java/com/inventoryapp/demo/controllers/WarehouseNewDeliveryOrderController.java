@@ -23,13 +23,6 @@ public class WarehouseNewDeliveryOrderController {
     @Autowired
     private WarehouseVerifyAmountItemsOnStockService warehouseVerifyAmountItemsOnStockService;
 
-//    @Autowired
-//    public WarehouseNewDeliveryOrderController(WarehouseNewDeliveryOrderService warehouseNewDeliveryOrderService, WarehouseVerifyAmountItemsOnStockService warehouseVerifyAmountItemsOnStockService) {
-//        this.warehouseNewDeliveryOrderService = warehouseNewDeliveryOrderService;
-//        this.warehouseVerifyAmountItemsOnStockService = warehouseVerifyAmountItemsOnStockService;
-//    }
-
-
     /**
      * REST Post-Request of all new order items.
      * @return DTO-List with current new order items.

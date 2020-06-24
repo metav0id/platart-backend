@@ -188,6 +188,7 @@ public class WarehouseNewDeliveryOrderService {
             newDeliveryOrderItemDTO.setDiscountPercent(convertingValues.convertLongToDoubleForEntityToDTO(item.getDiscountPercent()));
             newDeliveryOrderItemDTO.setPriceListPerUnit(convertingValues.convertLongToDoubleForEntityToDTO(item.getPriceListPerUnit()));
             newDeliveryOrderItemDTO.setComment(item.getComment());
+            newDeliveryOrderItemDTO.setDeliveryShop(item.getDeliveryShop());
 
             deliveryOrderItemDTOS.add(newDeliveryOrderItemDTO);
         }
