@@ -9,9 +9,9 @@ public class BasicReportingDTO {
     private String shop;
     private LocalDateTime date;
     private Long salesQuantity;
-    private Long purchasingCost;
-    private Long turnoverPerSale;
-    private Long listPrice;
-    private Long salesPrice;
+    private Double purchasingCost;
+    private Double turnoverPerSale;
+    private Double listPrice;
+    private Double salesPrice;
     private String category;
 }

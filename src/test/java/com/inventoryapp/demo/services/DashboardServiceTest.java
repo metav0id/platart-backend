@@ -83,9 +83,9 @@ public class DashboardServiceTest {
             basicReportingDTO.setCategory("bijoux");
             basicReportingDTO.setSalesQuantity((long) i + 1L);
             basicReportingDTO.setShop("Ye Olde Shoppe " + i);
-            basicReportingDTO.setPurchasingCost((long) i + 200L);
-            basicReportingDTO.setListPrice(1000L);
-            basicReportingDTO.setSalesPrice((long) i + 300L);
+            basicReportingDTO.setPurchasingCost(213.00);
+            basicReportingDTO.setListPrice(400.00);
+            basicReportingDTO.setSalesPrice(300.00);
             basicReportingDTOListTest.add(basicReportingDTO);
         }
     }
