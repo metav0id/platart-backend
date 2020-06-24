@@ -57,8 +57,12 @@ public class WarehouseNewDeliveryOrderController {
      */
     @PostMapping("sendDeliveryOrder")
     public WarehouseNewDeliveryPersistanceResponseDTO sendDeliveryOrder(@RequestBody List<WarehouseNewDeliveryOrderItemDTO> newDeliveryOrderItemDTOList){
-        System.out.println(newDeliveryOrderItemDTOList.toString());
         return this.warehouseNewDeliveryOrderService.sendDeliveryOrder(newDeliveryOrderItemDTOList);
 
+    }
+
+    @PostMapping("deleteItems")
+    public boolean deleteItems(@RequestBody List<Long>listTable){
+        return this.warehouseNewDeliveryOrderService.deleteItems(listTable);
     }
 }

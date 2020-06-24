@@ -205,7 +205,7 @@ public class WarehouseNewDeliveryOrderService {
         List<WarehouseNewDeliveryOrderItem> deliveryOrderItemEntityLists = new ArrayList<>();
         for (WarehouseNewDeliveryOrderItemDTO item : deliveryOrderItemDtoList) {
             WarehouseNewDeliveryOrderItem newDeliveryOrderItem = new WarehouseNewDeliveryOrderItem();
-            newDeliveryOrderItem.setId(item.getId());
+//            newDeliveryOrderItem.setId(item.getId());
             newDeliveryOrderItem.setCategory(item.getCategory());
             newDeliveryOrderItem.setQuantity(item.getQuantity());
             newDeliveryOrderItem.setPriceSalesPerUnit(convertingValues.convertDoubleToLongForDTOtoEntity(item.getPriceSalesPerUnit()));
@@ -219,4 +219,15 @@ public class WarehouseNewDeliveryOrderService {
         return deliveryOrderItemEntityLists;
     }
 
+    public boolean deleteItems(List<Long> listTable) {
+        try{
+            for(long id : listTable){
+                this.warehouseNewDeliveryOrderRepository.deleteById(id);
+            }
+            return true;
+        }catch (Exception e){
+            System.out.println("An error occured during deleting item");
+            return false;
+        }
+    }
 }
