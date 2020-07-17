@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "https://platart.com", allowedHeaders = "*")
 @RestController("")
 @RequestMapping("/warehouse")
 public class WarehouseInStockController {

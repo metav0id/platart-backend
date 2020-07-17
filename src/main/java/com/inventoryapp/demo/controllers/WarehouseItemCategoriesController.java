@@ -5,10 +5,10 @@ import com.inventoryapp.demo.services.WarehouseItemCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
-
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RestController
+@RestController("")
 @RequestMapping("/warehouse")
 public class WarehouseItemCategoriesController {
     @Autowired
@@ -21,7 +21,13 @@ public class WarehouseItemCategoriesController {
 
     @GetMapping("/getAllActivatedCategories")
     public List<WarehouseItemCategoryDTO> getAllActivatedCategories() {
-        return this.warehouseItemCategoryService.getActivatedCategories();
+        List<WarehouseItemCategoryDTO> list = new ArrayList<>();
+        list.add(new WarehouseItemCategoryDTO("cat 0", true));
+        list.add(new WarehouseItemCategoryDTO("cat 1", true));
+        list.add(new WarehouseItemCategoryDTO("cat 2", true));
+        list.add(new WarehouseItemCategoryDTO("cat 3", true));
+        return list;
+        //return this.warehouseItemCategoryService.getActivatedCategories();
     }
 
     @GetMapping("/getAllDeactivatedCategories")
