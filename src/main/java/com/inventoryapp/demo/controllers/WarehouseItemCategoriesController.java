@@ -21,12 +21,6 @@ public class WarehouseItemCategoriesController {
 
     @GetMapping("/getAllActivatedCategories")
     public List<WarehouseItemCategoryDTO> getAllActivatedCategories() {
-//        List<WarehouseItemCategoryDTO> list = new ArrayList<>();
-//        list.add(new WarehouseItemCategoryDTO("cat 0", true));
-//        list.add(new WarehouseItemCategoryDTO("cat 1", true));
-//        list.add(new WarehouseItemCategoryDTO("cat 2", true));
-//        list.add(new WarehouseItemCategoryDTO("cat 3", true));
-//        return list;
         return this.warehouseItemCategoryService.getActivatedCategories();
     }
 
